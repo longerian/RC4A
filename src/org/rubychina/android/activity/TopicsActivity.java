@@ -1,26 +1,29 @@
 package org.rubychina.android.activity;
 
 import greendroid.app.GDListActivity;
-import greendroid.graphics.drawable.ActionBarDrawable;
 import greendroid.widget.ActionBarItem;
-import greendroid.widget.NormalActionBarItem;
+import greendroid.widget.ItemAdapter;
 import greendroid.widget.ActionBarItem.Type;
 
 import org.rubychina.android.R;
 import org.rubychina.android.RCApplication;
 import org.rubychina.android.api.request.HotTopicsRequest;
 import org.rubychina.android.api.response.HotTopicsResponse;
+import org.rubychina.android.type.Topic;
 
 import yek.api.ApiCallback;
 import yek.api.ApiException;
-
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 
 public class TopicsActivity extends GDListActivity {
 
+	private static final String TAG = "TopicsActivity";
 	private HotTopicsRequest request;
 	
 	@Override
@@ -51,24 +54,30 @@ public class TopicsActivity extends GDListActivity {
 		}
 	}
 	
+	@Override
+	protected void onListItemClick(ListView l, View v, int position, long id) {
+		Toast.makeText(getApplicationContext(), "click " + position, Toast.LENGTH_SHORT).show();
+	}
+
 	private class HotTopicsCallback implements ApiCallback<HotTopicsResponse> {
 
 		@Override
 		public void onException(ApiException e) {
-			// TODO Auto-generated method stub
-			
+			Toast.makeText(getApplicationContext(), "exception", Toast.LENGTH_SHORT).show();
 		}
 
 		@Override
 		public void onFail(HotTopicsResponse r) {
-			// TODO Auto-generated method stub
-			
+			Toast.makeText(getApplicationContext(), "fail", Toast.LENGTH_SHORT).show();
 		}
 
 		@Override
 		public void onSuccess(HotTopicsResponse r) {
-			// TODO Auto-generated method stub
-			
+			ArrayAdapter<Topic> adapter = new ArrayAdapter<Topic>(getApplicationContext(), android.R.layout.simple_list_item_1);
+			for(Topic t : r.getTopics()) {
+				adapter.add(t);
+			}
+			setListAdapter(adapter);
 		}
 		
 	}

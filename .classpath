@@ -8,5 +8,6 @@
 	<classpathentry kind="lib" path="lib/YekCache.jar"/>
 	<classpathentry kind="lib" path="lib/YekLoader.jar"/>
 	<classpathentry kind="lib" path="lib/YekUtil.jar"/>
+	<classpathentry kind="lib" path="lib/gson-2.1.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
