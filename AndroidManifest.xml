@@ -25,6 +25,8 @@
         </activity>
         <activity android:name=".activity.TopicsActivity" />
         <activity android:name=".activity.NewTopicActivity" />
+        <activity android:name=".activity.EditTopicActivity" />
+        <activity android:name=".activity.TopicDetailActivity" />
     </application>
 
 </manifest>

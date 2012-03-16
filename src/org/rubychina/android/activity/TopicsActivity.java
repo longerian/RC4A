@@ -82,7 +82,8 @@ public class TopicsActivity extends GDListActivity {
 	
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
-		Toast.makeText(getApplicationContext(), "click " + position, Toast.LENGTH_SHORT).show();
+		Intent i = new Intent(getApplicationContext(), TopicDetailActivity.class);
+		startActivity(i);
 	}
 
 	private class HotTopicsCallback implements ApiCallback<HotTopicsResponse> {

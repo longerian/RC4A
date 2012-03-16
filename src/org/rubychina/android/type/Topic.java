@@ -1,7 +1,5 @@
 package org.rubychina.android.type;
 
-import java.util.Date;
-
 import com.google.gson.annotations.SerializedName;
 
 public class Topic extends RCType {
@@ -38,83 +36,53 @@ public class Topic extends RCType {
 	private String lastReplyUserLogin;
 	
 	private User user;
-	
+
 	public int getId() {
 		return id;
 	}
-	public void setId(int id) {
-		this.id = id;
-	}
+
 	public String getTitle() {
 		return title;
 	}
-	public void setTitle(String title) {
-		this.title = title;
-	}
+
 	public String getBody() {
 		return body;
 	}
-	public void setBody(String body) {
-		this.body = body;
-	}
+
 	public String getBodyHTML() {
 		return bodyHTML;
 	}
-	public void setBodyHTML(String bodyHTML) {
-		this.bodyHTML = bodyHTML;
-	}
+
 	public String getCreatedAt() {
 		return createdAt;
 	}
-	public void setCreatedAt(String createdAt) {
-		this.createdAt = createdAt;
-	}
+
 	public String getUpdatedAt() {
 		return updatedAt;
 	}
-	public void setUpdatedAt(String updatedAt) {
-		this.updatedAt = updatedAt;
-	}
+
 	public String getRepliedAt() {
 		return repliedAt;
 	}
-	public void setRepliedAt(String repliedAt) {
-		this.repliedAt = repliedAt;
-	}
+
 	public int getRepliesCount() {
 		return repliesCount;
 	}
-	public void setRepliesCount(int repliesCount) {
-		this.repliesCount = repliesCount;
-	}
+
 	public String getNodeName() {
 		return nodeName;
 	}
-	public void setNodeName(String nodeName) {
-		this.nodeName = nodeName;
-	}
+
 	public int getNodeID() {
 		return nodeID;
 	}
-	public void setNodeID(int nodeID) {
-		this.nodeID = nodeID;
-	}
+
 	public String getLastReplyUserLogin() {
 		return lastReplyUserLogin;
 	}
-	public void setLastReplyUserLogin(String lastReplyUserLogin) {
-		this.lastReplyUserLogin = lastReplyUserLogin;
-	}
+
 	public User getUser() {
 		return user;
-	}
-	public void setUser(User user) {
-		this.user = user;
-	}
-	
-	@Override
-	public String toString() {
-		return "Topic [title=" + title + "]";
 	}
 	
 }
