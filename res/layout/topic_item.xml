@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="48dip" >
+	<ImageView 
+	    android:id="@+id/gravater"
+	    android:layout_width="48dip"
+	    android:layout_height="48dip"
+	    />
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+	    android:layout_height="40dip"
+	    android:padding="8dip"
+	    android:layout_toRightOf="@+id/gravater"
+	    android:layout_toLeftOf="@+id/reply_count"
+	    android:layout_centerVertical="true"
+	    android:gravity="center_vertical"
+	    android:singleLine="true"
+	    android:ellipsize="end"
+	    android:text="tittttttttle"
+	    android:textSize="16sp"
+        />
+	<TextView 
+	    android:id="@+id/reply_count"
+        android:layout_width="32dip"
+	    android:layout_height="32dip"
+	    android:background="#FF1C7FDB"
+	    android:padding="4dip"
+	    android:layout_alignParentRight="true"
+	    android:layout_centerVertical="true"
+	    android:gravity="center"
+	    android:text="10"
+	    android:textSize="16sp"
+	    android:textColor="#FFFFFFFF"
+	    />
+</RelativeLayout>

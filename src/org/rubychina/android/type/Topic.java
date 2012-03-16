@@ -8,16 +8,35 @@ public class Topic extends RCType {
 	
 	@SerializedName("_id")  
 	private int id;
+	
 	private String title;
+	
 	private String body;
+	
+	@SerializedName("body_html")  
 	private String bodyHTML;
-	private Date createdAt;
-	private Date updatedAt;
-	private Date repliedAt;
-	private Date repliesCount;
+	
+	@SerializedName("created_at")  
+	private String createdAt;
+	
+	@SerializedName("updated_at")  
+	private String updatedAt;
+	
+	@SerializedName("replied_at")  
+	private String repliedAt;
+	
+	@SerializedName("replies_count")  
+	private int repliesCount;
+	
+	@SerializedName("node_name")  
 	private String nodeName;
+	
+	@SerializedName("node_id")  
 	private int nodeID;
+	
+	@SerializedName("last_reply_user_login")  
 	private String lastReplyUserLogin;
+	
 	private User user;
 	
 	public int getId() {
@@ -44,28 +63,28 @@ public class Topic extends RCType {
 	public void setBodyHTML(String bodyHTML) {
 		this.bodyHTML = bodyHTML;
 	}
-	public Date getCreatedAt() {
+	public String getCreatedAt() {
 		return createdAt;
 	}
-	public void setCreatedAt(Date createdAt) {
+	public void setCreatedAt(String createdAt) {
 		this.createdAt = createdAt;
 	}
-	public Date getUpdatedAt() {
+	public String getUpdatedAt() {
 		return updatedAt;
 	}
-	public void setUpdatedAt(Date updatedAt) {
+	public void setUpdatedAt(String updatedAt) {
 		this.updatedAt = updatedAt;
 	}
-	public Date getRepliedAt() {
+	public String getRepliedAt() {
 		return repliedAt;
 	}
-	public void setRepliedAt(Date repliedAt) {
+	public void setRepliedAt(String repliedAt) {
 		this.repliedAt = repliedAt;
 	}
-	public Date getRepliesCount() {
+	public int getRepliesCount() {
 		return repliesCount;
 	}
-	public void setRepliesCount(Date repliesCount) {
+	public void setRepliesCount(int repliesCount) {
 		this.repliesCount = repliesCount;
 	}
 	public String getNodeName() {

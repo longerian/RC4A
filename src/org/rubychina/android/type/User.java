@@ -12,8 +12,11 @@ public class User extends RCType {
 	private String website;
 	private String bio; //TODO ??
 	private String tagline; //TODO ??
+	@SerializedName("github_url")  
 	private String githubUrl;
+	@SerializedName("gravatar_hash")  
 	private String gravatarHash;
+	@SerializedName("avatar_url")  
 	private String avatarUrl;
 	
 	public int getId() {
