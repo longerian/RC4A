@@ -6,7 +6,7 @@
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry kind="lib" path="lib/YekApi.jar"/>
 	<classpathentry kind="lib" path="lib/YekCache.jar"/>
-	<classpathentry kind="lib" path="lib/YekLoader.jar"/>
+	<classpathentry kind="lib" path="lib/YekLoader.jar" sourcepath="C:/Users/long/Desktop/YEK Android 开发模块及文档/YekLoader/src/YekLoader_src.zip"/>
 	<classpathentry kind="lib" path="lib/YekUtil.jar"/>
 	<classpathentry kind="lib" path="lib/gson-2.1.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>

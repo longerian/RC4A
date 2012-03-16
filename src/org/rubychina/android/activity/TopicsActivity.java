@@ -16,7 +16,9 @@ import yek.api.ApiCallback;
 import yek.api.ApiException;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,6 +85,8 @@ public class TopicsActivity extends GDListActivity {
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		Intent i = new Intent(getApplicationContext(), TopicDetailActivity.class);
+		Topic t = (Topic) l.getItemAtPosition(position);
+		i.putExtra("id", t.getId());
 		startActivity(i);
 	}
 
@@ -140,7 +144,17 @@ public class TopicsActivity extends GDListActivity {
 				viewHolder = (ViewHolder) convertView.getTag();
 			}
 			Topic t = items.get(position);
-			viewHolder.gravatar.setImageResource(R.drawable.default_gravatar);
+			String avatar = t.getUser().getAvatarUrl();
+			if(TextUtils.isEmpty(avatar)) {
+				viewHolder.gravatar.setImageResource(R.drawable.default_gravatar);
+			} else {
+				Bitmap ava = ((RCApplication) getApplication()).getImgLoader().load(avatar, viewHolder.gravatar);
+				if(ava != null) {
+					viewHolder.gravatar.setImageBitmap(ava);
+				} else {
+					viewHolder.gravatar.setImageResource(R.drawable.default_gravatar);
+				}
+			}
 			viewHolder.title.setText(t.getTitle());
 			viewHolder.replies.setText(t.getRepliesCount() + "");
 			return convertView;
