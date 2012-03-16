@@ -33,7 +33,7 @@ public class HotTopicsRequest extends RCAPIGet<HotTopicsResponse> {
 	@Override
 	public String getCacheRelativePathOrURL() {
 		//NOTE always ensure providing a unique cache for a request
-		return makeCachePath(url);
+		return makeCachePath("api", "topics", "list", "default");
 	}
 
 	@Override

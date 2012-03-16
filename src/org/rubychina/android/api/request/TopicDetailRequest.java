@@ -44,7 +44,7 @@ public class TopicDetailRequest extends RCAPIGet<TopicDetailResponse> {
 	@Override
 	public String getCacheRelativePathOrURL() {
 		//NOTE always ensure providing a unique cache for a request
-		return makeCachePath(url, id + "");
+		return makeCachePath("api", "topics", id + "");
 	}
 
 	@Override

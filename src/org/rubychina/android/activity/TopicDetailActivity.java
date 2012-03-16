@@ -1,59 +1,72 @@
 package org.rubychina.android.activity;
 
 import greendroid.app.GDActivity;
+import greendroid.widget.ActionBarItem;
+import greendroid.widget.ActionBarItem.Type;
 
+import org.rubychina.android.GlobalResource;
+import org.rubychina.android.R;
 import org.rubychina.android.RCApplication;
 import org.rubychina.android.api.request.TopicDetailRequest;
 import org.rubychina.android.api.response.TopicDetailResponse;
+import org.rubychina.android.type.Topic;
 import org.rubychina.android.util.LogUtil;
 
 import yek.api.ApiCallback;
 import yek.api.ApiException;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.Window;
+import android.webkit.WebView;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class TopicDetailActivity extends GDActivity {
 
+	public static final String POS = "position";
 	private static final String TAG = "TopicDetailActivity";
-	private TopicDetailRequest request;
+	
+	private Topic t;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-
-		startTopicDetailRequest(getIntent().getIntExtra("id", 0));
-	}
-	
-	private void startTopicDetailRequest(int id) {
-		if(request == null) {
-			request = new TopicDetailRequest(id);
-		}
-		request.setId(id);
-		((RCApplication) getApplication()).getAPIClient().request(request, new TopicDetailCallback());
-		setProgressBarIndeterminateVisibility(true);
-	}
-	
-	private class TopicDetailCallback implements ApiCallback<TopicDetailResponse> {
-
-		@Override
-		public void onException(ApiException e) {
-			// TODO Auto-generated method stub
-			Toast.makeText(getApplicationContext(), "exception", Toast.LENGTH_SHORT).show();
-		}
-
-		@Override
-		public void onFail(TopicDetailResponse r) {
-			// TODO Auto-generated method stub
-			Toast.makeText(getApplicationContext(), "fail", Toast.LENGTH_SHORT).show();
-		}
-
-		@Override
-		public void onSuccess(TopicDetailResponse r) {
-			LogUtil.d(TAG, r.getTopic() + "");
+		setActionBarContentView(R.layout.topic_detail_layout);
+		addActionBarItem(Type.List, R.id.action_bar_replies);
+		
+		t = GlobalResource.INSTANCE.getCurTopics().get(getIntent().getIntExtra(POS, 0));
+		
+		TextView title = (TextView) findViewById(R.id.title);
+		title.setText(t.getTitle());
+		
+		ImageView avatar = (ImageView) findViewById(R.id.gravatar);
+		Bitmap avatarBitmap = ((RCApplication) getApplication()).getImgLoader().load(t.getUser().getAvatarUrl(), avatar);
+		if(avatarBitmap != null) {
+			avatar.setImageBitmap(avatarBitmap);
 		}
 		
+		WebView webView = (WebView) findViewById(R.id.body_html); 
+		webView.getSettings().setJavaScriptEnabled(true); 
+		webView.getSettings().setBuiltInZoomControls(true);
+		webView.getSettings().setDefaultTextEncodingName("utf-8");
+		webView.loadData(t.getBodyHTML(), "text/html", "UTF-8");
 	}
+	
+	@Override
+	public boolean onHandleActionBarItemClick(ActionBarItem item, int position) {
+		switch (item.getItemId()) {
+        case R.id.action_bar_replies:
+        	Intent i = new Intent(getApplicationContext(), ReplyListActivity.class);
+        	i.putExtra(ReplyListActivity.BELONG_TO_TOPIC, t.getId());
+        	startActivity(i);
+        	return true;
+        default:
+            return super.onHandleActionBarItemClick(item, position);
+		}
+	}
+
 	
 }

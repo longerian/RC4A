@@ -6,6 +6,7 @@ import greendroid.widget.ActionBarItem.Type;
 
 import java.util.List;
 
+import org.rubychina.android.GlobalResource;
 import org.rubychina.android.R;
 import org.rubychina.android.RCApplication;
 import org.rubychina.android.api.request.HotTopicsRequest;
@@ -85,8 +86,7 @@ public class TopicsActivity extends GDListActivity {
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		Intent i = new Intent(getApplicationContext(), TopicDetailActivity.class);
-		Topic t = (Topic) l.getItemAtPosition(position);
-		i.putExtra("id", t.getId());
+		i.putExtra(TopicDetailActivity.POS, position);
 		startActivity(i);
 	}
 
@@ -109,6 +109,7 @@ public class TopicsActivity extends GDListActivity {
 		@Override
 		public void onSuccess(HotTopicsResponse r) {
 			setProgressBarIndeterminateVisibility(false);
+			GlobalResource.INSTANCE.setCurTopics(r.getTopics());
 			TopicAdapter adapter = new TopicAdapter(getApplicationContext(), R.layout.topic_item,
 					R.id.title, r.getTopics());
 			setListAdapter(adapter);
@@ -136,7 +137,7 @@ public class TopicsActivity extends GDListActivity {
 			if(convertView == null) {
 				viewHolder = new ViewHolder();
 				convertView = LayoutInflater.from(context).inflate(resource, null);
-				viewHolder.gravatar = (ImageView) convertView.findViewById(R.id.gravater);
+				viewHolder.gravatar = (ImageView) convertView.findViewById(R.id.gravatar);
 				viewHolder.title = (TextView) convertView.findViewById(R.id.title);
 				viewHolder.replies = (TextView) convertView.findViewById(R.id.reply_count);
 				convertView.setTag(viewHolder);

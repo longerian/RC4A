@@ -2,7 +2,7 @@ package org.rubychina.android.type;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Reply extends RCType {
+public class Reply {
 
 	@SerializedName("_id")  
 	private int id;

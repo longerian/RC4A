@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+    <ImageView 
+	    android:id="@+id/gravatar"
+	    android:layout_width="48dip"
+	    android:layout_height="48dip"
+	    android:src="@drawable/default_gravatar"
+	    />
+    <TextView 
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="48dip"
+        android:layout_toRightOf="@+id/gravatar"
+        android:background="#FFFFFFFF"
+        android:padding="4dip"
+        android:textSize="16sp"
+        android:textColor="#FF000000"
+        android:gravity="center_vertical"
+        />
+	<WebView
+	    android:id="@+id/body_html"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:layout_below="@+id/title"
+	    android:layout_above="@+id/comment"
+	    />
+	<include 
+	    android:id="@+id/comment"
+	    layout="@layout/block_compose"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentBottom="true"
+	    />
+</RelativeLayout>

@@ -3,16 +3,17 @@
     android:layout_width="match_parent"
     android:layout_height="48dip" >
 	<ImageView 
-	    android:id="@+id/gravater"
+	    android:id="@+id/gravatar"
 	    android:layout_width="48dip"
 	    android:layout_height="48dip"
+	    android:src="@drawable/default_gravatar"
 	    />
     <TextView
         android:id="@+id/title"
         android:layout_width="match_parent"
 	    android:layout_height="40dip"
 	    android:padding="8dip"
-	    android:layout_toRightOf="@+id/gravater"
+	    android:layout_toRightOf="@+id/gravatar"
 	    android:layout_toLeftOf="@+id/reply_count"
 	    android:layout_centerVertical="true"
 	    android:gravity="center_vertical"
