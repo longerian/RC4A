@@ -37,7 +37,6 @@ public class RCApplication extends GDApplication {
 	}
 	
 	private void setupResource() {
-		mPrefs = getSharedPreferences(Preferences.PREFERENCE_APP, MODE_PRIVATE);
 		mCacher = new Cache(getApplicationContext());
 		mThreadPoolExecutor = new ThreadPoolExecutor(1, 10, 10, TimeUnit.SECONDS, new ArrayBlockingQueue <Runnable>(100) );
 		mAPIClient = new RCAPIClient(getApplicationContext(), new JSONParser(), mThreadPoolExecutor, mCacher);
@@ -53,7 +52,10 @@ public class RCApplication extends GDApplication {
 	}
 	
 	public SharedPreferences getPreference() {
+		if(mPrefs == null) {
+			mPrefs = getSharedPreferences(Preferences.PREFERENCE_APP, MODE_PRIVATE);
+		}
 		return this.mPrefs;
 	}
-
+	
 }

@@ -4,5 +4,14 @@
     <string name="reply_hint">请输入......</string>
     <string name="hot_topics">热门话题</string>
     <string name="reply_list_unit">楼</string>
+    <string name="view_profile">查看个人资料</string>
+    <string name="reply">回复</string>
+    <string name="user_id">ID</string>
+    <string name="user_name">Name</string>
+    <string name="user_location">城市</string><string name="user_bio">简介</string>
+    <string name="user_tagline">签名</string><string name="user_website">个人主页</string>
+    <string name="user_github">Github</string>
+    
+    
 
 </resources>

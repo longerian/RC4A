@@ -14,24 +14,35 @@ import org.rubychina.android.util.GravatarUtil;
 import yek.api.ApiCallback;
 import yek.api.ApiException;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 public class ReplyListActivity extends GDActivity {
 
 	public static final String BELONG_TO_TOPIC = "org.rubychina.android.activity.ReplyListActivity.TOPIC_ID";
+	
 	private static final String TAG = "ReplyListActivity";
+	
+	private static final int VIEW_PROFILE = 0; 
+	private static final int REPLY = 1; 
+	
 	private TopicDetailRequest request;
 	private ListView replies;
 	
@@ -68,6 +79,32 @@ public class ReplyListActivity extends GDActivity {
 		}
 	}
 	
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,
+			ContextMenuInfo menuInfo) {
+		menu.add(0, VIEW_PROFILE, 0, R.string.view_profile);
+		menu.add(0, REPLY, 1, R.string.reply);
+	}
+	
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+		switch (item.getItemId()) {  
+		  case VIEW_PROFILE:
+			  Gson g = new Gson();
+			  Reply r = (Reply) replies.getItemAtPosition(menuInfo.position);
+			  Intent i = new Intent(getApplicationContext(), UserProfileActivity.class);
+			  i.putExtra(UserProfileActivity.VIEW_PROFILE, g.toJson(r.getUser()));
+			  startActivity(i);
+			  return true;  
+		  case REPLY:  
+			  Toast.makeText(ReplyListActivity.this, "reply to " + replies.getItemAtPosition(menuInfo.position), Toast.LENGTH_LONG).show();
+			  return true;
+		  default:  
+			  return super.onContextItemSelected(item);  
+		  }  
+	}
+
 	private class TopicDetailCallback implements ApiCallback<TopicDetailResponse> {
 
 		@Override
@@ -91,6 +128,8 @@ public class ReplyListActivity extends GDActivity {
 			replies = (ListView) findViewById(R.id.replies);
 			replies.setAdapter(new ReplyAdapter(getApplicationContext(), R.layout.reply_item,
 					R.id.body, r.getReplies()));
+			registerForContextMenu(replies);
+//			replies.setOnCreateContextMenuListener(l)
 		}
 		
 	}
@@ -110,8 +149,8 @@ public class ReplyListActivity extends GDActivity {
 		}
 		
 		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			ViewHolder viewHolder;
+		public View getView(final int position, View convertView, ViewGroup parent) {
+			final ViewHolder viewHolder;
 			if(convertView == null) {
 				viewHolder = new ViewHolder();
 				convertView = LayoutInflater.from(context).inflate(resource, null);
@@ -120,14 +159,6 @@ public class ReplyListActivity extends GDActivity {
 				viewHolder.floor = (TextView) convertView.findViewById(R.id.floor);
 				viewHolder.body = (TextView) convertView.findViewById(R.id.body);
 				viewHolder.forward = (ImageView) convertView.findViewById(R.id.forward);
-				viewHolder.forward.setOnClickListener(new OnClickListener() {
-					
-					@Override
-					public void onClick(View v) {
-						// TODO Auto-generated method stub
-						Toast.makeText(getApplicationContext(), "cccc", Toast.LENGTH_SHORT).show();
-					}
-				});
 				convertView.setTag(viewHolder);
 			} else {
 				viewHolder = (ViewHolder) convertView.getTag();
@@ -153,6 +184,12 @@ public class ReplyListActivity extends GDActivity {
 			viewHolder.userName.setText(r.getUser().getLogin());
 			viewHolder.floor.setText(position + 1 + "" + getString(R.string.reply_list_unit));
 			viewHolder.body.setText(r.getBody());
+//			viewHolder.forward.setOnClickListener(new OnClickListener() {
+//				
+//				@Override
+//				public void onClick(View v) {
+//				}
+//			});
 			return convertView;
 		}
 		

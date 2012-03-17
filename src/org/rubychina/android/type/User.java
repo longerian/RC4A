@@ -7,17 +7,17 @@ public class User {
 	@SerializedName("_id")  
 	private int id;
 	
-	private String name;
+	private String name; //昵称
 	
-	private String login; //TODO ??
+	private String login; //登录id
 	
 	private String location;
 	
 	private String website;
 	
-	private String bio; //TODO ??
+	private String bio; //个人介绍
 	
-	private String tagline; //TODO ??
+	private String tagline; //签名
 	
 	@SerializedName("github_url")  
 	private String githubUrl;

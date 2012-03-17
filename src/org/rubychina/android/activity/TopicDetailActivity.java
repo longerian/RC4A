@@ -39,6 +39,7 @@ public class TopicDetailActivity extends GDActivity {
 		setActionBarContentView(R.layout.topic_detail_layout);
 		addActionBarItem(Type.List, R.id.action_bar_replies);
 		
+		//TODO if pos = 0; crash
 		t = GlobalResource.INSTANCE.getCurTopics().get(getIntent().getIntExtra(POS, 0));
 		
 		TextView title = (TextView) findViewById(R.id.title);

@@ -29,6 +29,7 @@
         <activity android:name=".activity.TopicDetailActivity" />
         <activity android:name=".activity.ReplyListActivity" />
         <activity android:name=".activity.NodesActivity" />
+        <activity android:name=".activity.UserProfileActivity" />
     </application>
 
 </manifest>
