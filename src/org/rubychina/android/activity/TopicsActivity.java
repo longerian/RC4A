@@ -11,6 +11,7 @@ import org.rubychina.android.R;
 import org.rubychina.android.RCApplication;
 import org.rubychina.android.api.request.HotTopicsRequest;
 import org.rubychina.android.api.response.HotTopicsResponse;
+import org.rubychina.android.database.RCDBResolver;
 import org.rubychina.android.type.Node;
 import org.rubychina.android.type.Topic;
 import org.rubychina.android.util.GravatarUtil;
@@ -51,6 +52,8 @@ public class TopicsActivity extends GDListActivity {
 		addActionBarItem(Type.Refresh, R.id.action_bar_refresh);
 		addActionBarItem(Type.Compose, R.id.action_bar_compose);
 
+		List<Topic> cachedTopics = RCDBResolver.INSTANCE.fetchTopics(getApplicationContext());
+		refreshPage(cachedTopics);
 		startTopicsRequest(HOT_TOPICS_NODE_ID);
 	}
 	
@@ -58,6 +61,14 @@ public class TopicsActivity extends GDListActivity {
 	protected void onDestroy() {
 		super.onDestroy();
 		cancelTopicsRequest();
+	}
+	
+	private void refreshPage(List<Topic> topics) {
+		TopicAdapter adapter = new TopicAdapter(getApplicationContext(), 
+				R.layout.topic_item,
+				R.id.title, 
+				topics);
+		setListAdapter(adapter);
 	}
 	
 	private void startTopicsRequest(int nodeId) {
@@ -135,9 +146,9 @@ public class TopicsActivity extends GDListActivity {
 		public void onSuccess(HotTopicsResponse r) {
 			setProgressBarIndeterminateVisibility(false);
 			GlobalResource.INSTANCE.setCurTopics(r.getTopics());
-			TopicAdapter adapter = new TopicAdapter(getApplicationContext(), R.layout.topic_item,
-					R.id.title, r.getTopics());
-			setListAdapter(adapter);
+			RCDBResolver.INSTANCE.clearTopics(getApplicationContext());
+			RCDBResolver.INSTANCE.insertTopics(getApplicationContext(), r.getTopics());
+			refreshPage(r.getTopics());
 		}
 		
 	}
