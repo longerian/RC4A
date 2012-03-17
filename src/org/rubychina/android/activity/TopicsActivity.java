@@ -11,7 +11,9 @@ import org.rubychina.android.R;
 import org.rubychina.android.RCApplication;
 import org.rubychina.android.api.request.HotTopicsRequest;
 import org.rubychina.android.api.response.HotTopicsResponse;
+import org.rubychina.android.type.Node;
 import org.rubychina.android.type.Topic;
+import org.rubychina.android.util.LogUtil;
 
 import yek.api.ApiCallback;
 import yek.api.ApiException;
@@ -36,14 +38,21 @@ public class TopicsActivity extends GDListActivity {
 	private static final String TAG = "TopicsActivity";
 	private HotTopicsRequest request;
 	
+	private static final int HOT_TOPICS_NODE_ID = -1;
+	
+	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+//		setTitle(getString(R.string.hot_topics));
+		
+		addActionBarItem(Type.List, R.id.action_bar_nodes);
 		addActionBarItem(Type.Refresh, R.id.action_bar_refresh);
 		addActionBarItem(Type.Compose, R.id.action_bar_compose);
 
-		startTopicsRequest();
+		startTopicsRequest(HOT_TOPICS_NODE_ID);
 	}
 	
 	@Override
@@ -52,7 +61,7 @@ public class TopicsActivity extends GDListActivity {
 		cancelTopicsRequest();
 	}
 	
-	private void startTopicsRequest() {
+	private void startTopicsRequest(int nodeId) {
 		if(request == null) {
 			request = new HotTopicsRequest();
 		}
@@ -69,12 +78,16 @@ public class TopicsActivity extends GDListActivity {
 
 	@Override
 	public boolean onHandleActionBarItemClick(ActionBarItem item, int position) {
+		Intent i = new Intent();
 		switch (item.getItemId()) {
+		case R.id.action_bar_nodes:
+			i.setClass(getApplicationContext(), NodesActivity.class);
+			startActivityForResult(i, NodesActivity.PICK_NODE);
+			return true;
         case R.id.action_bar_refresh:
-        	startTopicsRequest();
+        	startTopicsRequest(HOT_TOPICS_NODE_ID);
         	return true;
         case R.id.action_bar_compose:
-        	Intent i = new Intent();
         	i.setClass(getApplicationContext(), NewTopicActivity.class);
         	startActivity(i);
         	return true;
@@ -88,6 +101,16 @@ public class TopicsActivity extends GDListActivity {
 		Intent i = new Intent(getApplicationContext(), TopicDetailActivity.class);
 		i.putExtra(TopicDetailActivity.POS, position);
 		startActivity(i);
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if(requestCode == NodesActivity.PICK_NODE) {
+			if(resultCode == RESULT_OK) {
+				Node n = data.getParcelableExtra(NodesActivity.PICKED_NODE);
+				LogUtil.d(TAG, n.getId() + " " + n.getName());
+			}
+		}
 	}
 
 	private class HotTopicsCallback implements ApiCallback<HotTopicsResponse> {
@@ -146,6 +169,9 @@ public class TopicsActivity extends GDListActivity {
 			}
 			Topic t = items.get(position);
 			String avatar = t.getUser().getAvatarUrl();
+			LogUtil.d(TAG, "url: " + avatar);
+			LogUtil.d(TAG, "hash: " + t.getUser().getGravatarHash());
+			
 			if(TextUtils.isEmpty(avatar)) {
 				viewHolder.gravatar.setImageResource(R.drawable.default_gravatar);
 			} else {

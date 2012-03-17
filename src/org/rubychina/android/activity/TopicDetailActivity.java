@@ -25,7 +25,7 @@ import android.widget.Toast;
 
 public class TopicDetailActivity extends GDActivity {
 
-	public static final String POS = "position";
+	public static final String POS = "org.rubychina.android.activity.TopicDetailActivity.POSITION";
 	private static final String TAG = "TopicDetailActivity";
 	
 	private Topic t;

@@ -37,7 +37,7 @@ public class HotTopicsParser extends JSONParseHandler<HotTopicsResponse> {
 		}
 	}
 
-	private Topic json2Topic(JSONObject json) throws JSONException {
+	private Topic json2Topic(JSONObject json) {
 		Gson gson = new Gson();
 		Topic t = gson.fromJson(json.toString(), Topic.class);
 		return t;

@@ -29,7 +29,7 @@ import android.widget.Toast;
 
 public class ReplyListActivity extends GDActivity {
 
-	public static final String BELONG_TO_TOPIC = "topic_id";
+	public static final String BELONG_TO_TOPIC = "org.rubychina.android.activity.ReplyListActivity.TOPIC_ID";
 	private static final String TAG = "ReplyListActivity";
 	private TopicDetailRequest request;
 	private ListView replies;
@@ -45,6 +45,12 @@ public class ReplyListActivity extends GDActivity {
 		startTopicDetailRequest(getIntent().getIntExtra(BELONG_TO_TOPIC, 0));
 	}
 	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		cancelTopicDetailRequest();
+	}
+	
 	private void startTopicDetailRequest(int id) {
 		if(request == null) {
 			request = new TopicDetailRequest(id);
@@ -52,6 +58,13 @@ public class ReplyListActivity extends GDActivity {
 		request.setId(id);
 		((RCApplication) getApplication()).getAPIClient().request(request, new TopicDetailCallback());
 		setProgressBarIndeterminateVisibility(true);
+	}
+	
+	private void cancelTopicDetailRequest() {
+		if(request != null) {
+			((RCApplication) getApplication()).getAPIClient().cancel(request);
+			setProgressBarIndeterminateVisibility(false);
+		}
 	}
 	
 	private class TopicDetailCallback implements ApiCallback<TopicDetailResponse> {

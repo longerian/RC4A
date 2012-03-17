@@ -27,5 +27,6 @@
 	<item type="id" name="action_bar_add"/>
 	<item type="id" name="action_bar_update"/>
 	<item name="action_bar_replies" type="id"/>
+	<item name="action_bar_nodes" type="id"/>
 
 </resources>

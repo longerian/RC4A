@@ -40,7 +40,7 @@ public class TopicDetailParser extends JSONParseHandler<TopicDetailResponse> {
 		}
 	}
 	
-	private Reply json2Reply(JSONObject json) throws JSONException {
+	private Reply json2Reply(JSONObject json) {
 		Gson gson = new Gson();
 		Reply r = gson.fromJson(json.toString(), Reply.class);
 		return r;
