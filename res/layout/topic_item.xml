@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="48dip" >
+    android:layout_height="48dip"
+    >
 	<ImageView 
 	    android:id="@+id/gravatar"
 	    android:layout_width="48dip"
@@ -11,16 +12,28 @@
     <TextView
         android:id="@+id/title"
         android:layout_width="match_parent"
-	    android:layout_height="40dip"
-	    android:padding="8dip"
+	    android:layout_height="wrap_content"
+	    android:padding="4dip"
 	    android:layout_toRightOf="@+id/gravatar"
 	    android:layout_toLeftOf="@+id/reply_count"
-	    android:layout_centerVertical="true"
+		android:layout_alignParentTop="true"
 	    android:gravity="center_vertical"
 	    android:singleLine="true"
 	    android:ellipsize="end"
-	    android:text="tittttttttle"
 	    android:textSize="16sp"
+        />
+    <TextView
+        android:id="@+id/author"
+        android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:padding="4dip"
+	    android:layout_toRightOf="@+id/gravatar"
+	    android:layout_toLeftOf="@+id/reply_count"
+	    android:layout_alignParentBottom="true"
+	    android:gravity="center_vertical"
+	    android:singleLine="true"
+	    android:ellipsize="end"
+	    android:textSize="12sp"
         />
 	<TextView 
 	    android:id="@+id/reply_count"

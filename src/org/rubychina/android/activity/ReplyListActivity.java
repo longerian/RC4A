@@ -151,7 +151,7 @@ public class ReplyListActivity extends GDActivity {
 				}
 			}
 			viewHolder.userName.setText(r.getUser().getLogin());
-			viewHolder.floor.setText(position + 1 + "" + "楼");//TODO use to string res
+			viewHolder.floor.setText(position + 1 + "" + getString(R.string.reply_list_unit));
 			viewHolder.body.setText(r.getBody());
 			return convertView;
 		}

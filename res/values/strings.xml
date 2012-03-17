@@ -3,5 +3,6 @@
     <string name="app_name">RC4A</string>
     <string name="reply_hint">请输入......</string>
     <string name="hot_topics">热门话题</string>
+    <string name="reply_list_unit">楼</string>
 
 </resources>

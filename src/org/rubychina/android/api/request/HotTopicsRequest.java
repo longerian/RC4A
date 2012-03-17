@@ -46,6 +46,7 @@ public class HotTopicsRequest extends RCAPIGet<HotTopicsResponse> {
 	@Override
 	public Map<String, String> getTextParams(RCAPIContext context) {
 		//TODO add node id parameter
+		//TODO the size seems do not work
 		HashMap<String, String> params = new HashMap<String, String>();
 		params.put(SIZE_KEY, size + "");
 		return params;

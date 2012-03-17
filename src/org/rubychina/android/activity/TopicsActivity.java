@@ -175,6 +175,7 @@ public class TopicsActivity extends GDListActivity {
 				convertView = LayoutInflater.from(context).inflate(resource, null);
 				viewHolder.gravatar = (ImageView) convertView.findViewById(R.id.gravatar);
 				viewHolder.title = (TextView) convertView.findViewById(R.id.title);
+				viewHolder.author = (TextView) convertView.findViewById(R.id.author);
 				viewHolder.replies = (TextView) convertView.findViewById(R.id.reply_count);
 				convertView.setTag(viewHolder);
 			} else {
@@ -199,6 +200,7 @@ public class TopicsActivity extends GDListActivity {
 				}
 			}
 			viewHolder.title.setText(t.getTitle());
+			viewHolder.author.setText(" >> " + t.getUser().getLogin());
 			viewHolder.replies.setText(t.getRepliesCount() + "");
 			return convertView;
 		}
@@ -207,6 +209,7 @@ public class TopicsActivity extends GDListActivity {
 			
 			public ImageView gravatar;
 			public TextView title;
+			public TextView author;
 			public TextView replies;
 			
 		}
