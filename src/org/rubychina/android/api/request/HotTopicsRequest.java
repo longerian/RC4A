@@ -13,6 +13,26 @@ public class HotTopicsRequest extends RCAPIGet<HotTopicsResponse> {
 	private static final String TAG = "HotTopicsRequest";
 	private static final String url = "api/topics.json";
 	
+	private static final int DEFAULT_SIZE = 30;
+	
+	private static final String SIZE_KEY = "size";
+//	private static final String NODE_ID_KEY = "size";
+	
+	private int size = DEFAULT_SIZE;
+	private int nodeId;
+	
+	public void setSize(int size) {
+		if(size < 0 || size > 100) {
+			this.size = DEFAULT_SIZE;
+		} else {
+			this.size = size; 
+		}
+	}
+	
+	public void setNodeId(int nodeId) {
+		this.nodeId = nodeId;
+	}
+	
 	@Override
 	public String getRequestURL(RCAPIContext context) {
 		return context.getServer() + url;
@@ -25,15 +45,16 @@ public class HotTopicsRequest extends RCAPIGet<HotTopicsResponse> {
 
 	@Override
 	public Map<String, String> getTextParams(RCAPIContext context) {
-		//NOTE because request for hot topics doesn't need any particular parameters, so just return a empty hashmap.
+		//TODO add node id parameter
 		HashMap<String, String> params = new HashMap<String, String>();
+		params.put(SIZE_KEY, size + "");
 		return params;
 	}
 
 	@Override
 	public String getCacheRelativePathOrURL() {
 		//NOTE always ensure providing a unique cache for a request
-		return makeCachePath("api", "topics", "list", "default");
+		return makeCachePath("api", "topics", "list", "default", size + "");
 	}
 
 	@Override

@@ -24,7 +24,6 @@ public class TopicDetailParser extends JSONParseHandler<TopicDetailResponse> {
 	
 	@Override
 	public void parse(String source) {
-		Log.d(TAG, source);
 		try {
 			JSONArray jsonReplies = new JSONObject(source).getJSONArray("replies");
 			List<Reply> replies = new ArrayList<Reply>();

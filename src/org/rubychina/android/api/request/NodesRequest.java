@@ -6,6 +6,8 @@ import java.util.Map;
 import org.rubychina.android.api.RCAPIContext;
 import org.rubychina.android.api.response.NodesResponse;
 
+import yek.cache.Cache;
+
 public class NodesRequest extends RCAPIGet<NodesResponse> {
 
 	private static final String TAG = "NodesRequest";
@@ -37,7 +39,7 @@ public class NodesRequest extends RCAPIGet<NodesResponse> {
 	@Override
 	public long getCacheTime() {
 		//Thought nodes do not change frequently, cache lasts for an hour.
-		return 60 * 60;
+		return Cache.EXPIRED;
 	}
 
 }

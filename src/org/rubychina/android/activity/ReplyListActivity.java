@@ -9,6 +9,7 @@ import org.rubychina.android.RCApplication;
 import org.rubychina.android.api.request.TopicDetailRequest;
 import org.rubychina.android.api.response.TopicDetailResponse;
 import org.rubychina.android.type.Reply;
+import org.rubychina.android.util.GravatarUtil;
 
 import yek.api.ApiCallback;
 import yek.api.ApiException;
@@ -85,6 +86,7 @@ public class ReplyListActivity extends GDActivity {
 
 		@Override
 		public void onSuccess(TopicDetailResponse r) {
+			//TODO sort the reply list
 			setProgressBarIndeterminateVisibility(false);
 			replies = (ListView) findViewById(R.id.replies);
 			replies.setAdapter(new ReplyAdapter(getApplicationContext(), R.layout.reply_item,
@@ -132,8 +134,14 @@ public class ReplyListActivity extends GDActivity {
 			}
 			Reply r = items.get(position);
 			String avatar = r.getUser().getAvatarUrl();
+			String hash = r.getUser().getGravatarHash();
 			if(TextUtils.isEmpty(avatar)) {
-				viewHolder.gravatar.setImageResource(R.drawable.default_gravatar);
+				Bitmap ava = ((RCApplication) getApplication()).getImgLoader().load(GravatarUtil.getBaseURL(hash), viewHolder.gravatar);
+				if(ava != null) {
+					viewHolder.gravatar.setImageBitmap(ava);
+				} else {
+					viewHolder.gravatar.setImageResource(R.drawable.default_gravatar);
+				}
 			} else {
 				Bitmap ava = ((RCApplication) getApplication()).getImgLoader().load(avatar, viewHolder.gravatar);
 				if(ava != null) {

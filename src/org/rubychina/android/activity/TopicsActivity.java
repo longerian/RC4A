@@ -13,6 +13,7 @@ import org.rubychina.android.api.request.HotTopicsRequest;
 import org.rubychina.android.api.response.HotTopicsResponse;
 import org.rubychina.android.type.Node;
 import org.rubychina.android.type.Topic;
+import org.rubychina.android.util.GravatarUtil;
 import org.rubychina.android.util.LogUtil;
 
 import yek.api.ApiCallback;
@@ -40,8 +41,6 @@ public class TopicsActivity extends GDListActivity {
 	
 	private static final int HOT_TOPICS_NODE_ID = -1;
 	
-	
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -64,6 +63,9 @@ public class TopicsActivity extends GDListActivity {
 	private void startTopicsRequest(int nodeId) {
 		if(request == null) {
 			request = new HotTopicsRequest();
+		}
+		if(!(nodeId == HOT_TOPICS_NODE_ID)) {
+			request.setNodeId(nodeId);
 		}
 		((RCApplication) getApplication()).getAPIClient().request(request, new HotTopicsCallback());
 		setProgressBarIndeterminateVisibility(true);
@@ -169,11 +171,14 @@ public class TopicsActivity extends GDListActivity {
 			}
 			Topic t = items.get(position);
 			String avatar = t.getUser().getAvatarUrl();
-			LogUtil.d(TAG, "url: " + avatar);
-			LogUtil.d(TAG, "hash: " + t.getUser().getGravatarHash());
-			
+			String hash = t.getUser().getGravatarHash();
 			if(TextUtils.isEmpty(avatar)) {
-				viewHolder.gravatar.setImageResource(R.drawable.default_gravatar);
+				Bitmap ava = ((RCApplication) getApplication()).getImgLoader().load(GravatarUtil.getBaseURL(hash), viewHolder.gravatar);
+				if(ava != null) {
+					viewHolder.gravatar.setImageBitmap(ava);
+				} else {
+					viewHolder.gravatar.setImageResource(R.drawable.default_gravatar);
+				}
 			} else {
 				Bitmap ava = ((RCApplication) getApplication()).getImgLoader().load(avatar, viewHolder.gravatar);
 				if(ava != null) {
