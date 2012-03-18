@@ -3,6 +3,7 @@ package org.rubychina.android.database;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.rubychina.android.type.Node;
 import org.rubychina.android.type.Topic;
 
 import android.content.ContentValues;
@@ -87,19 +88,77 @@ public enum RCDBResolver {
 		}
 		return ts;
 	}
+	
+	public boolean clearNodes(Context context) {
+		SQLiteHelper sHelper = sHelperFromUs(context);
+		SQLiteDatabase db = sHelper.getWritableDatabase();
+		try {
+			db.delete(SQLiteHelper.TBL_NODE, null, null);
+		} catch(Exception e) {
+			e.printStackTrace();
+			return false;
+		} finally {
+			db.close();
+		}
+		return true;
+	}
+	
+	public boolean insertNodes(Context context, List<Node> nodes) {
+		SQLiteHelper sHelper = sHelperFromUs(context);
+		ContentValues values = new ContentValues();
+		Gson g = new Gson();
+		SQLiteDatabase db = sHelper.getWritableDatabase();
+		try {
+			for(Node n : nodes) {
+				values.put(SQLiteHelper.CLM_NODE, g.toJson(n));
+				db.insert(SQLiteHelper.TBL_NODE, null, values);
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+			return false;
+		} finally {
+			db.close();
+		}
+		return true;
+	}
+	
+	public List<Node> fetchNodes(Context context) {
+		SQLiteHelper sHelper = sHelperFromUs(context);
+		SQLiteDatabase db = sHelper.getWritableDatabase();
+		Cursor cursor = null;
+		List<Node> ns = new ArrayList<Node>();
+		try {
+			cursor = db.query(SQLiteHelper.TBL_NODE, null, null, null, null, null, null);
+			if(cursor != null) {
+				cursor.moveToFirst();
+				Gson g = new Gson();
+				while(!cursor.isAfterLast()) {
+					Node n = g.fromJson(
+							cursor.getString(cursor.getColumnIndexOrThrow(SQLiteHelper.CLM_NODE)), 
+							Node.class);
+					ns.add(n);
+					cursor.moveToNext();
+				}
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			cursor.close();
+			db.close();
+		}
+		return ns;
+	}
 
 	public class SQLiteHelper extends SQLiteOpenHelper {
 
 		private static final String DATABASE_NAME = "RubyChina.db";
-		private static final int DATABASE_VERSION = 2;
+		private static final int DATABASE_VERSION = 3;
 		
-		/**
-		 * cache for topic list
-		 */
 		public static final String TBL_TOPIC = "topics";
-		
-		// table for topics
 		public static final String CLM_TOPIC = "topic";
+		
+		public static final String TBL_NODE = "nodes";
+		public static final String CLM_NODE = "node";
 		
 		public SQLiteHelper(Context context, String name,
 				CursorFactory factory, int version) {
@@ -112,11 +171,16 @@ public enum RCDBResolver {
 					+ " (" + BaseColumns._ID + " INTEGER NOT NULL PRIMARY KEY,"
 					+ CLM_TOPIC + " TEXT NOT NULL"
 					+ ");");
+			db.execSQL("create table if not exists " + TBL_NODE
+					+ " (" + BaseColumns._ID + " INTEGER NOT NULL PRIMARY KEY,"
+					+ CLM_NODE + " TEXT NOT NULL"
+					+ ");");
 		}
 
 		@Override
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 			db.execSQL("drop table if exists " + TBL_TOPIC);
+			db.execSQL("drop table if exists " + TBL_NODE);
 		    onCreate(db);
 		}
 		

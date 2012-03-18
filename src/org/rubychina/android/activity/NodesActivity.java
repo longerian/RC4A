@@ -11,7 +11,9 @@ import org.rubychina.android.R;
 import org.rubychina.android.RCApplication;
 import org.rubychina.android.api.request.NodesRequest;
 import org.rubychina.android.api.response.NodesResponse;
+import org.rubychina.android.database.RCDBResolver;
 import org.rubychina.android.type.Node;
+import org.rubychina.android.type.Topic;
 
 import yek.api.ApiCallback;
 import yek.api.ApiException;
@@ -41,7 +43,11 @@ public class NodesActivity extends GDListActivity {
 		
 		addActionBarItem(Type.Refresh, R.id.action_bar_refresh);
 
-		startNodesRequest();
+		if(GlobalResource.INSTANCE.getNodes().isEmpty()) {
+			startNodesRequest();
+		} else {
+			refreshPage(GlobalResource.INSTANCE.getNodes());
+		}
 	}
 	
 	@Override
@@ -79,6 +85,12 @@ public class NodesActivity extends GDListActivity {
 		}
 	}
 	
+	private void refreshPage(List<Node> nodes) {
+		NodeAdapter adapter = new NodeAdapter(getApplicationContext(), R.layout.node_item,
+				R.id.name, nodes);
+		setListAdapter(adapter);
+	}
+	
 	private class NodesCallback implements ApiCallback<NodesResponse> {
 
 		@Override
@@ -99,9 +111,9 @@ public class NodesActivity extends GDListActivity {
 		public void onSuccess(NodesResponse r) {
 			setProgressBarIndeterminateVisibility(false);
 			GlobalResource.INSTANCE.setNodes(r.getNodes());
-			NodeAdapter adapter = new NodeAdapter(getApplicationContext(), R.layout.node_item,
-					R.id.name, r.getNodes());
-			setListAdapter(adapter);
+			RCDBResolver.INSTANCE.clearNodes(getApplicationContext());
+			RCDBResolver.INSTANCE.insertNodes(getApplicationContext(), r.getNodes());
+			refreshPage(r.getNodes());
 		}
 		
 	}

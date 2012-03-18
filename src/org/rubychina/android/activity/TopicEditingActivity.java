@@ -13,10 +13,15 @@ import org.rubychina.android.type.Node;
 
 import yek.api.ApiCallback;
 import yek.api.ApiException;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.Window;
+import android.view.KeyEvent;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -24,16 +29,19 @@ import android.widget.Toast;
 
 public class TopicEditingActivity extends GDActivity {
 
+	private static final int DIALOG_EXIT = 1;
+	
 	private EditText title;
 	private Spinner nodeSelector;
 	private EditText body;
+	
+	private ProgressDialog sending;
 	
 	private PostTopicRequest request;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setActionBarContentView(R.layout.topic_editing_layout);
 		addActionBarItem(Type.Add, R.id.action_bar_add);
 		
@@ -47,6 +55,7 @@ public class TopicEditingActivity extends GDActivity {
 		nodeSelector.setAdapter(adapter);
 		
 		body = (EditText) findViewById(R.id.body);
+		
 	}
 
 	@Override
@@ -66,6 +75,36 @@ public class TopicEditingActivity extends GDActivity {
 		}
 	}
 	
+	@Override
+	protected Dialog onCreateDialog(int id) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    	switch(id) {
+    	case DIALOG_EXIT:
+    		builder.setMessage(R.string.hint_stoping_editing_topic_or_not)
+    		.setCancelable(false)
+    		.setPositiveButton(R.string.p_yek, new OnClickListener() {
+    			
+    			@Override
+    			public void onClick(DialogInterface dialog, int which) {
+    				TopicEditingActivity.this.finish();
+    				
+    			}
+    		})
+    		.setNegativeButton(R.string.p_no, new OnClickListener() {
+    			
+    			@Override
+    			public void onClick(DialogInterface dialog, int which) {
+    				dialog.cancel();
+    			}
+    		});
+    		break;
+    	default:
+    		break;
+    	}
+    	AlertDialog alert = builder.create();
+		return alert;
+	}
+
 	private boolean isTopicValid() {
 		if(TextUtils.isEmpty(title.getText().toString())) {
 			Toast.makeText(getApplicationContext(), "title empty", Toast.LENGTH_SHORT).show();
@@ -86,34 +125,66 @@ public class TopicEditingActivity extends GDActivity {
 		request.setNodeId(nodeId);
 		request.setBody(body);
 		((RCApplication) getApplication()).getAPIClient().request(request, new PostTopicCallback());
-		setProgressBarIndeterminateVisibility(true);
+		showProgress();
+	}
+	
+	private void showProgress() {
+		if(sending == null) {
+			sending = new ProgressDialog(this);
+			sending.setCancelable(false);
+		}
+		sending.setMessage(getString(R.string.hint_submiting_topic));
+		sending.show();
+	}
+	
+	private void dismissProgress() {
+		if(sending != null) {
+			sending.dismiss();
+		}
 	}
 	
 	private class PostTopicCallback implements ApiCallback<PostTopicResponse> {
 
 		@Override
 		public void onException(ApiException e) {
-			//TODO
-			Toast.makeText(getApplicationContext(), "exception", Toast.LENGTH_SHORT).show();
-			setProgressBarIndeterminateVisibility(false);
+			dismissProgress();
+			Toast.makeText(getApplicationContext(), 
+					R.string.hint_network_or_token_problem, 
+					Toast.LENGTH_SHORT)
+					.show();
 			e.printStackTrace();
 		}
 
 		@Override
 		public void onFail(PostTopicResponse r) {
-			// TODO Auto-generated method stub
-			setProgressBarIndeterminateVisibility(false);
+			dismissProgress();
+			Toast.makeText(getApplicationContext(), 
+					R.string.hint_network_or_token_problem, 
+					Toast.LENGTH_SHORT)
+					.show();
 		}
 
 		@Override
 		public void onSuccess(PostTopicResponse r) {
-			setProgressBarIndeterminateVisibility(false);
+			dismissProgress();
 			Intent homeIntent = new Intent(TopicEditingActivity.this, 
 					((RCApplication) getApplicationContext()).getHomeActivityClass());
             homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(homeIntent);
 		}
 		
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if(keyCode == KeyEvent.KEYCODE_BACK) {
+			if(!TextUtils.isEmpty(title.getText().toString())
+					|| !TextUtils.isEmpty(body.getText().toString())) {
+				showDialog(DIALOG_EXIT);
+				return true;
+			}
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 	
 }
