@@ -12,8 +12,12 @@ import org.rubychina.android.util.GravatarUtil;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.TextUtils;
+import android.text.style.ImageSpan;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -63,11 +67,21 @@ public class TopicDetailActivity extends GDActivity {
 			}
 		}
 		
-		WebView webView = (WebView) findViewById(R.id.body_html);
-		webView.getSettings().setJavaScriptEnabled(true); 
-		webView.getSettings().setBuiltInZoomControls(true);
-		webView.getSettings().setDefaultTextEncodingName("utf-8");
-		webView.loadData(t.getBodyHTML(), "text/html", "UTF-8");
+//		WebView webView = (WebView) findViewById(R.id.body_html);
+//		webView.getSettings().setJavaScriptEnabled(true); 
+//		webView.getSettings().setBuiltInZoomControls(true);
+//		webView.getSettings().setDefaultTextEncodingName("utf-8");
+//		webView.loadData(t.getBodyHTML(), "text/html", "UTF-8");
+		
+		TextView body = (TextView) findViewById(R.id.body);
+		
+//		SpannableString ss = new SpannableString(t.getBody());
+//		
+//		Drawable d = getResources().getDrawable(R.drawable.default_gravatar);
+//		ImageSpan is = new ImageSpan(d, ImageSpan.ALIGN_BASELINE);
+//		ss.setSpan(is, 0, t.getBody().length() - 1, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+		
+		body.setText(t.getBody());
 		
 	}
 	

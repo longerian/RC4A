@@ -6,4 +6,5 @@ public interface RCAPIContext extends ApiContext {
 
 	public String getServer();
 	
+	public String getToken();
 }

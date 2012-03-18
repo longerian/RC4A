@@ -30,11 +30,7 @@
             android:screenOrientation="portrait"
             />
         <activity 
-            android:name=".activity.NewTopicActivity" 
-            android:screenOrientation="portrait"
-            />
-        <activity 
-            android:name=".activity.EditTopicActivity" 
+            android:name=".activity.TopicEditingActivity" 
             android:screenOrientation="portrait"
             />
         <activity 

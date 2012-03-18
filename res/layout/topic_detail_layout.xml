@@ -20,13 +20,26 @@
         android:textColor="#FF000000"
         android:gravity="center_vertical"
         />
-	<WebView
-	    android:id="@+id/body_html"
-	    android:layout_width="match_parent"
+    <ScrollView
+        android:layout_width="match_parent"
 	    android:layout_height="match_parent"
 	    android:layout_below="@+id/title"
-	    android:layout_above="@+id/comment"
-	    />
+	    android:layout_above="@+id/comment" 
+        >
+    <TextView 
+        android:id="@+id/body"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:autoLink="all"
+        />
+   	</ScrollView>
+<!-- 	<WebView -->
+<!-- 	    android:id="@+id/body_html" -->
+<!-- 	    android:layout_width="match_parent" -->
+<!-- 	    android:layout_height="match_parent" -->
+<!-- 	    android:layout_below="@+id/title" -->
+<!-- 	    android:layout_above="@+id/comment" -->
+<!-- 	    /> -->
 	<!-- no api for reply, so remove reply box -->
 <!-- 	<include  -->
 <!-- 	    android:id="@+id/comment" -->

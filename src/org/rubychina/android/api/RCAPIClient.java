@@ -8,6 +8,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import org.apache.http.Header;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.BasicCookieStore;
+import org.rubychina.android.RCApplication;
 import org.rubychina.android.api.request.RCAPIRequest;
 import org.rubychina.android.api.response.RCAPIResponse;
 import org.rubychina.android.util.LogUtil;
@@ -43,13 +44,6 @@ public class RCAPIClient extends ApiClient<RCAPIContext, RCAPIResponse, RCAPIReq
 			RCAPIRequest<? extends RCAPIResponse> request) {
 		Map<String, String> param = new HashMap<String, String>();
 		param.putAll(request.getTextParams(getApiContext()));
-		Iterator iter = param.entrySet().iterator();
-		while (iter.hasNext()) {
-		    Map.Entry entry = (Map.Entry) iter.next(); 
-		    String key = (String) entry.getKey(); 
-		    String val = (String) entry.getValue();
-		    LogUtil.d(TAG, "api params: " + key + " = " + val);
-		} 
 		return param;
 	}
 
@@ -67,6 +61,11 @@ public class RCAPIClient extends ApiClient<RCAPIContext, RCAPIResponse, RCAPIReq
 	@Override
 	public String getServer() {
 		return SERVER;
+	}
+	
+	@Override
+	public String getToken() {
+		return ((RCApplication) mContext.getApplicationContext()).getToken();
 	}
 
 	@Override

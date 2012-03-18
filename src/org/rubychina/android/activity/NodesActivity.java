@@ -6,6 +6,7 @@ import greendroid.widget.ActionBarItem.Type;
 
 import java.util.List;
 
+import org.rubychina.android.GlobalResource;
 import org.rubychina.android.R;
 import org.rubychina.android.RCApplication;
 import org.rubychina.android.api.request.NodesRequest;
@@ -97,7 +98,7 @@ public class NodesActivity extends GDListActivity {
 		@Override
 		public void onSuccess(NodesResponse r) {
 			setProgressBarIndeterminateVisibility(false);
-//			GlobalResource.INSTANCE.setCurTopics(r.getTopics());
+			GlobalResource.INSTANCE.setNodes(r.getNodes());
 			NodeAdapter adapter = new NodeAdapter(getApplicationContext(), R.layout.node_item,
 					R.id.name, r.getNodes());
 			setListAdapter(adapter);

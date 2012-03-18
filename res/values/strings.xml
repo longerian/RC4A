@@ -14,6 +14,9 @@
     <string name="hint_login_to_reply">登录发表回复</string>
     <string name="action_save_token">保存</string>
     <string name="hint_no_token">请输入你的个人私钥</string>
+    <string name="topic_title">标题</string>
+    <string name="topic_node">选择节点</string>
+    <string name="topic_body">正文</string>
     
     
 

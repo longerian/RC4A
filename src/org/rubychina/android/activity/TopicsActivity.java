@@ -101,7 +101,12 @@ public class TopicsActivity extends GDListActivity {
         	startTopicsRequest(HOT_TOPICS_NODE_ID);
         	return true;
         case R.id.action_bar_compose:
-        	i.setClass(getApplicationContext(), NewTopicActivity.class);
+        	if(((RCApplication) getApplication()).isLogin()) {
+        		i.setClass(getApplicationContext(), TopicEditingActivity.class);
+        	} else {
+        		i.setClass(getApplicationContext(), UserVerificationActivity.class);
+        		Toast.makeText(getApplicationContext(), R.string.hint_no_token, Toast.LENGTH_SHORT).show();
+        	}
         	startActivity(i);
         	return true;
         default:

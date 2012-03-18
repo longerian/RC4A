@@ -18,6 +18,22 @@ public class PostTopicRequest extends RCAPIPost<PostTopicResponse> {
 	private static final String BODY_KEY = "body";
 	private static final String NODE_ID_KEY = "node_id";
 	
+	private String title;
+	private String body;
+	private String nodeId;
+	
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public void setBody(String body) {
+		this.body = body;
+	}
+
+	public void setNodeId(String nodeId) {
+		this.nodeId = nodeId;
+	}
+
 	@Override
 	public String getRequestURL(RCAPIContext context) {
 		return context.getServer() + url;
@@ -31,18 +47,17 @@ public class PostTopicRequest extends RCAPIPost<PostTopicResponse> {
 	@Override
 	public Map<String, String> getTextParams(RCAPIContext context) {
 		HashMap<String, String> params = new HashMap<String, String>();
-		
-		params.put(TITLE_KEY, "android client test");
-		params.put(BODY_KEY, "att");
-		params.put(NODE_ID_KEY, "27");
-		params.put(TOKEN_KEY, "4e3cec5794bb58a009c9");
+		params.put(TITLE_KEY, title);
+		params.put(BODY_KEY, body);
+		params.put(NODE_ID_KEY, nodeId);
+		params.put(TOKEN_KEY, context.getToken());
 		return params;
 	}
 
 	@Override
 	public String getCacheRelativePathOrURL() {
 		//NOTE always ensure providing a unique cache for a request
-		return makeCachePath("api", "topics", "post", "default");
+		return makeCachePath("api", "topics", "post", System.currentTimeMillis() / 1000 + "");
 	}
 
 	@Override
