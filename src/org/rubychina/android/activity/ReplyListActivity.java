@@ -14,6 +14,7 @@ import org.rubychina.android.api.request.TopicDetailRequest;
 import org.rubychina.android.api.response.TopicDetailResponse;
 import org.rubychina.android.type.Reply;
 import org.rubychina.android.util.GravatarUtil;
+import org.rubychina.android.util.ImageParser;
 import org.rubychina.android.util.LogUtil;
 
 import yek.api.ApiCallback;
@@ -55,6 +56,7 @@ public class ReplyListActivity extends GDActivity {
 	
 	private RCService mService;
 	private boolean isBound = false; 
+	private ImageParser ip;
 	
 	private TopicDetailRequest request;
 	private ListView replies;
@@ -65,7 +67,7 @@ public class ReplyListActivity extends GDActivity {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setActionBarContentView(R.layout.topic_replies_layout);
-		
+		ip = new ImageParser(getApplicationContext());
 		startTopicDetailRequest(getIntent().getIntExtra(BELONG_TO_TOPIC, 0));
 	}
 	
@@ -249,7 +251,8 @@ public class ReplyListActivity extends GDActivity {
 			}
 			viewHolder.userName.setText(r.getUser().getLogin());
 			viewHolder.floor.setText(position + 1 + "" + getString(R.string.reply_list_unit));
-			viewHolder.body.setText(r.getBody());
+			viewHolder.body.setText(ip.replace(r.getBody()));
+			
 //			viewHolder.forward.setOnClickListener(new OnClickListener() {
 //				
 //				@Override

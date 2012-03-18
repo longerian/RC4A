@@ -12,6 +12,7 @@ import org.rubychina.android.RCService.LocalBinder;
 import org.rubychina.android.type.Topic;
 import org.rubychina.android.type.User;
 import org.rubychina.android.util.GravatarUtil;
+import org.rubychina.android.util.ImageParser;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -21,6 +22,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
@@ -51,28 +53,15 @@ public class TopicDetailActivity extends GDActivity {
 		setActionBarContentView(R.layout.topic_detail_layout);
 		addActionBarItem(Type.List, R.id.action_bar_replies);
 		
-		//TODO if pos = 0; crash
 		t = GlobalResource.INSTANCE.getCurTopics().get(getIntent().getIntExtra(POS, 0));
 		
 		TextView title = (TextView) findViewById(R.id.title);
 		title.setText(t.getTitle());
 		
-//		WebView webView = (WebView) findViewById(R.id.body_html);
-//		webView.getSettings().setJavaScriptEnabled(true); 
-//		webView.getSettings().setBuiltInZoomControls(true);
-//		webView.getSettings().setDefaultTextEncodingName("utf-8");
-//		webView.loadData(t.getBodyHTML(), "text/html", "UTF-8");
-		
 		TextView body = (TextView) findViewById(R.id.body);
-		
-//		SpannableString ss = new SpannableString(t.getBody());
-//		
-//		Drawable d = getResources().getDrawable(R.drawable.default_gravatar);
-//		ImageSpan is = new ImageSpan(d, ImageSpan.ALIGN_BASELINE);
-//		ss.setSpan(is, 0, t.getBody().length() - 1, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
-		
-		body.setText(t.getBody());
-		
+
+		ImageParser ip = new ImageParser(getApplicationContext());
+		body.setText(ip.replace(t.getBody()));  
 	}
 	
 	@Override

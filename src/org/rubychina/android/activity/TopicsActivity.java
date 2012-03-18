@@ -78,6 +78,7 @@ public class TopicsActivity extends GDListActivity {
             LocalBinder binder = (LocalBinder) service;
             mService = binder.getService();
             isBound = true;
+            getListView().invalidate();
         }
 
         @Override

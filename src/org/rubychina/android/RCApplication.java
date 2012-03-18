@@ -15,6 +15,8 @@ import yek.loader.AsyncLoaderEngine;
 import yek.loader.BitmapAsyncLoader;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
+import android.view.Display;
+import android.view.WindowManager;
 
 public class RCApplication extends GDApplication {
 
@@ -24,6 +26,8 @@ public class RCApplication extends GDApplication {
 	private Cache mCacher;
 	private ThreadPoolExecutor mThreadPoolExecutor;
 	private SharedPreferences mPrefs;
+	private int screenWidth;
+    private int screenHeight;
 	
 	@Override
 	public Class<?> getHomeActivityClass() {
@@ -42,6 +46,7 @@ public class RCApplication extends GDApplication {
 		mThreadPoolExecutor = new ThreadPoolExecutor(1, 10, 10, TimeUnit.SECONDS, new ArrayBlockingQueue <Runnable>(100) );
 		mAPIClient = new RCAPIClient(getApplicationContext(), new JSONParser(), mThreadPoolExecutor, mCacher);
 		mImgLoader = new BitmapAsyncLoader(new AsyncLoaderEngine(getApplicationContext(), mThreadPoolExecutor, mCacher));
+		
 	}
 
 	public RCAPIClient getAPIClient() {
@@ -70,6 +75,22 @@ public class RCApplication extends GDApplication {
 	public boolean isLogin() {
 		String token = Preferences.getToken(getPreference());
 		return !TextUtils.isEmpty(token);
+	}
+
+	public int getScreenWidth() {
+		return screenWidth;
+	}
+
+	public void setScreenWidth(int screenWidth) {
+		this.screenWidth = screenWidth;
+	}
+
+	public int getScreenHeight() {
+		return screenHeight;
+	}
+
+	public void setScreenHeight(int screenHeight) {
+		this.screenHeight = screenHeight;
 	}
 	
 }

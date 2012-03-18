@@ -13,7 +13,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.view.Display;
 import android.view.KeyEvent;
+import android.view.WindowManager;
 
 public class RCActivity extends Activity {
 
@@ -23,6 +25,10 @@ public class RCActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.rc_layout);
+		WindowManager windowManager = getWindowManager();
+        Display display = windowManager.getDefaultDisplay();
+        ((RCApplication) getApplication()).setScreenWidth(display.getWidth());
+        ((RCApplication) getApplication()).setScreenHeight(display.getHeight());
 	}
 
 	@Override
