@@ -8,6 +8,8 @@ import java.util.List;
 
 import org.rubychina.android.R;
 import org.rubychina.android.RCApplication;
+import org.rubychina.android.RCService;
+import org.rubychina.android.RCService.LocalBinder;
 import org.rubychina.android.api.request.TopicDetailRequest;
 import org.rubychina.android.api.response.TopicDetailResponse;
 import org.rubychina.android.type.Reply;
@@ -16,10 +18,13 @@ import org.rubychina.android.util.LogUtil;
 
 import yek.api.ApiCallback;
 import yek.api.ApiException;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.text.TextUtils;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -48,6 +53,9 @@ public class ReplyListActivity extends GDActivity {
 	private static final int VIEW_PROFILE = 0; 
 //	private static final int REPLY = 1; 
 	
+	private RCService mService;
+	private boolean isBound = false; 
+	
 	private TopicDetailRequest request;
 	private ListView replies;
 //	private EditText replyContent;
@@ -60,6 +68,38 @@ public class ReplyListActivity extends GDActivity {
 		
 		startTopicDetailRequest(getIntent().getIntExtra(BELONG_TO_TOPIC, 0));
 	}
+	
+	@Override
+	protected void onStart() {
+		super.onStart();
+        Intent intent = new Intent(this, RCService.class);
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+	}
+	
+    private ServiceConnection mConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName className,
+                IBinder service) {
+            LocalBinder binder = (LocalBinder) service;
+            mService = binder.getService();
+            isBound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            isBound = false;
+        }
+    };
+    
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (isBound) {
+            unbindService(mConnection);
+            isBound = false;
+        }
+    }
 	
 	//no api for reply, so remove reply box
 //	@Override
@@ -204,22 +244,8 @@ public class ReplyListActivity extends GDActivity {
 				viewHolder = (ViewHolder) convertView.getTag();
 			}
 			Reply r = items.get(position);
-			String avatar = r.getUser().getAvatarUrl();
-			String hash = r.getUser().getGravatarHash();
-			if(TextUtils.isEmpty(avatar)) {
-				Bitmap ava = ((RCApplication) getApplication()).getImgLoader().load(GravatarUtil.getBaseURL(hash), viewHolder.gravatar);
-				if(ava != null) {
-					viewHolder.gravatar.setImageBitmap(ava);
-				} else {
-					viewHolder.gravatar.setImageResource(R.drawable.default_gravatar);
-				}
-			} else {
-				Bitmap ava = ((RCApplication) getApplication()).getImgLoader().load(avatar, viewHolder.gravatar);
-				if(ava != null) {
-					viewHolder.gravatar.setImageBitmap(ava);
-				} else {
-					viewHolder.gravatar.setImageResource(R.drawable.default_gravatar);
-				}
+			if(isBound) {
+				mService.requestUserAvatar(r.getUser(), viewHolder.gravatar);
 			}
 			viewHolder.userName.setText(r.getUser().getLogin());
 			viewHolder.floor.setText(position + 1 + "" + getString(R.string.reply_list_unit));

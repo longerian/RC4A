@@ -53,6 +53,13 @@
             android:name=".activity.UserVerificationActivity" 
             android:screenOrientation="portrait"
             />
+        <activity 
+            android:name=".activity.UserVerificationActivity" 
+            android:screenOrientation="portrait"
+            />
+        <service 
+            android:name=".RCService" 
+            />
     </application>
 
 </manifest>

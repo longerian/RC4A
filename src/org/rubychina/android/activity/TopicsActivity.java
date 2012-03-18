@@ -9,21 +9,23 @@ import java.util.List;
 import org.rubychina.android.GlobalResource;
 import org.rubychina.android.R;
 import org.rubychina.android.RCApplication;
+import org.rubychina.android.RCService;
+import org.rubychina.android.RCService.LocalBinder;
 import org.rubychina.android.api.request.ActiveTopicsRequest;
 import org.rubychina.android.api.response.ActiveTopicsResponse;
 import org.rubychina.android.database.RCDBResolver;
 import org.rubychina.android.type.Node;
 import org.rubychina.android.type.Topic;
-import org.rubychina.android.util.GravatarUtil;
 import org.rubychina.android.util.LogUtil;
 
 import yek.api.ApiCallback;
 import yek.api.ApiException;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
+import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.text.TextUtils;
+import android.os.IBinder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +44,9 @@ public class TopicsActivity extends GDListActivity {
 	
 	private static final int HOT_TOPICS_NODE_ID = -1;
 	
+	private RCService mService;
+	private boolean isBound = false; 
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -51,12 +56,44 @@ public class TopicsActivity extends GDListActivity {
 		addActionBarItem(Type.List, R.id.action_bar_nodes);
 		addActionBarItem(Type.Refresh, R.id.action_bar_refresh);
 		addActionBarItem(Type.Compose, R.id.action_bar_compose);
-
+		
 		List<Topic> cachedTopics = RCDBResolver.INSTANCE.fetchTopics(getApplicationContext());
 		GlobalResource.INSTANCE.setCurTopics(cachedTopics);
 		refreshPage(cachedTopics);
 		startTopicsRequest(HOT_TOPICS_NODE_ID);
 	}
+	
+	@Override
+	protected void onStart() {
+		super.onStart();
+        Intent intent = new Intent(this, RCService.class);
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+	}
+	
+    private ServiceConnection mConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName className,
+                IBinder service) {
+            LocalBinder binder = (LocalBinder) service;
+            mService = binder.getService();
+            isBound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            isBound = false;
+        }
+    };
+    
+	@Override
+    protected void onStop() {
+        super.onStop();
+        if (isBound) {
+            unbindService(mConnection);
+            isBound = false;
+        }
+    }
 	
 	@Override
 	protected void onDestroy() {
@@ -188,22 +225,8 @@ public class TopicsActivity extends GDListActivity {
 				viewHolder = (ViewHolder) convertView.getTag();
 			}
 			Topic t = items.get(position);
-			String avatar = t.getUser().getAvatarUrl();
-			String hash = t.getUser().getGravatarHash();
-			if(TextUtils.isEmpty(avatar)) {
-				Bitmap ava = ((RCApplication) getApplication()).getImgLoader().load(GravatarUtil.getBaseURL(hash), viewHolder.gravatar);
-				if(ava != null) {
-					viewHolder.gravatar.setImageBitmap(ava);
-				} else {
-					viewHolder.gravatar.setImageResource(R.drawable.default_gravatar);
-				}
-			} else {
-				Bitmap ava = ((RCApplication) getApplication()).getImgLoader().load(avatar, viewHolder.gravatar);
-				if(ava != null) {
-					viewHolder.gravatar.setImageBitmap(ava);
-				} else {
-					viewHolder.gravatar.setImageResource(R.drawable.default_gravatar);
-				}
+			if(isBound) {
+				mService.requestUserAvatar(t.getUser(), viewHolder.gravatar);
 			}
 			viewHolder.title.setText(t.getTitle());
 			viewHolder.author.setText(" >> " + t.getUser().getLogin());

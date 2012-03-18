@@ -7,13 +7,20 @@ import greendroid.widget.ActionBarItem.Type;
 import org.rubychina.android.GlobalResource;
 import org.rubychina.android.R;
 import org.rubychina.android.RCApplication;
+import org.rubychina.android.RCService;
+import org.rubychina.android.RCService.LocalBinder;
 import org.rubychina.android.type.Topic;
+import org.rubychina.android.type.User;
 import org.rubychina.android.util.GravatarUtil;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
@@ -32,6 +39,8 @@ public class TopicDetailActivity extends GDActivity {
 	public static final String POS = "org.rubychina.android.activity.TopicDetailActivity.POSITION";
 	private static final String TAG = "TopicDetailActivity";
 	
+	private RCService mService;
+	private boolean isBound = false; 
 	private Topic t;
 //	private EditText replyContent;
 	
@@ -47,25 +56,6 @@ public class TopicDetailActivity extends GDActivity {
 		
 		TextView title = (TextView) findViewById(R.id.title);
 		title.setText(t.getTitle());
-		
-		ImageView gravatar = (ImageView) findViewById(R.id.gravatar);
-		String avatar = t.getUser().getAvatarUrl();
-		String hash = t.getUser().getGravatarHash();
-		if(TextUtils.isEmpty(avatar)) {
-			Bitmap ava = ((RCApplication) getApplication()).getImgLoader().load(GravatarUtil.getBaseURL(hash), gravatar);
-			if(ava != null) {
-				gravatar.setImageBitmap(ava);
-			} else {
-				gravatar.setImageResource(R.drawable.default_gravatar);
-			}
-		} else {
-			Bitmap ava = ((RCApplication) getApplication()).getImgLoader().load(avatar, gravatar);
-			if(ava != null) {
-				gravatar.setImageBitmap(ava);
-			} else {
-				gravatar.setImageResource(R.drawable.default_gravatar);
-			}
-		}
 		
 //		WebView webView = (WebView) findViewById(R.id.body_html);
 //		webView.getSettings().setJavaScriptEnabled(true); 
@@ -84,6 +74,39 @@ public class TopicDetailActivity extends GDActivity {
 		body.setText(t.getBody());
 		
 	}
+	
+	@Override
+	protected void onStart() {
+		super.onStart();
+        Intent intent = new Intent(this, RCService.class);
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+	}
+	
+    private ServiceConnection mConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName className,
+                IBinder service) {
+            LocalBinder binder = (LocalBinder) service;
+            mService = binder.getService();
+            isBound = true;
+            requestUserAvatar();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            isBound = false;
+        }
+    };
+    
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (isBound) {
+            unbindService(mConnection);
+            isBound = false;
+        }
+    }
 	
 	//no api for reply, so remove reply box
 //	@Override
@@ -133,6 +156,11 @@ public class TopicDetailActivity extends GDActivity {
         default:
             return super.onHandleActionBarItemClick(item, position);
 		}
+	}
+	
+	private void requestUserAvatar() {
+		ImageView gravatar = (ImageView) findViewById(R.id.gravatar);
+		mService.requestUserAvatar(t.getUser(), gravatar);
 	}
 
 	
