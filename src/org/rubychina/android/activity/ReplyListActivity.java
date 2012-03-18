@@ -2,6 +2,8 @@ package org.rubychina.android.activity;
 
 import greendroid.app.GDActivity;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.rubychina.android.R;
@@ -10,6 +12,7 @@ import org.rubychina.android.api.request.TopicDetailRequest;
 import org.rubychina.android.api.response.TopicDetailResponse;
 import org.rubychina.android.type.Reply;
 import org.rubychina.android.util.GravatarUtil;
+import org.rubychina.android.util.LogUtil;
 
 import yek.api.ApiCallback;
 import yek.api.ApiException;
@@ -161,9 +164,9 @@ public class ReplyListActivity extends GDActivity {
 
 		@Override
 		public void onSuccess(TopicDetailResponse r) {
-			//TODO sort the reply list
 			setProgressBarIndeterminateVisibility(false);
 			replies = (ListView) findViewById(R.id.replies);
+			Collections.sort(r.getReplies());
 			replies.setAdapter(new ReplyAdapter(getApplicationContext(), R.layout.reply_item,
 					R.id.body, r.getReplies()));
 			registerForContextMenu(replies);

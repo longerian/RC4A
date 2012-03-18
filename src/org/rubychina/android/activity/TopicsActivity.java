@@ -53,6 +53,7 @@ public class TopicsActivity extends GDListActivity {
 		addActionBarItem(Type.Compose, R.id.action_bar_compose);
 
 		List<Topic> cachedTopics = RCDBResolver.INSTANCE.fetchTopics(getApplicationContext());
+		GlobalResource.INSTANCE.setCurTopics(cachedTopics);
 		refreshPage(cachedTopics);
 		startTopicsRequest(HOT_TOPICS_NODE_ID);
 	}
