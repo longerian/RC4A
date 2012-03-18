@@ -7,6 +7,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 import org.apache.http.Header;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.BasicCookieStore;
 import org.rubychina.android.api.request.RCAPIRequest;
 import org.rubychina.android.api.response.RCAPIResponse;
 import org.rubychina.android.util.LogUtil;
@@ -25,7 +26,7 @@ public class RCAPIClient extends ApiClient<RCAPIContext, RCAPIResponse, RCAPIReq
 	
 	public RCAPIClient(Context context, Parser parser,
 			ThreadPoolExecutor threadPool, Cache cache) {
-		super(context, parser, threadPool, cache);
+		super(context, parser, threadPool, cache, new BasicCookieStore());
 		mContext = context;
 	}
 	

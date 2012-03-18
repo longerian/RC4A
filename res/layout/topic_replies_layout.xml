@@ -10,11 +10,20 @@
 	    android:layout_above="@+id/comment"
 	    android:fastScrollEnabled="true"
         />
-	<include 
-	    android:id="@+id/comment"
-	    layout="@layout/block_compose"
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:layout_alignParentBottom="true"
-	    />
+    <!-- no api for reply, so remove reply box -->
+<!-- 	<include -->
+<!-- 	    android:id="@+id/comment" -->
+<!-- 	    layout="@layout/block_compose" -->
+<!-- 	    android:layout_width="match_parent" -->
+<!-- 	    android:layout_height="wrap_content" -->
+<!-- 	    android:layout_alignParentBottom="true" -->
+<!-- 	    /> -->
+<!-- 	<include  -->
+<!-- 	    android:id="@+id/login_note" -->
+<!-- 	    layout="@layout/block_login_note" -->
+<!-- 	    android:layout_width="match_parent" -->
+<!-- 	    android:layout_height="wrap_content" -->
+<!-- 	    android:layout_alignParentBottom="true" -->
+<!-- 	    android:layout_alignBaseline="@+id/comment" -->
+<!-- 	    /> -->
 </RelativeLayout>

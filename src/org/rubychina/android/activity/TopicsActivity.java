@@ -9,8 +9,8 @@ import java.util.List;
 import org.rubychina.android.GlobalResource;
 import org.rubychina.android.R;
 import org.rubychina.android.RCApplication;
-import org.rubychina.android.api.request.HotTopicsRequest;
-import org.rubychina.android.api.response.HotTopicsResponse;
+import org.rubychina.android.api.request.ActiveTopicsRequest;
+import org.rubychina.android.api.response.ActiveTopicsResponse;
 import org.rubychina.android.database.RCDBResolver;
 import org.rubychina.android.type.Node;
 import org.rubychina.android.type.Topic;
@@ -38,7 +38,7 @@ import android.widget.Toast;
 public class TopicsActivity extends GDListActivity {
 
 	private static final String TAG = "TopicsActivity";
-	private HotTopicsRequest request;
+	private ActiveTopicsRequest request;
 	
 	private static final int HOT_TOPICS_NODE_ID = -1;
 	
@@ -73,7 +73,7 @@ public class TopicsActivity extends GDListActivity {
 	
 	private void startTopicsRequest(int nodeId) {
 		if(request == null) {
-			request = new HotTopicsRequest();
+			request = new ActiveTopicsRequest();
 		}
 		if(!(nodeId == HOT_TOPICS_NODE_ID)) {
 			request.setNodeId(nodeId);
@@ -126,7 +126,7 @@ public class TopicsActivity extends GDListActivity {
 		}
 	}
 
-	private class HotTopicsCallback implements ApiCallback<HotTopicsResponse> {
+	private class HotTopicsCallback implements ApiCallback<ActiveTopicsResponse> {
 
 		@Override
 		public void onException(ApiException e) {
@@ -136,14 +136,14 @@ public class TopicsActivity extends GDListActivity {
 		}
 
 		@Override
-		public void onFail(HotTopicsResponse r) {
+		public void onFail(ActiveTopicsResponse r) {
 			//TODO
 			Toast.makeText(getApplicationContext(), "fail", Toast.LENGTH_SHORT).show();
 			setProgressBarIndeterminateVisibility(false);
 		}
 
 		@Override
-		public void onSuccess(HotTopicsResponse r) {
+		public void onSuccess(ActiveTopicsResponse r) {
 			setProgressBarIndeterminateVisibility(false);
 			GlobalResource.INSTANCE.setCurTopics(r.getTopics());
 			RCDBResolver.INSTANCE.clearTopics(getApplicationContext());

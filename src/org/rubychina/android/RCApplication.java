@@ -14,6 +14,7 @@ import yek.cache.Cache;
 import yek.loader.AsyncLoaderEngine;
 import yek.loader.BitmapAsyncLoader;
 import android.content.SharedPreferences;
+import android.text.TextUtils;
 
 public class RCApplication extends GDApplication {
 
@@ -51,11 +52,24 @@ public class RCApplication extends GDApplication {
 		return this.mImgLoader;
 	}
 	
-	public SharedPreferences getPreference() {
+	private SharedPreferences getPreference() {
 		if(mPrefs == null) {
 			mPrefs = getSharedPreferences(Preferences.PREFERENCE_APP, MODE_PRIVATE);
 		}
 		return this.mPrefs;
+	}
+	
+	public boolean setToken(String token) {
+		return Preferences.setToken(getPreference(), token);
+	}
+	
+	public String getToken() {
+		return Preferences.getToken(getPreference());
+	}
+	
+	public boolean isLogin() {
+		String token = Preferences.getToken(getPreference());
+		return !TextUtils.isEmpty(token);
 	}
 	
 }

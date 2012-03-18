@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@+id/submit"
-        android:hint="@string/reply_hint"
+        android:hint="@string/hint_reply"
         android:textSize="16sp"
         />
 	<ImageView 

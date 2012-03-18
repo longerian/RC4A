@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.View.OnClickListener;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,6 +28,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -41,12 +43,11 @@ public class ReplyListActivity extends GDActivity {
 	private static final String TAG = "ReplyListActivity";
 	
 	private static final int VIEW_PROFILE = 0; 
-	private static final int REPLY = 1; 
+//	private static final int REPLY = 1; 
 	
 	private TopicDetailRequest request;
 	private ListView replies;
-	
-	//TODO try to cache the replies .....
+//	private EditText replyContent;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +57,43 @@ public class ReplyListActivity extends GDActivity {
 		
 		startTopicDetailRequest(getIntent().getIntExtra(BELONG_TO_TOPIC, 0));
 	}
+	
+	//no api for reply, so remove reply box
+//	@Override
+//	protected void onStart() {
+//		super.onStart();
+//		View replyBox = findViewById(R.id.comment);
+//		View loginNoteBox = findViewById(R.id.login_note);
+//		if(((RCApplication) getApplication()).isLogin()) {
+//			replyBox.setVisibility(View.VISIBLE);
+//			loginNoteBox.setVisibility(View.INVISIBLE);
+//			replyContent = (EditText) findViewById(R.id.content);
+//			ImageView submit = (ImageView) findViewById(R.id.submit);
+//			submit.setOnClickListener(mSubmitListener);
+//		} else {
+//			replyBox.setVisibility(View.INVISIBLE);
+//			loginNoteBox.setVisibility(View.VISIBLE);
+//			loginNoteBox.setOnClickListener(mNeedLoginListener);
+//		}
+//	}
+	
+//	private OnClickListener mNeedLoginListener = new OnClickListener() {
+//		
+//		@Override
+//		public void onClick(View v) {
+//			Intent i = new Intent(getApplicationContext(), UserVerificationActivity.class);
+//			startActivity(i);
+//		}
+//	};
+//	
+//	private OnClickListener mSubmitListener = new OnClickListener() {
+//		
+//		@Override
+//		public void onClick(View v) {
+//			Intent i = new Intent();
+//			Toast.makeText(getApplicationContext(), "submit: " + replyContent.getText().toString(), Toast.LENGTH_SHORT).show();
+//		}
+//	};
 	
 	@Override
 	protected void onDestroy() {
@@ -82,8 +120,8 @@ public class ReplyListActivity extends GDActivity {
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v,
 			ContextMenuInfo menuInfo) {
-		menu.add(0, VIEW_PROFILE, 0, R.string.view_profile);
-		menu.add(0, REPLY, 1, R.string.reply);
+		menu.add(0, VIEW_PROFILE, 0, R.string.action_view_profile);
+//		menu.add(0, REPLY, 1, R.string.action_reply);
 	}
 	
 	@Override
@@ -97,9 +135,9 @@ public class ReplyListActivity extends GDActivity {
 			  i.putExtra(UserProfileActivity.VIEW_PROFILE, g.toJson(r.getUser()));
 			  startActivity(i);
 			  return true;  
-		  case REPLY:  
-			  Toast.makeText(ReplyListActivity.this, "reply to " + replies.getItemAtPosition(menuInfo.position), Toast.LENGTH_LONG).show();
-			  return true;
+//		  case REPLY:  
+//			  Toast.makeText(ReplyListActivity.this, "reply to " + replies.getItemAtPosition(menuInfo.position), Toast.LENGTH_LONG).show();
+//			  return true;
 		  default:  
 			  return super.onContextItemSelected(item);  
 		  }  
@@ -129,7 +167,6 @@ public class ReplyListActivity extends GDActivity {
 			replies.setAdapter(new ReplyAdapter(getApplicationContext(), R.layout.reply_item,
 					R.id.body, r.getReplies()));
 			registerForContextMenu(replies);
-//			replies.setOnCreateContextMenuListener(l)
 		}
 		
 	}

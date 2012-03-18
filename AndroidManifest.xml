@@ -16,20 +16,47 @@
          >
         <activity
             android:label="@string/app_name"
-            android:name=".activity.RCActivity" >
+            android:name=".activity.RCActivity"
+            android:screenOrientation="portrait"
+            >
             <intent-filter >
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.TopicsActivity" />
-        <activity android:name=".activity.NewTopicActivity" />
-        <activity android:name=".activity.EditTopicActivity" />
-        <activity android:name=".activity.TopicDetailActivity" />
-        <activity android:name=".activity.ReplyListActivity" />
-        <activity android:name=".activity.NodesActivity" />
-        <activity android:name=".activity.UserProfileActivity" />
+        <activity 
+            android:name=".activity.TopicsActivity" 
+            android:screenOrientation="portrait"
+            />
+        <activity 
+            android:name=".activity.NewTopicActivity" 
+            android:screenOrientation="portrait"
+            />
+        <activity 
+            android:name=".activity.EditTopicActivity" 
+            android:screenOrientation="portrait"
+            />
+        <activity 
+            android:name=".activity.TopicDetailActivity" 
+            android:screenOrientation="portrait"
+            />
+        <activity 
+            android:name=".activity.ReplyListActivity" 
+            android:screenOrientation="portrait"
+            />
+        <activity 
+            android:name=".activity.NodesActivity" 
+            android:screenOrientation="portrait"
+            />
+        <activity 
+            android:name=".activity.UserProfileActivity" 
+            android:screenOrientation="portrait"
+            />
+        <activity 
+            android:name=".activity.UserVerificationActivity" 
+            android:screenOrientation="portrait"
+            />
     </application>
 
 </manifest>

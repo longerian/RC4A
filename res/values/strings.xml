@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">RC4A</string>
-    <string name="reply_hint">请输入......</string>
+    <string name="hint_reply">请输入......</string>
     <string name="hot_topics">热门话题</string>
     <string name="reply_list_unit">楼</string>
-    <string name="view_profile">查看个人资料</string>
-    <string name="reply">回复</string>
+    <string name="action_view_profile">查看个人资料</string>
+    <string name="action_reply">回复</string>
     <string name="user_id">ID</string>
     <string name="user_name">Name</string>
     <string name="user_location">城市</string><string name="user_bio">简介</string>
     <string name="user_tagline">签名</string><string name="user_website">个人主页</string>
     <string name="user_github">Github</string>
+    <string name="hint_login_to_reply">登录发表回复</string>
+    <string name="action_save_token">保存</string>
+    <string name="hint_no_token">请输入你的个人私钥</string>
     
     
 

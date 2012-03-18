@@ -7,20 +7,18 @@ import greendroid.widget.ActionBarItem.Type;
 import org.rubychina.android.GlobalResource;
 import org.rubychina.android.R;
 import org.rubychina.android.RCApplication;
-import org.rubychina.android.api.request.TopicDetailRequest;
-import org.rubychina.android.api.response.TopicDetailResponse;
 import org.rubychina.android.type.Topic;
 import org.rubychina.android.util.GravatarUtil;
-import org.rubychina.android.util.LogUtil;
 
-import yek.api.ApiCallback;
-import yek.api.ApiException;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
 import android.webkit.WebView;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,6 +29,7 @@ public class TopicDetailActivity extends GDActivity {
 	private static final String TAG = "TopicDetailActivity";
 	
 	private Topic t;
+//	private EditText replyContent;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -64,13 +63,51 @@ public class TopicDetailActivity extends GDActivity {
 			}
 		}
 		
-		WebView webView = (WebView) findViewById(R.id.body_html); 
+		WebView webView = (WebView) findViewById(R.id.body_html);
 		webView.getSettings().setJavaScriptEnabled(true); 
 		webView.getSettings().setBuiltInZoomControls(true);
 		webView.getSettings().setDefaultTextEncodingName("utf-8");
 		webView.loadData(t.getBodyHTML(), "text/html", "UTF-8");
+		
 	}
 	
+	//no api for reply, so remove reply box
+//	@Override
+//	protected void onStart() {
+//		super.onStart();
+//		View replyBox = findViewById(R.id.comment);
+//		View loginNoteBox = findViewById(R.id.login_note);
+//		if(((RCApplication) getApplication()).isLogin()) {
+//			replyBox.setVisibility(View.VISIBLE);
+//			loginNoteBox.setVisibility(View.INVISIBLE);
+//			replyContent = (EditText) findViewById(R.id.content);
+//			ImageView submit = (ImageView) findViewById(R.id.submit);
+//			submit.setOnClickListener(mSubmitListener);
+//		} else {
+//			replyBox.setVisibility(View.INVISIBLE);
+//			loginNoteBox.setVisibility(View.VISIBLE);
+//			loginNoteBox.setOnClickListener(mNeedLoginListener);
+//		}
+//	}
+	
+//	private OnClickListener mNeedLoginListener = new OnClickListener() {
+//		
+//		@Override
+//		public void onClick(View v) {
+//			Intent i = new Intent(getApplicationContext(), UserVerificationActivity.class);
+//			startActivity(i);
+//		}
+//	};
+
+//	private OnClickListener mSubmitListener = new OnClickListener() {
+//		
+//		@Override
+//		public void onClick(View v) {
+//			Intent i = new Intent();
+//			Toast.makeText(getApplicationContext(), "submit: " + replyContent.getText().toString(), Toast.LENGTH_SHORT).show();
+//		}
+//	};
+
 	@Override
 	public boolean onHandleActionBarItemClick(ActionBarItem item, int position) {
 		switch (item.getItemId()) {

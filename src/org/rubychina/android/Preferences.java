@@ -25,8 +25,8 @@ public class Preferences {
     	return editor.commit();
     }
 
-    public static boolean getToken(SharedPreferences prefs) {
-    	return (prefs.getString(TOKEN, null) != null );
+    public static String getToken(SharedPreferences prefs) {
+    	return prefs.getString(TOKEN, null);
     }
 	
 }
