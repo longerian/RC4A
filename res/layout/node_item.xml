@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="48dip"
     android:padding="8dip"
+    android:background="@drawable/list_bg_selector"
     >
     <TextView
         android:id="@+id/name"
@@ -12,7 +13,7 @@
 	    android:gravity="center_vertical"
 	    android:singleLine="true"
 	    android:ellipsize="end"
-	    android:text="tittttttttle"
 	    android:textSize="16sp"
+	    android:textColor="#ff000000"
         />
 </RelativeLayout>

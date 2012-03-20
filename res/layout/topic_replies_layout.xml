@@ -9,6 +9,9 @@
 	    android:layout_height="match_parent"
 	    android:layout_above="@+id/comment"
 	    android:fastScrollEnabled="true"
+	    android:cacheColorHint="#00000000" 
+	    android:divider="@drawable/list_divider" 
+	    android:dividerHeight="1.0px"
         />
     <!-- no api for reply, so remove reply box -->
 <!-- 	<include -->

@@ -231,7 +231,11 @@ public class TopicsActivity extends GDListActivity {
 			}
 			viewHolder.title.setText(t.getTitle());
 			viewHolder.author.setText(" >> " + t.getUser().getLogin());
-			viewHolder.replies.setText(t.getRepliesCount() + "");
+			if(t.getRepliesCount() > 99) {
+				viewHolder.replies.setText("99+");
+			} else {
+				viewHolder.replies.setText(t.getRepliesCount() + "");
+			}
 			return convertView;
 		}
 		

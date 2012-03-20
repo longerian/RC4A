@@ -2,12 +2,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/list_bg_selector"
     >
     <ImageView 
         android:id="@+id/gravatar"
         android:layout_width="48dip"
 	    android:layout_height="48dip"
 	    android:src="@drawable/default_gravatar"
+	    android:contentDescription="@string/hint_image_alt"
         />
 	<TextView 
 	    android:id="@+id/user_name"
@@ -41,5 +43,6 @@
 	    android:layout_marginBottom="8dip"
 	    android:layout_toRightOf="@+id/gravatar"
 	    android:layout_below="@+id/user_name"
+	    android:textColor="#ff000000"
 	    />
 </RelativeLayout>
