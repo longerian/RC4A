@@ -16,6 +16,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/token"
+        android:background="@drawable/rc_button"
         android:text="@string/action_save_token"
+        android:textSize="18sp"
         />
 </RelativeLayout>
