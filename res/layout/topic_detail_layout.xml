@@ -3,35 +3,49 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
-    <ImageView 
-	    android:id="@+id/gravatar"
-	    android:layout_width="48dip"
-	    android:layout_height="48dip"
-	    android:src="@drawable/default_gravatar"
-	    />
-    <TextView 
-        android:id="@+id/title"
+    <RelativeLayout
+        android:id="@+id/title_bar" 
         android:layout_width="match_parent"
-        android:layout_height="48dip"
-        android:layout_toRightOf="@+id/gravatar"
-        android:background="#FFFFFFFF"
-        android:padding="4dip"
-        android:textSize="16sp"
-        android:textColor="#FF000000"
-        android:gravity="center_vertical"
-        />
+        android:layout_height="wrap_content"
+        android:background="@drawable/format_bar_bg" 
+        android:padding="6.0dip" 
+        >
+        <ImageView 
+		    android:id="@+id/gravatar"
+		    android:layout_width="48dip"
+		    android:layout_height="48dip"
+		    android:src="@drawable/default_gravatar"
+		    />
+	    <TextView 
+	        android:id="@+id/title"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_toRightOf="@+id/gravatar"
+	        android:padding="4dip"
+	        android:textSize="20sp"
+	        android:textColor="#ff000000"
+	        android:gravity="center_vertical"
+	        android:shadowColor="#ffffffff" 
+	        android:shadowDx="0.0" 
+	        android:shadowDy="1.0" 
+	        android:shadowRadius="1.0"
+	        />
+    </RelativeLayout>
     <ScrollView
         android:layout_width="match_parent"
 	    android:layout_height="match_parent"
-	    android:layout_below="@+id/title"
+	    android:layout_below="@+id/title_bar"
 	    android:layout_above="@+id/comment" 
         >
-    <TextView 
-        android:id="@+id/body"
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:autoLink="all"
-        />
+	    <TextView 
+	        android:id="@+id/body"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:background="#ffffffff"
+		    android:padding="10.0dip"
+		    android:autoLink="all"
+		    android:textSize="18.0sp"
+	        />
    	</ScrollView>
 	<!-- no api for reply, so remove reply box -->
 <!-- 	<include  -->
