@@ -229,7 +229,7 @@ public class TopicsActivity extends GDListActivity {
 				mService.requestUserAvatar(t.getUser(), viewHolder.gravatar);
 			}
 			viewHolder.title.setText(t.getTitle());
-			viewHolder.author.setText(" >> " + t.getUser().getLogin());
+			viewHolder.author.setText(" >> " + t.getUser().getLogin() + " 在  " + t.getNodeName() + " 中发起");
 			if(t.getRepliesCount() > 99) {
 				viewHolder.replies.setText("99+");
 			} else {

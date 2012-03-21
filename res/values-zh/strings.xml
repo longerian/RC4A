@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">RC4A</string>
+    <string name="hint_reply">请输入......</string>
+    <string name="hot_topics">热门话题</string>
+    <string name="reply_list_unit">楼</string>
+    <string name="action_view_profile">查看个人资料</string>
+    <string name="action_reply">回复</string><string name="user_account_label">用户信息</string>
+    <string name="user_id">ID</string>
+    <string name="user_name">Name</string>
+    <string name="user_location">城市</string><string name="user_bio">简介</string>
+    <string name="user_tagline">签名</string><string name="user_website">个人主页</string>
+    <string name="user_github">Github</string>
+    <string name="hint_login_to_reply">登录发表回复</string>
+    <string name="action_save_token">保存</string>
+    <string name="hint_no_token">请输入你的个人私钥</string>
+    <string name="topic_title">标题</string>
+    <string name="topic_node">选择节点</string>
+    <string name="topic_body">正文</string>
+    <string name="hint_submiting_topic">正在发送帖子......</string>
+    <string name="hint_network_or_token_problem">网络连接异常或token错误</string>
+    <string name="hint_stoping_editing_topic_or_not">你要放弃发帖吗？</string>
+    <string name="p_yek">是</string>
+    <string name="p_no">否</string>
+    <string name="hint_image_alt">avartar</string>
+    <string name="hint_loading_data_failed">获取数据失败......</string>
+    
+    
+    
+
+</resources>

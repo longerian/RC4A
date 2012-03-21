@@ -39,6 +39,7 @@ public class RCActivity extends Activity {
 		if(RCDBResolver.INSTANCE.fetchNodes(getApplicationContext()).isEmpty()) {
 			startNodesRequest();
 		} else {
+			GlobalResource.INSTANCE.setNodes(RCDBResolver.INSTANCE.fetchNodes(getApplicationContext()));
 			new CountDownTimer(1000, 500) {
 				
 				@Override
