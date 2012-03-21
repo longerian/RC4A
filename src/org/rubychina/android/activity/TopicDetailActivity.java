@@ -44,7 +44,6 @@ public class TopicDetailActivity extends GDActivity {
 	private RCService mService;
 	private boolean isBound = false; 
 	private Topic t;
-//	private EditText replyContent;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -97,43 +96,6 @@ public class TopicDetailActivity extends GDActivity {
         }
     }
 	
-	//no api for reply, so remove reply box
-//	@Override
-//	protected void onStart() {
-//		super.onStart();
-//		View replyBox = findViewById(R.id.comment);
-//		View loginNoteBox = findViewById(R.id.login_note);
-//		if(((RCApplication) getApplication()).isLogin()) {
-//			replyBox.setVisibility(View.VISIBLE);
-//			loginNoteBox.setVisibility(View.INVISIBLE);
-//			replyContent = (EditText) findViewById(R.id.content);
-//			ImageView submit = (ImageView) findViewById(R.id.submit);
-//			submit.setOnClickListener(mSubmitListener);
-//		} else {
-//			replyBox.setVisibility(View.INVISIBLE);
-//			loginNoteBox.setVisibility(View.VISIBLE);
-//			loginNoteBox.setOnClickListener(mNeedLoginListener);
-//		}
-//	}
-	
-//	private OnClickListener mNeedLoginListener = new OnClickListener() {
-//		
-//		@Override
-//		public void onClick(View v) {
-//			Intent i = new Intent(getApplicationContext(), UserVerificationActivity.class);
-//			startActivity(i);
-//		}
-//	};
-
-//	private OnClickListener mSubmitListener = new OnClickListener() {
-//		
-//		@Override
-//		public void onClick(View v) {
-//			Intent i = new Intent();
-//			Toast.makeText(getApplicationContext(), "submit: " + replyContent.getText().toString(), Toast.LENGTH_SHORT).show();
-//		}
-//	};
-
 	@Override
 	public boolean onHandleActionBarItemClick(ActionBarItem item, int position) {
 		switch (item.getItemId()) {

@@ -2,8 +2,8 @@ package org.rubychina.android.activity;
 
 import greendroid.app.GDListActivity;
 import greendroid.widget.ActionBarItem;
-import greendroid.widget.LoaderActionBarItem;
 import greendroid.widget.ActionBarItem.Type;
+import greendroid.widget.LoaderActionBarItem;
 
 import java.util.List;
 
@@ -14,7 +14,6 @@ import org.rubychina.android.api.request.NodesRequest;
 import org.rubychina.android.api.response.NodesResponse;
 import org.rubychina.android.database.RCDBResolver;
 import org.rubychina.android.type.Node;
-import org.rubychina.android.type.Topic;
 
 import yek.api.ApiCallback;
 import yek.api.ApiException;
@@ -24,7 +23,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -100,15 +98,13 @@ public class NodesActivity extends GDListActivity {
 
 		@Override
 		public void onException(ApiException e) {
-			//TODO
-			Toast.makeText(getApplicationContext(), "exception", Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext(), R.string.hint_loading_data_failed, Toast.LENGTH_SHORT).show();
 			progress.setLoading(false);
 		}
 
 		@Override
 		public void onFail(NodesResponse r) {
-			//TODO
-			Toast.makeText(getApplicationContext(), "fail", Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext(), R.string.hint_loading_data_failed, Toast.LENGTH_SHORT).show();
 			progress.setLoading(false);
 		}
 

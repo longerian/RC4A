@@ -175,15 +175,13 @@ public class TopicsActivity extends GDListActivity {
 
 		@Override
 		public void onException(ApiException e) {
-			//TODO
-			Toast.makeText(getApplicationContext(), "exception", Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext(), R.string.hint_loading_data_failed, Toast.LENGTH_SHORT).show();
 			progress.setLoading(false);
 		}
 
 		@Override
 		public void onFail(ActiveTopicsResponse r) {
-			//TODO
-			Toast.makeText(getApplicationContext(), "fail", Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext(), R.string.hint_loading_data_failed, Toast.LENGTH_SHORT).show();
 			progress.setLoading(false);
 		}
 

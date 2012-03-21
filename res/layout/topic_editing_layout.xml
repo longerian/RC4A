@@ -2,12 +2,19 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="10.0dip"
     >
     <TextView 
         android:id="@+id/lb_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/topic_title"
+        android:textSize="20sp"
+        android:textColor="#ff000000"
+        android:shadowColor="#ffffffff" 
+        android:shadowDx="0.0" 
+        android:shadowDy="1.0" 
+        android:shadowRadius="1.0"
         />
     <EditText 
         android:id="@+id/title"
@@ -22,6 +29,7 @@
         android:layout_height="wrap_content"
         android:prompt="@string/topic_node"
         android:layout_below="@+id/title"
+        android:background="@drawable/rc_spinner_bg"
         />
     <TextView 
         android:id="@+id/lb_body"
@@ -29,6 +37,12 @@
         android:layout_height="wrap_content"
         android:text="@string/topic_body"
         android:layout_below="@+id/node"
+        android:textSize="20sp"
+        android:textColor="#ff000000"
+        android:shadowColor="#ffffffff" 
+        android:shadowDx="0.0" 
+        android:shadowDy="1.0" 
+        android:shadowRadius="1.0"
         />
 	<EditText 
         android:id="@+id/body"

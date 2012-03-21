@@ -22,6 +22,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.KeyEvent;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -106,12 +108,13 @@ public class TopicEditingActivity extends GDActivity {
 	}
 
 	private boolean isTopicValid() {
+		Animation animation = AnimationUtils.loadAnimation(this, R.anim.shake);   
 		if(TextUtils.isEmpty(title.getText().toString())) {
-			Toast.makeText(getApplicationContext(), "title empty", Toast.LENGTH_SHORT).show();
+			title.startAnimation(animation);
 			return false;
 		}
 		if(TextUtils.isEmpty(body.getText().toString())) {
-			Toast.makeText(getApplicationContext(), "body empty", Toast.LENGTH_SHORT).show();
+			body.startAnimation(animation);
 			return false;
 		}
 		return true;

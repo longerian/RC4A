@@ -23,6 +23,7 @@
     <string name="p_yek">是</string>
     <string name="p_no">否</string>
     <string name="hint_image_alt">avartar</string>
+    <string name="hint_loading_data_failed">获取数据失败......</string>
     
     
 
