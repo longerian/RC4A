@@ -2,8 +2,8 @@ package org.rubychina.android.activity;
 
 import greendroid.app.GDListActivity;
 import greendroid.widget.ActionBarItem;
-import greendroid.widget.LoaderActionBarItem;
 import greendroid.widget.ActionBarItem.Type;
+import greendroid.widget.LoaderActionBarItem;
 
 import java.util.List;
 
@@ -17,7 +17,6 @@ import org.rubychina.android.api.response.ActiveTopicsResponse;
 import org.rubychina.android.database.RCDBResolver;
 import org.rubychina.android.type.Node;
 import org.rubychina.android.type.Topic;
-import org.rubychina.android.util.LogUtil;
 
 import yek.api.ApiCallback;
 import yek.api.ApiException;
@@ -28,9 +27,11 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -144,7 +145,7 @@ public class TopicsActivity extends GDListActivity {
         	if(((RCApplication) getApplication()).isLogin()) {
         		i.setClass(getApplicationContext(), TopicEditingActivity.class);
         	} else {
-        		i.setClass(getApplicationContext(), UserVerificationActivity.class);
+        		i.setClass(getApplicationContext(), RCPreferenceActivity.class);
         		Toast.makeText(getApplicationContext(), R.string.hint_no_token, Toast.LENGTH_SHORT).show();
         	}
         	startActivity(i);
@@ -169,6 +170,25 @@ public class TopicsActivity extends GDListActivity {
 				startTopicsRequest(n.getId());
 			}
 		}
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		new MenuInflater(getApplication()).inflate(R.menu.menu, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		Intent intent = new Intent();
+		int id = item.getItemId();
+		switch(id) {
+		case R.id.menu_preference:
+			intent.setClass(getApplicationContext(), RCPreferenceActivity.class);
+			startActivity(intent);
+			break;
+		}
+		return true;
 	}
 
 	private class HotTopicsCallback implements ApiCallback<ActiveTopicsResponse> {

@@ -55,11 +55,7 @@
             android:screenOrientation="portrait"
             />
         <activity 
-            android:name=".activity.UserVerificationActivity" 
-            android:screenOrientation="portrait"
-            />
-        <activity 
-            android:name=".activity.UserVerificationActivity" 
+            android:name=".activity.RCPreferenceActivity" 
             android:screenOrientation="portrait"
             />
         <service 

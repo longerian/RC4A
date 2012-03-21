@@ -76,6 +76,14 @@ public class RCApplication extends GDApplication {
 		String token = Preferences.getToken(getPreference());
 		return !TextUtils.isEmpty(token);
 	}
+	
+	public boolean setPageSize(int size) {
+		return Preferences.setPageSize(getPreference(), size);
+	}
+	
+	public int getPageSize() {
+		return Preferences.getPageSize(getPreference());
+	}
 
 	public int getScreenWidth() {
 		return screenWidth;

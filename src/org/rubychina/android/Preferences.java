@@ -10,11 +10,17 @@ public class Preferences {
     public static final String PREFERENCE_APP = "RubyChina";
     
     private static final String TOKEN = "token";
+    private static final String PAGE_SIZE = "page_size";
+    
+    private static final int DEFAULT_PAGE_SIZE = 30;
     
     public static void setupPreferences(SharedPreferences preferences) {
     	Editor editor = preferences.edit();
-        if (!preferences.contains(TOKEN)) {
+        if(!preferences.contains(TOKEN)) {
         	editor.putString(TOKEN, "");
+        }
+        if(!preferences.contains(PAGE_SIZE)) {
+        	editor.putInt(PAGE_SIZE, DEFAULT_PAGE_SIZE);
         }
         editor.commit();
     }
@@ -29,4 +35,14 @@ public class Preferences {
     	return prefs.getString(TOKEN, null);
     }
 	
+    public static boolean setPageSize(SharedPreferences prefs, int size) {
+    	Editor editor = prefs.edit();
+    	editor.putInt(PAGE_SIZE, size);
+    	return editor.commit();
+    }
+    
+    public static int getPageSize(SharedPreferences prefs) {
+    	return prefs.getInt(PAGE_SIZE, DEFAULT_PAGE_SIZE);
+    }
+    
 }

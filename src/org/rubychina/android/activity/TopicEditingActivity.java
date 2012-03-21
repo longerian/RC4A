@@ -108,7 +108,7 @@ public class TopicEditingActivity extends GDActivity {
 	}
 
 	private boolean isTopicValid() {
-		Animation animation = AnimationUtils.loadAnimation(this, R.anim.shake);   
+		Animation animation = AnimationUtils.loadAnimation(this, R.anim.shake);
 		if(TextUtils.isEmpty(title.getText().toString())) {
 			title.startAnimation(animation);
 			return false;
