@@ -9,10 +9,13 @@ import org.rubychina.android.R;
 import org.rubychina.android.RCApplication;
 import org.rubychina.android.RCService;
 import org.rubychina.android.RCService.LocalBinder;
+import org.rubychina.android.type.Reply;
 import org.rubychina.android.type.Topic;
 import org.rubychina.android.type.User;
 import org.rubychina.android.util.GravatarUtil;
 import org.rubychina.android.util.ImageParser;
+
+import com.google.gson.Gson;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -41,6 +44,7 @@ public class TopicDetailActivity extends GDActivity {
 	public static final String POS = "org.rubychina.android.activity.TopicDetailActivity.POSITION";
 	private static final String TAG = "TopicDetailActivity";
 	
+	private ImageView gravatar;
 	private RCService mService;
 	private boolean isBound = false; 
 	private Topic t;
@@ -53,6 +57,9 @@ public class TopicDetailActivity extends GDActivity {
 		addActionBarItem(Type.List, R.id.action_bar_replies);
 		
 		t = GlobalResource.INSTANCE.getCurTopics().get(getIntent().getIntExtra(POS, 0));
+		
+		gravatar = (ImageView) findViewById(R.id.gravatar);
+		gravatar.setOnClickListener(mCheckProfileListener );
 		
 		TextView title = (TextView) findViewById(R.id.title);
 		title.setText(t.getTitle());
@@ -69,6 +76,17 @@ public class TopicDetailActivity extends GDActivity {
         Intent intent = new Intent(this, RCService.class);
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 	}
+	
+	private OnClickListener mCheckProfileListener = new OnClickListener() {
+		
+		@Override
+		public void onClick(View v) {
+			Gson g = new Gson();
+			Intent i = new Intent(getApplicationContext(), UserProfileActivity.class);
+			i.putExtra(UserProfileActivity.VIEW_PROFILE, g.toJson(t.getUser()));
+			startActivity(i);
+		}
+	};
 	
     private ServiceConnection mConnection = new ServiceConnection() {
 
@@ -110,7 +128,9 @@ public class TopicDetailActivity extends GDActivity {
 	}
 	
 	private void requestUserAvatar() {
-		ImageView gravatar = (ImageView) findViewById(R.id.gravatar);
+		if(gravatar == null) {
+			gravatar = (ImageView) findViewById(R.id.gravatar);
+		}
 		mService.requestUserAvatar(t.getUser(), gravatar);
 	}
 

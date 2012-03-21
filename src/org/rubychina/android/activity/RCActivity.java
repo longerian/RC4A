@@ -6,6 +6,7 @@ import org.rubychina.android.RCApplication;
 import org.rubychina.android.api.request.NodesRequest;
 import org.rubychina.android.api.response.NodesResponse;
 import org.rubychina.android.database.RCDBResolver;
+import org.rubychina.android.util.LogUtil;
 
 import yek.api.ApiCallback;
 import yek.api.ApiException;
@@ -19,6 +20,7 @@ import android.view.WindowManager;
 
 public class RCActivity extends Activity {
 
+	private static final String TAG = "RCActivity";
 	private NodesRequest request;
 	
 	@Override
@@ -34,7 +36,7 @@ public class RCActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if(GlobalResource.INSTANCE.getNodes().isEmpty()) {
+		if(RCDBResolver.INSTANCE.fetchNodes(getApplicationContext()).isEmpty()) {
 			startNodesRequest();
 		} else {
 			new CountDownTimer(1000, 500) {
