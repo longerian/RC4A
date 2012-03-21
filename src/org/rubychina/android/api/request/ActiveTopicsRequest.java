@@ -12,7 +12,6 @@ import yek.cache.Cache;
 public class ActiveTopicsRequest extends RCAPIGet<ActiveTopicsResponse> {
 
 	private static final String TAG = "HotTopicsRequest";
-	private static final String url = "api/topics.json";
 	
 	private static final int DEFAULT_SIZE = 30;
 	
@@ -36,7 +35,7 @@ public class ActiveTopicsRequest extends RCAPIGet<ActiveTopicsResponse> {
 	@Override
 	public String getRequestURL(RCAPIContext context) {
 		if(nodeId == TopicsActivity.HOT_TOPICS_NODE_ID) {
-			return context.getServer() + url;
+			return context.getServer() + "api/topics.json";
 		} else {
 			return context.getServer() + "api/topics/node/" + nodeId + ".json";
 		}
@@ -49,7 +48,6 @@ public class ActiveTopicsRequest extends RCAPIGet<ActiveTopicsResponse> {
 
 	@Override
 	public Map<String, String> getTextParams(RCAPIContext context) {
-		//TODO the size seems do not work
 		HashMap<String, String> params = new HashMap<String, String>();
 		params.put(SIZE_KEY, size + "");
 		return params;
