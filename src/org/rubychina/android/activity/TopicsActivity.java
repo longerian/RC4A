@@ -43,7 +43,7 @@ public class TopicsActivity extends GDListActivity {
 	private static final String TAG = "TopicsActivity";
 	private ActiveTopicsRequest request;
 	
-	private static final int HOT_TOPICS_NODE_ID = -1;
+	public static final int HOT_TOPICS_NODE_ID = -1;
 	
 	private RCService mService;
 	private boolean isBound = false; 
@@ -53,7 +53,6 @@ public class TopicsActivity extends GDListActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-//		setTitle(getString(R.string.hot_topics));
 		
 		addActionBarItem(Type.List, R.id.action_bar_nodes);
 		progress = (LoaderActionBarItem) addActionBarItem(Type.Refresh, R.id.action_bar_refresh);
@@ -167,7 +166,7 @@ public class TopicsActivity extends GDListActivity {
 		if(requestCode == NodesActivity.PICK_NODE) {
 			if(resultCode == RESULT_OK) {
 				Node n = data.getParcelableExtra(NodesActivity.PICKED_NODE);
-				LogUtil.d(TAG, n.getId() + " " + n.getName());
+				startTopicsRequest(n.getId());
 			}
 		}
 	}

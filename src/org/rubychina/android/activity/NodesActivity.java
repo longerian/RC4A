@@ -57,7 +57,13 @@ public class NodesActivity extends GDListActivity {
 	
 	@Override
 	public boolean onHandleActionBarItemClick(ActionBarItem item, int position) {
-		return super.onHandleActionBarItemClick(item, position);
+		switch (item.getItemId()) {
+        case R.id.action_bar_refresh:
+        	startNodesRequest();
+        	return true;
+        default:
+            return super.onHandleActionBarItemClick(item, position);
+		}
 	}
 
 	@Override
