@@ -2,6 +2,7 @@ package org.rubychina.android.activity;
 
 import greendroid.app.GDListActivity;
 import greendroid.widget.ActionBarItem;
+import greendroid.widget.LoaderActionBarItem;
 import greendroid.widget.ActionBarItem.Type;
 
 import java.util.List;
@@ -47,14 +48,15 @@ public class TopicsActivity extends GDListActivity {
 	private RCService mService;
 	private boolean isBound = false; 
 	
+	private LoaderActionBarItem progress;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 //		setTitle(getString(R.string.hot_topics));
 		
 		addActionBarItem(Type.List, R.id.action_bar_nodes);
-		addActionBarItem(Type.Refresh, R.id.action_bar_refresh);
+		progress = (LoaderActionBarItem) addActionBarItem(Type.Refresh, R.id.action_bar_refresh);
 		addActionBarItem(Type.Compose, R.id.action_bar_compose);
 		
 		List<Topic> cachedTopics = RCDBResolver.INSTANCE.fetchTopics(getApplicationContext());
@@ -118,13 +120,13 @@ public class TopicsActivity extends GDListActivity {
 			request.setNodeId(nodeId);
 		}
 		((RCApplication) getApplication()).getAPIClient().request(request, new HotTopicsCallback());
-		setProgressBarIndeterminateVisibility(true);
+		progress.setLoading(true);
 	}
 	
 	private void cancelTopicsRequest() {
 		if(request != null) {
 			((RCApplication) getApplication()).getAPIClient().cancel(request);
-			setProgressBarIndeterminateVisibility(false);
+			progress.setLoading(false);
 		}
 	}
 
@@ -176,19 +178,19 @@ public class TopicsActivity extends GDListActivity {
 		public void onException(ApiException e) {
 			//TODO
 			Toast.makeText(getApplicationContext(), "exception", Toast.LENGTH_SHORT).show();
-			setProgressBarIndeterminateVisibility(false);
+			progress.setLoading(false);
 		}
 
 		@Override
 		public void onFail(ActiveTopicsResponse r) {
 			//TODO
 			Toast.makeText(getApplicationContext(), "fail", Toast.LENGTH_SHORT).show();
-			setProgressBarIndeterminateVisibility(false);
+			progress.setLoading(false);
 		}
 
 		@Override
 		public void onSuccess(ActiveTopicsResponse r) {
-			setProgressBarIndeterminateVisibility(false);
+			progress.setLoading(false);
 			GlobalResource.INSTANCE.setCurTopics(r.getTopics());
 			RCDBResolver.INSTANCE.clearTopics(getApplicationContext());
 			RCDBResolver.INSTANCE.insertTopics(getApplicationContext(), r.getTopics());

@@ -2,6 +2,7 @@ package org.rubychina.android.activity;
 
 import greendroid.app.GDListActivity;
 import greendroid.widget.ActionBarItem;
+import greendroid.widget.LoaderActionBarItem;
 import greendroid.widget.ActionBarItem.Type;
 
 import java.util.List;
@@ -35,14 +36,12 @@ public class NodesActivity extends GDListActivity {
 	public static final String PICKED_NODE = "org.rubychina.android.activity.NodesActivity.PICKED_NODE";
 	private static final String TAG = "NodesActivity";
 	private NodesRequest request;
+	private LoaderActionBarItem progress;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-		
-		addActionBarItem(Type.Refresh, R.id.action_bar_refresh);
-
+		progress = (LoaderActionBarItem) addActionBarItem(Type.Refresh, R.id.action_bar_refresh);
 		if(GlobalResource.INSTANCE.getNodes().isEmpty()) {
 			startNodesRequest();
 		} else {
@@ -75,13 +74,13 @@ public class NodesActivity extends GDListActivity {
 			request = new NodesRequest();
 		}
 		((RCApplication) getApplication()).getAPIClient().request(request, new NodesCallback());
-		setProgressBarIndeterminateVisibility(true);
+		progress.setLoading(true);
 	}
 	
 	private void cancelNodesRequest() {
 		if(request != null) {
 			((RCApplication) getApplication()).getAPIClient().cancel(request);
-			setProgressBarIndeterminateVisibility(false);
+			progress.setLoading(false);
 		}
 	}
 	
@@ -97,19 +96,19 @@ public class NodesActivity extends GDListActivity {
 		public void onException(ApiException e) {
 			//TODO
 			Toast.makeText(getApplicationContext(), "exception", Toast.LENGTH_SHORT).show();
-			setProgressBarIndeterminateVisibility(false);
+			progress.setLoading(false);
 		}
 
 		@Override
 		public void onFail(NodesResponse r) {
 			//TODO
 			Toast.makeText(getApplicationContext(), "fail", Toast.LENGTH_SHORT).show();
-			setProgressBarIndeterminateVisibility(false);
+			progress.setLoading(false);
 		}
 
 		@Override
 		public void onSuccess(NodesResponse r) {
-			setProgressBarIndeterminateVisibility(false);
+			progress.setLoading(false);
 			GlobalResource.INSTANCE.setNodes(r.getNodes());
 			RCDBResolver.INSTANCE.clearNodes(getApplicationContext());
 			RCDBResolver.INSTANCE.insertNodes(getApplicationContext(), r.getNodes());

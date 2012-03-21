@@ -1,6 +1,9 @@
 package org.rubychina.android.activity;
 
 import greendroid.app.GDActivity;
+import greendroid.widget.ActionBarItem;
+import greendroid.widget.LoaderActionBarItem;
+import greendroid.widget.ActionBarItem.Type;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -62,11 +65,14 @@ public class ReplyListActivity extends GDActivity {
 	private ListView replies;
 //	private EditText replyContent;
 	
+	private LoaderActionBarItem progress;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setActionBarContentView(R.layout.topic_replies_layout);
+		progress = (LoaderActionBarItem) addActionBarItem(Type.Refresh, R.id.action_bar_refresh);
 		ip = new ImageParser(getApplicationContext());
 		startTopicDetailRequest(getIntent().getIntExtra(BELONG_TO_TOPIC, 0));
 	}
@@ -152,13 +158,13 @@ public class ReplyListActivity extends GDActivity {
 		}
 		request.setId(id);
 		((RCApplication) getApplication()).getAPIClient().request(request, new TopicDetailCallback());
-		setProgressBarIndeterminateVisibility(true);
+		progress.setLoading(true);
 	}
 	
 	private void cancelTopicDetailRequest() {
 		if(request != null) {
 			((RCApplication) getApplication()).getAPIClient().cancel(request);
-			setProgressBarIndeterminateVisibility(false);
+			progress.setLoading(false);
 		}
 	}
 	
@@ -188,25 +194,36 @@ public class ReplyListActivity extends GDActivity {
 		  }  
 	}
 
+	@Override
+	public boolean onHandleActionBarItemClick(ActionBarItem item, int position) {
+		switch (item.getItemId()) {
+        case R.id.action_bar_refresh:
+        	startTopicDetailRequest(getIntent().getIntExtra(BELONG_TO_TOPIC, 0));
+        	return true;
+        default:
+            return super.onHandleActionBarItemClick(item, position);
+		}
+	}
+
 	private class TopicDetailCallback implements ApiCallback<TopicDetailResponse> {
 
 		@Override
 		public void onException(ApiException e) {
 			// TODO Auto-generated method stub
 			Toast.makeText(getApplicationContext(), "exception", Toast.LENGTH_SHORT).show();
-			setProgressBarIndeterminateVisibility(false);
+			progress.setLoading(false);
 		}
 
 		@Override
 		public void onFail(TopicDetailResponse r) {
 			// TODO Auto-generated method stub
 			Toast.makeText(getApplicationContext(), "fail", Toast.LENGTH_SHORT).show();
-			setProgressBarIndeterminateVisibility(false);
+			progress.setLoading(false);
 		}
 
 		@Override
 		public void onSuccess(TopicDetailResponse r) {
-			setProgressBarIndeterminateVisibility(false);
+			progress.setLoading(false);
 			replies = (ListView) findViewById(R.id.replies);
 			Collections.sort(r.getReplies());
 			replies.setAdapter(new ReplyAdapter(getApplicationContext(), R.layout.reply_item,
