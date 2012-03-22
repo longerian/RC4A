@@ -35,10 +35,10 @@ public class RCPreferenceActivity extends GDActivity {
 		pageSizeEdit.setText(((RCApplication) getApplication()).getPageSize() + "");
 		
 		Button saveBtn = (Button) findViewById(R.id.save);
-		saveBtn.setOnClickListener(mVerificationListener);
+		saveBtn.setOnClickListener(mSaveListener);
 	}
 	
-	private OnClickListener mVerificationListener = new OnClickListener() {
+	private OnClickListener mSaveListener = new OnClickListener() {
 		
 		@Override
 		public void onClick(View v) {
@@ -53,10 +53,10 @@ public class RCPreferenceActivity extends GDActivity {
 	
 	private boolean isInputValid() {
 		Animation animation = AnimationUtils.loadAnimation(this, R.anim.shake);
-		if(TextUtils.isEmpty(tokenEdit.getText().toString())) {
-			tokenEdit.startAnimation(animation);
-			return false;
-		}
+//		if(TextUtils.isEmpty(tokenEdit.getText().toString())) {
+//			tokenEdit.startAnimation(animation);
+//			return false;
+//		}
 		if(TextUtils.isEmpty(pageSizeEdit.getText().toString())) {
 			pageSizeEdit.startAnimation(animation);
 			return false;

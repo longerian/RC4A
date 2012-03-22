@@ -2,8 +2,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" 
     android:layout_height="wrap_content"
-    android:background="@drawable/content_bg" 
     android:padding="10.0dip" 
+    >
+<RelativeLayout 
+    android:layout_width="match_parent" 
+    android:layout_height="wrap_content"
+    android:background="@drawable/content_bg" 
     >
     <TextView 
 	   	android:id="@+id/label1" 
@@ -66,4 +70,5 @@
         android:text="@string/action_save"
         android:textSize="18sp"
       />
+</RelativeLayout>
 </RelativeLayout>

@@ -112,6 +112,7 @@ public class TopicsActivity extends GDListActivity {
 		if(!(nodeId == HOT_TOPICS_NODE_ID)) {
 			request.setNodeId(nodeId);
 		}
+		request.setSize(((RCApplication) getApplication()).getPageSize());
 		((RCApplication) getApplication()).getAPIClient().request(request, new HotTopicsCallback());
 		progress.setLoading(true);
 	}

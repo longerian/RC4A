@@ -5,7 +5,7 @@
     <string name="hot_topics">热门话题</string>
     <string name="reply_list_unit">楼</string>
     <string name="action_view_profile">查看个人资料</string>
-    <string name="action_reply">回复</string><string name="action_save">保存</string><string name="user_account_label">用户信息</string>
+    <string name="action_reply">回复</string><string name="action_save">保存</string><string name="action_clear_token">清除token</string><string name="user_account_label">用户信息</string>
     <string name="user_id">ID</string>
     <string name="user_name">Name</string>
     <string name="user_location">城市</string><string name="user_bio">简介</string>
@@ -25,6 +25,7 @@
     <string name="hint_image_alt">avartar</string>
     <string name="hint_loading_data_failed">获取数据失败......</string>
     <string name="menu_preference">设置</string>
+    
     <string name="setting_app">设置</string>
     
     
