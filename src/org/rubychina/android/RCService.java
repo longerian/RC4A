@@ -31,11 +31,11 @@ public class RCService extends Service {
 		return mBinder;
 	}
 	
-	public void requestUserAvatar(User user, ImageView view) {
+	public void requestUserAvatar(User user, ImageView view, int size) {
 		String avatar = user.getAvatarUrl();
 		String hash = user.getGravatarHash();
 		if(TextUtils.isEmpty(avatar)) {
-			Bitmap ava = ((RCApplication) getApplication()).getImgLoader().load(GravatarUtil.getBaseURL(hash), view);
+			Bitmap ava = ((RCApplication) getApplication()).getImgLoader().load(GravatarUtil.getURLWithSize(hash, size), view);
 			if(ava != null) {
 				view.setImageBitmap(ava);
 			}

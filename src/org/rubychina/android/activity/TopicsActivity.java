@@ -241,7 +241,7 @@ public class TopicsActivity extends GDListActivity {
 			}
 			Topic t = items.get(position);
 			if(isBound) {
-				mService.requestUserAvatar(t.getUser(), viewHolder.gravatar);
+				mService.requestUserAvatar(t.getUser(), viewHolder.gravatar, 0);
 			}
 			viewHolder.title.setText(t.getTitle());
 			viewHolder.author.setText(" >> " + t.getUser().getLogin() + " 在  " + t.getNodeName() + " 中发起");

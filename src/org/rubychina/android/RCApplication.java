@@ -15,8 +15,6 @@ import yek.loader.AsyncLoaderEngine;
 import yek.loader.BitmapAsyncLoader;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
-import android.view.Display;
-import android.view.WindowManager;
 
 public class RCApplication extends GDApplication {
 
@@ -46,7 +44,6 @@ public class RCApplication extends GDApplication {
 		mThreadPoolExecutor = new ThreadPoolExecutor(1, 10, 10, TimeUnit.SECONDS, new ArrayBlockingQueue <Runnable>(100) );
 		mAPIClient = new RCAPIClient(getApplicationContext(), new JSONParser(), mThreadPoolExecutor, mCacher);
 		mImgLoader = new BitmapAsyncLoader(new AsyncLoaderEngine(getApplicationContext(), mThreadPoolExecutor, mCacher));
-		
 	}
 
 	public RCAPIClient getAPIClient() {

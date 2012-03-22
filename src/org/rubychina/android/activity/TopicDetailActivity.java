@@ -136,7 +136,7 @@ public class TopicDetailActivity extends GDActivity {
 		if(gravatar == null) {
 			gravatar = (ImageView) findViewById(R.id.gravatar);
 		}
-		mService.requestUserAvatar(t.getUser(), gravatar);
+		mService.requestUserAvatar(t.getUser(), gravatar, 0);
 	}
 
 	

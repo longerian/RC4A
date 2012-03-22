@@ -219,7 +219,7 @@ public class ReplyListActivity extends GDActivity {
 			}
 			Reply r = items.get(position);
 			if(isBound) {
-				mService.requestUserAvatar(r.getUser(), viewHolder.gravatar);
+				mService.requestUserAvatar(r.getUser(), viewHolder.gravatar, 0);
 			}
 			viewHolder.userName.setText(r.getUser().getLogin());
 			viewHolder.floor.setText(position + 1 + "" + getString(R.string.reply_list_unit));

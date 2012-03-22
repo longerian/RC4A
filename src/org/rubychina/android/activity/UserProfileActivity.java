@@ -17,6 +17,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -29,13 +30,15 @@ public class UserProfileActivity extends GDActivity {
 
 	private RCService mService;
 	private boolean isBound = false; 
-	
+	private DisplayMetrics metrics;
 	private User u;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+		metrics = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(metrics);
+		
 		setActionBarContentView(R.layout.user_profile_layout);
 		
 		Gson g = new Gson();
@@ -99,7 +102,7 @@ public class UserProfileActivity extends GDActivity {
     
     private void requestUserAvatar() {
 		ImageView gravatar = (ImageView) findViewById(R.id.gravatar);
-		mService.requestUserAvatar(u, gravatar);
+		mService.requestUserAvatar(u, gravatar, (int) (96 * metrics.density));
 	}
 	
 }
