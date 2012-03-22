@@ -16,6 +16,7 @@ import org.rubychina.android.api.request.NodesRequest;
 import org.rubychina.android.api.response.NodesResponse;
 import org.rubychina.android.database.RCDBResolver;
 import org.rubychina.android.type.Node;
+import org.rubychina.android.type.Topic;
 
 import yek.api.ApiCallback;
 import yek.api.ApiException;
@@ -23,6 +24,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.view.LayoutInflater;
@@ -155,9 +157,29 @@ public class NodesActivity extends GDListActivity {
 		@Override
 		public void onSuccess(NodesResponse r) {
 			progress.setLoading(false);
-			mService.clearNodes();
-			mService.insertNodes(r.getNodes());
 			refreshPage(r.getNodes());
+			new CacheNodesTask().execute(r.getNodes());
+		}
+		
+	}
+	
+	private class CacheNodesTask extends AsyncTask<List<Node>, Void, Void> {
+
+		@Override
+		protected void onPreExecute() {
+			progress.setLoading(true);
+		}
+
+		@Override
+		protected Void doInBackground(List<Node>... params) {
+			mService.clearNodes();
+			mService.insertNodes(params[0]);
+			return null;
+		}
+		
+		@Override
+		protected void onPostExecute(Void result) {
+			progress.setLoading(false);
 		}
 		
 	}

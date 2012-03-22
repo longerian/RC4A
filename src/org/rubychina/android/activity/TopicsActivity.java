@@ -204,9 +204,29 @@ public class TopicsActivity extends GDListActivity {
 		@Override
 		public void onSuccess(ActiveTopicsResponse r) {
 			progress.setLoading(false);
-			mService.clearTopics();
-			mService.insertTopics(r.getTopics());
 			refreshPage(r.getTopics());
+			new CacheTopicsTask().execute(r.getTopics());
+		}
+		
+	}
+	
+	private class CacheTopicsTask extends AsyncTask<List<Topic>, Void, Void> {
+
+		@Override
+		protected void onPreExecute() {
+			progress.setLoading(true);
+		}
+
+		@Override
+		protected Void doInBackground(List<Topic>... params) {
+			mService.clearTopics();
+			mService.insertTopics(params[0]);
+			return null;
+		}
+		
+		@Override
+		protected void onPostExecute(Void result) {
+			progress.setLoading(false);
 		}
 		
 	}

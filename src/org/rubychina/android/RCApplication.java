@@ -36,12 +36,11 @@ public class RCApplication extends GDApplication {
 	public void onCreate() {
 		super.onCreate();
 		setupResource();
-		//TODO add uncaught exceptions handler
 	}
 	
 	private void setupResource() {
 		mCacher = new Cache(getApplicationContext());
-		mThreadPoolExecutor = new ThreadPoolExecutor(1, 10, 10, TimeUnit.SECONDS, new ArrayBlockingQueue <Runnable>(100) );
+		mThreadPoolExecutor = new ThreadPoolExecutor(10, 20, 30, TimeUnit.SECONDS, new ArrayBlockingQueue <Runnable>(100) );
 		mAPIClient = new RCAPIClient(getApplicationContext(), new JSONParser(), mThreadPoolExecutor, mCacher);
 		mImgLoader = new BitmapAsyncLoader(new AsyncLoaderEngine(getApplicationContext(), mThreadPoolExecutor, mCacher));
 	}
