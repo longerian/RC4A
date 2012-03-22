@@ -34,6 +34,7 @@
 	    android:layout_below="@+id/lb_token"
 	    android:background="@android:drawable/editbox_background"
 		android:hint="@string/hint_no_token"
+		android:singleLine="true"
 		/>
 	<TextView 
 	    android:id="@+id/lb_page_size"

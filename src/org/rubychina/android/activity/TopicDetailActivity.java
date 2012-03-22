@@ -42,6 +42,7 @@ import android.widget.Toast;
 public class TopicDetailActivity extends GDActivity {
 
 	public static final String POS = "org.rubychina.android.activity.TopicDetailActivity.POSITION";
+	public static final String TOPIC = "org.rubychina.android.activity.TopicDetailActivity.TOPIC";
 	private static final String TAG = "TopicDetailActivity";
 	
 	private ImageView gravatar;
@@ -56,18 +57,8 @@ public class TopicDetailActivity extends GDActivity {
 		setActionBarContentView(R.layout.topic_detail_layout);
 		addActionBarItem(Type.List, R.id.action_bar_replies);
 		
-		t = GlobalResource.INSTANCE.getCurTopics().get(getIntent().getIntExtra(POS, 0));
-		
-		gravatar = (ImageView) findViewById(R.id.gravatar);
-		gravatar.setOnClickListener(mCheckProfileListener );
-		
-		TextView title = (TextView) findViewById(R.id.title);
-		title.setText(t.getTitle());
-		
-		TextView body = (TextView) findViewById(R.id.body);
-
-		ImageParser ip = new ImageParser(getApplicationContext());
-		body.setText(ip.replace(t.getBody()));  
+		Gson g = new Gson(); 
+		t = g.fromJson(getIntent().getStringExtra(TOPIC), Topic.class);
 	}
 	
 	@Override
@@ -96,6 +87,7 @@ public class TopicDetailActivity extends GDActivity {
             LocalBinder binder = (LocalBinder) service;
             mService = binder.getService();
             isBound = true;
+            initialize();
             requestUserAvatar();
         }
 
@@ -125,6 +117,19 @@ public class TopicDetailActivity extends GDActivity {
         default:
             return super.onHandleActionBarItemClick(item, position);
 		}
+	}
+	
+	private void initialize() {
+		gravatar = (ImageView) findViewById(R.id.gravatar);
+		gravatar.setOnClickListener(mCheckProfileListener);
+		
+		TextView title = (TextView) findViewById(R.id.title);
+		title.setText(t.getTitle());
+		
+		TextView body = (TextView) findViewById(R.id.body);
+
+		ImageParser ip = new ImageParser(getApplicationContext());
+		body.setText(ip.replace(t.getBody()));
 	}
 	
 	private void requestUserAvatar() {

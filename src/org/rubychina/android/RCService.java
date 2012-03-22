@@ -1,5 +1,10 @@
 package org.rubychina.android;
 
+import java.util.List;
+
+import org.rubychina.android.database.RCDBResolver;
+import org.rubychina.android.type.Node;
+import org.rubychina.android.type.Topic;
 import org.rubychina.android.type.User;
 import org.rubychina.android.util.GravatarUtil;
 
@@ -13,16 +18,10 @@ import android.widget.ImageView;
 
 public class RCService extends Service {
 
-	// Binder given to clients
     private final IBinder mBinder = new LocalBinder();
     
-    /**
-     * Class used for the client Binder.  Because we know this service always
-     * runs in the same process as its clients, we don't need to deal with IPC.
-     */
     public class LocalBinder extends Binder {
     	public RCService getService() {
-            // Return this instance of LocalService so clients can call public methods
             return RCService.this;
         }
     }
@@ -46,6 +45,44 @@ public class RCService extends Service {
 				view.setImageBitmap(ava);
 			}
 		}
+	}
+	
+	public List<Node> fetchNodes() {
+		List<Node> nodes = GlobalResource.INSTANCE.getNodes();
+		if(nodes.isEmpty()) {
+			nodes = RCDBResolver.INSTANCE.fetchNodes(getApplicationContext());
+			GlobalResource.INSTANCE.setNodes(nodes);
+		}
+		return nodes;
+	}
+	
+	public boolean insertNodes(List<Node> nodes) {
+		GlobalResource.INSTANCE.setNodes(nodes);
+		return RCDBResolver.INSTANCE.insertNodes(getApplicationContext(), nodes);
+	}
+	
+	public boolean clearNodes() {
+		GlobalResource.INSTANCE.getNodes().clear();
+		return RCDBResolver.INSTANCE.clearNodes(getApplicationContext());
+	}
+	
+	public List<Topic> fetchTopics() {
+		List<Topic> topics = GlobalResource.INSTANCE.getCurTopics();
+		if(topics.isEmpty()) {
+			topics = RCDBResolver.INSTANCE.fetchTopics(getApplicationContext());
+			GlobalResource.INSTANCE.setCurTopics(topics);
+		}
+		return topics;
+	}
+	
+	public boolean insertTopics(List<Topic> topics) {
+		GlobalResource.INSTANCE.setCurTopics(topics);
+		return RCDBResolver.INSTANCE.insertTopics(getApplicationContext(), topics);
+	}
+	
+	public boolean clearTopics() {
+		GlobalResource.INSTANCE.getCurTopics().clear();
+		return RCDBResolver.INSTANCE.clearTopics(getApplicationContext());
 	}
 	
 }

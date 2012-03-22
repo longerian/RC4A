@@ -10,6 +10,8 @@ import java.util.List;
 import org.rubychina.android.GlobalResource;
 import org.rubychina.android.R;
 import org.rubychina.android.RCApplication;
+import org.rubychina.android.RCService;
+import org.rubychina.android.RCService.LocalBinder;
 import org.rubychina.android.api.request.NodesRequest;
 import org.rubychina.android.api.response.NodesResponse;
 import org.rubychina.android.database.RCDBResolver;
@@ -17,9 +19,12 @@ import org.rubychina.android.type.Node;
 
 import yek.api.ApiCallback;
 import yek.api.ApiException;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,17 +40,47 @@ public class NodesActivity extends GDListActivity {
 	private static final String TAG = "NodesActivity";
 	private NodesRequest request;
 	private LoaderActionBarItem progress;
+	private RCService mService;
+	private boolean isBound = false; 
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		progress = (LoaderActionBarItem) addActionBarItem(Type.Refresh, R.id.action_bar_refresh);
-		if(GlobalResource.INSTANCE.getNodes().isEmpty()) {
-			startNodesRequest();
-		} else {
-			refreshPage(GlobalResource.INSTANCE.getNodes());
-		}
 	}
+	
+	@Override
+	protected void onStart() {
+		super.onStart();
+        Intent intent = new Intent(this, RCService.class);
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+	}
+
+    private ServiceConnection mConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName className,
+                IBinder service) {
+            LocalBinder binder = (LocalBinder) service;
+            mService = binder.getService();
+            isBound = true;
+            initialize();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            isBound = false;
+        }
+    };
+    
+	@Override
+    protected void onStop() {
+        super.onStop();
+        if (isBound) {
+            unbindService(mConnection);
+            isBound = false;
+        }
+    }
 	
 	@Override
 	protected void onDestroy() {
@@ -73,6 +108,15 @@ public class NodesActivity extends GDListActivity {
 		finish();
 	}
 
+	private void initialize() {
+		List<Node> nodes = mService.fetchNodes();
+		if(nodes.isEmpty()) {
+			startNodesRequest();
+		} else {
+			refreshPage(nodes);
+		}
+	}
+	
 	private void startNodesRequest() {
 		if(request == null) {
 			request = new NodesRequest();
@@ -111,9 +155,8 @@ public class NodesActivity extends GDListActivity {
 		@Override
 		public void onSuccess(NodesResponse r) {
 			progress.setLoading(false);
-			GlobalResource.INSTANCE.setNodes(r.getNodes());
-			RCDBResolver.INSTANCE.clearNodes(getApplicationContext());
-			RCDBResolver.INSTANCE.insertNodes(getApplicationContext(), r.getNodes());
+			mService.clearNodes();
+			mService.insertNodes(r.getNodes());
 			refreshPage(r.getNodes());
 		}
 		

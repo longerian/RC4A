@@ -2,19 +2,17 @@ package org.rubychina.android.activity;
 
 import greendroid.app.GDListActivity;
 import greendroid.widget.ActionBarItem;
-import greendroid.widget.ActionBarItem.Type;
 import greendroid.widget.LoaderActionBarItem;
+import greendroid.widget.ActionBarItem.Type;
 
 import java.util.List;
 
-import org.rubychina.android.GlobalResource;
 import org.rubychina.android.R;
 import org.rubychina.android.RCApplication;
 import org.rubychina.android.RCService;
 import org.rubychina.android.RCService.LocalBinder;
 import org.rubychina.android.api.request.ActiveTopicsRequest;
 import org.rubychina.android.api.response.ActiveTopicsResponse;
-import org.rubychina.android.database.RCDBResolver;
 import org.rubychina.android.type.Node;
 import org.rubychina.android.type.Topic;
 
@@ -24,6 +22,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.view.LayoutInflater;
@@ -37,6 +36,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.gson.Gson;
 
 
 public class TopicsActivity extends GDListActivity {
@@ -59,17 +60,8 @@ public class TopicsActivity extends GDListActivity {
 		progress = (LoaderActionBarItem) addActionBarItem(Type.Refresh, R.id.action_bar_refresh);
 		addActionBarItem(Type.Compose, R.id.action_bar_compose);
 		
-		List<Topic> cachedTopics = RCDBResolver.INSTANCE.fetchTopics(getApplicationContext());
-		GlobalResource.INSTANCE.setCurTopics(cachedTopics);
-		refreshPage(cachedTopics);
-		startTopicsRequest(HOT_TOPICS_NODE_ID);
-	}
-	
-	@Override
-	protected void onStart() {
-		super.onStart();
-        Intent intent = new Intent(this, RCService.class);
-        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+		Intent intent = new Intent(this, RCService.class);
+		bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 	}
 	
     private ServiceConnection mConnection = new ServiceConnection() {
@@ -80,7 +72,7 @@ public class TopicsActivity extends GDListActivity {
             LocalBinder binder = (LocalBinder) service;
             mService = binder.getService();
             isBound = true;
-            getListView().invalidate();
+            initialize();
         }
 
         @Override
@@ -88,20 +80,21 @@ public class TopicsActivity extends GDListActivity {
             isBound = false;
         }
     };
-    
-	@Override
-    protected void onStop() {
-        super.onStop();
-        if (isBound) {
-            unbindService(mConnection);
-            isBound = false;
-        }
-    }
-	
-	@Override
+
+    @Override
 	protected void onDestroy() {
 		super.onDestroy();
+		if (isBound) {
+			unbindService(mConnection);
+			isBound = false;
+		}
 		cancelTopicsRequest();
+	}
+	
+	private void initialize() {
+		List<Topic> cachedTopics = mService.fetchTopics();
+		refreshPage(cachedTopics);
+		startTopicsRequest(HOT_TOPICS_NODE_ID);
 	}
 	
 	private void refreshPage(List<Topic> topics) {
@@ -158,6 +151,9 @@ public class TopicsActivity extends GDListActivity {
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		Intent i = new Intent(getApplicationContext(), TopicDetailActivity.class);
+		Gson g = new Gson();
+		Topic t = (Topic) l.getItemAtPosition(position);
+		i.putExtra(TopicDetailActivity.TOPIC, g.toJson(t));
 		i.putExtra(TopicDetailActivity.POS, position);
 		startActivity(i);
 	}
@@ -208,9 +204,8 @@ public class TopicsActivity extends GDListActivity {
 		@Override
 		public void onSuccess(ActiveTopicsResponse r) {
 			progress.setLoading(false);
-			GlobalResource.INSTANCE.setCurTopics(r.getTopics());
-			RCDBResolver.INSTANCE.clearTopics(getApplicationContext());
-			RCDBResolver.INSTANCE.insertTopics(getApplicationContext(), r.getTopics());
+			mService.clearTopics();
+			mService.insertTopics(r.getTopics());
 			refreshPage(r.getTopics());
 		}
 		
