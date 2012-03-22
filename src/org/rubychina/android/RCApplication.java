@@ -40,7 +40,7 @@ public class RCApplication extends GDApplication {
 	
 	private void setupResource() {
 		mCacher = new Cache(getApplicationContext());
-		mThreadPoolExecutor = new ThreadPoolExecutor(10, 20, 30, TimeUnit.SECONDS, new ArrayBlockingQueue <Runnable>(100) );
+		mThreadPoolExecutor = new ThreadPoolExecutor(10, 20, 10, TimeUnit.SECONDS, new ArrayBlockingQueue <Runnable>(100) );
 		mAPIClient = new RCAPIClient(getApplicationContext(), new JSONParser(), mThreadPoolExecutor, mCacher);
 		mImgLoader = new BitmapAsyncLoader(new AsyncLoaderEngine(getApplicationContext(), mThreadPoolExecutor, mCacher));
 	}

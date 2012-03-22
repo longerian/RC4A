@@ -17,8 +17,8 @@ public class ImageParser {
 
 	private static final String TAG = "ImageParser";
 	private static final String RC_IMG_PATTERN = "!\\[.*\\]\\(.*\\)"; 
-	private Context mContext;  
-    private Pattern mPattern;  
+	private Context mContext;
+    private Pattern mPattern;
     private BitmapFactory.Options mBO;
     
     public ImageParser(Context context) {  
@@ -58,28 +58,16 @@ public class ImageParser {
 	
 	private Bitmap getScaledBitmap(Bitmap b) {
 		int screenWidth = ((RCApplication) mContext.getApplicationContext()).getScreenWidth();
-    	int screenHeight = ((RCApplication) mContext.getApplicationContext()).getScreenHeight();
-    	int newWidth = screenWidth, newHeight = screenHeight;
-    	
-    	float w2h = b.getWidth() * 1.0f / b.getHeight();
-    	if(w2h > 1.0f) {
-    		float ratio = b.getWidth() * 1.0f / screenWidth;
-    		if(ratio > 1.0) {
-    			newWidth = (int) (screenWidth / ratio);
-    			newHeight = (int) (b.getHeight() / ratio);
-    		} else {
-    			newWidth = b.getWidth();
-    			newHeight = b.getHeight();
-    		}
-    	} else {
-    		float ratio = b.getHeight() * 1.0f / screenHeight;
-    		if(ratio > 1.0) {
-    			newWidth = (int) (b.getWidth() / ratio);
-    			newHeight = (int) (screenHeight / ratio);
-    		} else {
-    			newWidth = b.getWidth();
-    			newHeight = b.getHeight();
-    		}
+    	int newWidth = b.getWidth(), newHeight = b.getHeight();
+    	if(b.getWidth() > screenWidth) {
+    		int scale = 1;
+    		int tempWith = b.getWidth();
+    		do {
+    			scale <<= 1;
+    			tempWith /= 2;
+    		} while(tempWith > screenWidth);
+    		newWidth = b.getWidth() / scale;
+    		newHeight = b.getHeight() / scale;
     	}
     	Bitmap nb = Bitmap.createScaledBitmap(b, newWidth, newHeight, true);
     	return nb;

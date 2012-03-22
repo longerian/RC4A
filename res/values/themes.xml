@@ -3,7 +3,7 @@
     <style parent="@style/Theme.GreenDroid.Light.NoTitleBar" name="Theme.RC">
 		<item name="gdActionBarBackground">@drawable/action_bar_background</item>
 		<item name="gdActionBarDividerWidth">2px</item>
-<!-- 		<item name="gdActionBarApplicationDrawable">@drawable/greendroid_application_logo_normal</item> -->
+<!-- 		<item name="gdActionBarApplicationDrawable">@drawable/app_logo</item> -->
     </style>
     
 </resources>
