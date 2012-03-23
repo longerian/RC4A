@@ -15,7 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
  -->
 <resources>
-    <string name="app_user_token">个人私钥</string><string name="app_name">RubyChina for Android</string><string name="app_page_size">帖子加载页数</string>
+    <string name="app_user_token">个人私钥</string><string name="app_name">Ruby China for Android</string><string name="app_page_size">帖子加载页数</string>
     <string name="hint_reply">请输入......</string>
     <string name="hot_topics">热门话题</string>
     <string name="reply_list_unit">楼</string>
