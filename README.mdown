@@ -1,0 +1,10 @@
+##DESCRIPTION
+
+It is an Android client for Ruby-China. For more information about the community itself, please visit http://ruby-china.org/.
+This project requires GreenDroid as library to support it's UI presentation, you can fork it from my github https://github.com/longerian/GreenDroid
+or the origin one which is https://github.com/cyrilmottier/GreenDroid. These two are almost the same at current time, but I may do little modification
+in the future.
+
+##LICENSE
+
+Copyright (C) 2012 Longerian (http://www.longerian.me)
