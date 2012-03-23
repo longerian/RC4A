@@ -23,7 +23,7 @@ limitations under the License.
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/format_bar_bg" 
-        android:padding="6.0dip" 
+        android:padding="8.0dip" 
         >
         <ImageView 
 		    android:id="@+id/gravatar"

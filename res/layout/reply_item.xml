@@ -18,6 +18,7 @@ limitations under the License.
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/list_bg_selector"
+    android:padding="8dip"
     >
     <ImageView 
         android:id="@+id/gravatar"
