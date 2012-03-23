@@ -2,7 +2,6 @@ package org.rubychina.android.activity;
 
 import java.util.List;
 
-import org.rubychina.android.GlobalResource;
 import org.rubychina.android.R;
 import org.rubychina.android.RCApplication;
 import org.rubychina.android.RCService;
@@ -18,6 +17,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.IBinder;
@@ -85,7 +85,7 @@ public class RCActivity extends Activity {
 		if(nodes.isEmpty()) {
 			startNodesRequest();
 		} else {
-			new CountDownTimer(1000, 500) {
+			new CountDownTimer(500, 100) {
 				
 				@Override
 				public void onTick(long millisUntilFinished) {
@@ -128,9 +128,19 @@ public class RCActivity extends Activity {
 
 		@Override
 		public void onSuccess(NodesResponse r) {
-			mService.clearNodes();
-			mService.insertNodes(r.getNodes());
+			new CacheNodesTask().execute(r.getNodes());
 			go2Topics();
+		}
+		
+	}
+	
+	private class CacheNodesTask extends AsyncTask<List<Node>, Void, Void> {
+
+		@Override
+		protected Void doInBackground(List<Node>... params) {
+			mService.clearNodes();
+			mService.insertNodes(params[0]);
+			return null;
 		}
 		
 	}
