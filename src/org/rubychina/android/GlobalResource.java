@@ -19,18 +19,6 @@ import java.util.List;
 import org.rubychina.android.type.Node;
 import org.rubychina.android.type.Topic;
 
-/**
- * @author Longer
- *
- */
-/**
- * @author long
- *
- */
-/**
- * @author long
- *
- */
 public enum GlobalResource {
 
 	INSTANCE;
