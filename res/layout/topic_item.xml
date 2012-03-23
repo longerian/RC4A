@@ -56,11 +56,10 @@ limitations under the License.
         />
 	<TextView 
 	    android:id="@+id/reply_count"
-        android:layout_width="48dip"
-	    android:layout_height="32dip"
+        android:layout_width="32dip"
+	    android:layout_height="24dip"
 	    android:layout_margin="4dip"
 	    android:background="@drawable/reply_count_bg"
-	    android:padding="4dip"
 	    android:layout_alignParentRight="true"
 	    android:layout_centerVertical="true"
 	    android:gravity="center"
