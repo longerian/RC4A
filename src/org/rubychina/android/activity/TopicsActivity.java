@@ -24,8 +24,8 @@ import org.rubychina.android.R;
 import org.rubychina.android.RCApplication;
 import org.rubychina.android.RCService;
 import org.rubychina.android.RCService.LocalBinder;
-import org.rubychina.android.api.request.ActiveTopicsRequest;
-import org.rubychina.android.api.response.ActiveTopicsResponse;
+import org.rubychina.android.api.request.TopicsRequest;
+import org.rubychina.android.api.response.TopicsResponse;
 import org.rubychina.android.type.Node;
 import org.rubychina.android.type.Topic;
 
@@ -56,7 +56,7 @@ import com.google.gson.Gson;
 public class TopicsActivity extends GDListActivity {
 
 	private static final String TAG = "TopicsActivity";
-	private ActiveTopicsRequest request;
+	private TopicsRequest request;
 	
 	public static final int HOT_TOPICS_NODE_ID = -1;
 	
@@ -120,7 +120,7 @@ public class TopicsActivity extends GDListActivity {
 	
 	private void startTopicsRequest(int nodeId) {
 		if(request == null) {
-			request = new ActiveTopicsRequest();
+			request = new TopicsRequest();
 		}
 		if(!(nodeId == HOT_TOPICS_NODE_ID)) {
 			request.setNodeId(nodeId);
@@ -201,7 +201,7 @@ public class TopicsActivity extends GDListActivity {
 		return true;
 	}
 
-	private class HotTopicsCallback implements ApiCallback<ActiveTopicsResponse> {
+	private class HotTopicsCallback implements ApiCallback<TopicsResponse> {
 
 		@Override
 		public void onException(ApiException e) {
@@ -210,13 +210,13 @@ public class TopicsActivity extends GDListActivity {
 		}
 
 		@Override
-		public void onFail(ActiveTopicsResponse r) {
+		public void onFail(TopicsResponse r) {
 			Toast.makeText(getApplicationContext(), R.string.hint_loading_data_failed, Toast.LENGTH_SHORT).show();
 			progress.setLoading(false);
 		}
 
 		@Override
-		public void onSuccess(ActiveTopicsResponse r) {
+		public void onSuccess(TopicsResponse r) {
 			progress.setLoading(false);
 			refreshPage(r.getTopics());
 			new CacheTopicsTask().execute(r.getTopics());
