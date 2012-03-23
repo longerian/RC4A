@@ -16,29 +16,19 @@ package org.rubychina.android.api.response;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.rubychina.android.type.Reply;
 import org.rubychina.android.type.Topic;
 
-public class TopicDetailResponse extends RCAPIResponse {
 
-	private Topic topic;
-	
-	private List<Reply> replies = new ArrayList<Reply>();
+public class TopicsResponse extends RCAPIResponse {
 
-	public Topic getTopic() {
-		return topic;
+	private List<Topic> topics = new ArrayList<Topic>();
+
+	public List<Topic> getTopics() {
+		return topics;
 	}
 
-	public List<Reply> getReplies() {
-		return replies;
+	public void setTopics(List<Topic> topics) {
+		this.topics = topics;
 	}
-
-	public void setTopic(Topic topic) {
-		this.topic = topic;
-	}
-
-	public void setReplies(List<Reply> replies) {
-		this.replies = replies;
-	} 
 	
 }

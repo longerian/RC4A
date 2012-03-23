@@ -16,48 +16,60 @@ package org.rubychina.android.api.request;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.rubychina.android.activity.TopicsActivity;
 import org.rubychina.android.api.RCAPIContext;
-import org.rubychina.android.api.response.TopicDetailResponse;
+import org.rubychina.android.api.response.TopicsResponse;
 
 import yek.cache.Cache;
 
-public class TopicDetailRequest extends RCAPIGet<TopicDetailResponse> {
+public class TopicsRequest extends RCAPIGet<TopicsResponse> {
 
-	private static final String TAG = "TopicDetailRequest";
-	private static final String url = "api/topics/";
+	private static final String TAG = "HotTopicsRequest";
 	
-	private int id;
+	private static final int DEFAULT_SIZE = 30;
 	
-	public TopicDetailRequest(int id) {
-		super();
-		this.id = id;
+	private static final String SIZE_KEY = "size";
+	
+	private int size = DEFAULT_SIZE;
+	private int nodeId = TopicsActivity.HOT_TOPICS_NODE_ID;
+	
+	public void setSize(int size) {
+		if(size < 0 || size > 100) {
+			this.size = DEFAULT_SIZE;
+		} else {
+			this.size = size; 
+		}
 	}
-
-	public void setId(int id) {
-		this.id = id;
+	
+	public void setNodeId(int nodeId) {
+		this.nodeId = nodeId;
 	}
-
+	
 	@Override
 	public String getRequestURL(RCAPIContext context) {
-		return  context.getServer() + url + id + ".json";
+		if(nodeId == TopicsActivity.HOT_TOPICS_NODE_ID) {
+			return context.getServer() + "api/topics.json";
+		} else {
+			return context.getServer() + "api/topics/node/" + nodeId + ".json";
+		}
 	}
 
 	@Override
-	public Class<TopicDetailResponse> getResponseClass() {
-		return TopicDetailResponse.class;
+	public Class<TopicsResponse> getResponseClass() {
+		return TopicsResponse.class;
 	}
 
 	@Override
 	public Map<String, String> getTextParams(RCAPIContext context) {
-		//NOTE because request for hot topics doesn't need any particular parameters, so just return a empty hashmap.
 		HashMap<String, String> params = new HashMap<String, String>();
+		params.put(SIZE_KEY, size + "");
 		return params;
 	}
 
 	@Override
 	public String getCacheRelativePathOrURL() {
 		//NOTE always ensure providing a unique cache for a request
-		return makeCachePath("api", "topics", id + "");
+		return makeCachePath("api", "topics", "list", "default", size + "");
 	}
 
 	@Override

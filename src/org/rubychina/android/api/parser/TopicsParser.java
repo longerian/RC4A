@@ -19,43 +19,41 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.rubychina.android.api.response.TopicDetailResponse;
-import org.rubychina.android.type.Reply;
-
-import android.util.Log;
+import org.rubychina.android.api.response.TopicsResponse;
+import org.rubychina.android.type.Topic;
 
 import com.google.gson.Gson;
 
-public class TopicDetailParser extends JSONParseHandler<TopicDetailResponse> {
+public class TopicsParser extends JSONParseHandler<TopicsResponse> {
 
-	private TopicDetailResponse resp = new TopicDetailResponse();
+	private TopicsResponse resp = new TopicsResponse();
 	
 	@Override
-	public TopicDetailResponse getModel() {
+	public TopicsResponse getModel() {
 		return resp;
 	}
-	
+
 	@Override
 	public void parse(String source) {
 		try {
-			JSONArray jsonReplies = new JSONObject(source).getJSONArray("replies");
-			List<Reply> replies = new ArrayList<Reply>();
-			int length = jsonReplies.length();
+			JSONArray jsonTopics = new JSONArray(source);
+			List<Topic> topics = new ArrayList<Topic>();
+			int length = jsonTopics.length();
 			for(int i = 0; i < length; i++) {
-				replies.add(json2Reply(jsonReplies.getJSONObject(i)));
+				topics.add(json2Topic(jsonTopics.getJSONObject(i)));
 			}
-			resp.setReplies(replies);
+			resp.setTopics(topics);
 			resp.setSuccess(true);
 		} catch (JSONException e) {
 			resp.setSuccess(false);
 			e.printStackTrace();
 		}
 	}
-	
-	private Reply json2Reply(JSONObject json) {
-		Gson gson = new Gson();
-		Reply r = gson.fromJson(json.toString(), Reply.class);
-		return r;
-	}
 
+	private Topic json2Topic(JSONObject json) {
+		Gson gson = new Gson();
+		Topic t = gson.fromJson(json.toString(), Topic.class);
+		return t;
+	}
+	
 }

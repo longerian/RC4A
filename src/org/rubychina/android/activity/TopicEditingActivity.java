@@ -1,14 +1,31 @@
+/*Copyright (C) 2012 Longerian (http://www.longerian.me)
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.*/
 package org.rubychina.android.activity;
 
 import greendroid.app.GDActivity;
 import greendroid.widget.ActionBarItem;
 import greendroid.widget.ActionBarItem.Type;
 
+import java.util.List;
+
 import org.rubychina.android.R;
 import org.rubychina.android.RCApplication;
 import org.rubychina.android.RCService;
 import org.rubychina.android.RCService.LocalBinder;
+import org.rubychina.android.api.request.NodesRequest;
 import org.rubychina.android.api.request.PostTopicRequest;
+import org.rubychina.android.api.response.NodesResponse;
 import org.rubychina.android.api.response.PostTopicResponse;
 import org.rubychina.android.type.Node;
 
@@ -23,6 +40,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.DialogInterface.OnClickListener;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.text.TextUtils;
@@ -43,6 +61,7 @@ public class TopicEditingActivity extends GDActivity {
 	private EditText body;
 	private ProgressDialog sending;
 	private PostTopicRequest request;
+	private NodesRequest nodeRequest;
 	private RCService mService;
 	private boolean isBound = false; 
 	
@@ -130,15 +149,17 @@ public class TopicEditingActivity extends GDActivity {
 	
 	private void initialize() {
 		title = (EditText) findViewById(R.id.title);
-		
 		nodeSelector = (Spinner) findViewById(R.id.node);
 		ArrayAdapter<Node> adapter = new ArrayAdapter<Node>(getApplicationContext(), 
 				android.R.layout.simple_spinner_item, 
 				mService.fetchNodes());
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		nodeSelector.setAdapter(adapter);
-		
 		body = (EditText) findViewById(R.id.body);
+		
+		if(mService.fetchNodes().isEmpty()) {
+			startNodesRequest();
+		}
 	}
 
 	private boolean isTopicValid() {
@@ -154,6 +175,10 @@ public class TopicEditingActivity extends GDActivity {
 			body.startAnimation(animation);
 			return false;
 		}
+		if((Node) nodeSelector.getSelectedItem() == null) {
+			nodeSelector.startAnimation(animation);
+			return false;
+		}
 		return true;
 	}
 	
@@ -165,15 +190,15 @@ public class TopicEditingActivity extends GDActivity {
 		request.setNodeId(nodeId);
 		request.setBody(body);
 		((RCApplication) getApplication()).getAPIClient().request(request, new PostTopicCallback());
-		showProgress();
+		showProgress(R.string.hint_submiting_topic);
 	}
 	
-	private void showProgress() {
+	private void showProgress(int  message) {
 		if(sending == null) {
 			sending = new ProgressDialog(this);
 			sending.setCancelable(false);
 		}
-		sending.setMessage(getString(R.string.hint_submiting_topic));
+		sending.setMessage(getString(message));
 		sending.show();
 	}
 	
@@ -181,6 +206,58 @@ public class TopicEditingActivity extends GDActivity {
 		if(sending != null) {
 			sending.dismiss();
 		}
+	}
+	
+	private void startNodesRequest() {
+		if(nodeRequest == null) {
+			nodeRequest = new NodesRequest();
+		}
+		((RCApplication) getApplication()).getAPIClient().request(nodeRequest, new NodesCallback());
+		showProgress(R.string.hint_loading_nodes);
+	}
+	
+	private class NodesCallback implements ApiCallback<NodesResponse> {
+
+		@Override
+		public void onException(ApiException e) {
+			dismissProgress();
+			Toast.makeText(getApplicationContext(), 
+					R.string.hint_no_nodes, 
+					Toast.LENGTH_SHORT)
+					.show();
+		}
+
+		@Override
+		public void onFail(NodesResponse r) {
+			dismissProgress();
+			Toast.makeText(getApplicationContext(), 
+					R.string.hint_no_nodes,
+					Toast.LENGTH_SHORT)
+					.show();
+		}
+
+		@Override
+		public void onSuccess(NodesResponse r) {
+			dismissProgress();
+			ArrayAdapter<Node> adapter = new ArrayAdapter<Node>(getApplicationContext(), 
+					android.R.layout.simple_spinner_item, 
+					r.getNodes());
+			adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+			nodeSelector.setAdapter(adapter);
+			new CacheNodesTask().execute(r.getNodes());
+		}
+		
+	}
+	
+	private class CacheNodesTask extends AsyncTask<List<Node>, Void, Void> {
+
+		@Override
+		protected Void doInBackground(List<Node>... params) {
+			mService.clearNodes();
+			mService.insertNodes(params[0]);
+			return null;
+		}
+		
 	}
 	
 	private class PostTopicCallback implements ApiCallback<PostTopicResponse> {
