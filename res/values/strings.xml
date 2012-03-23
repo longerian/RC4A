@@ -42,6 +42,7 @@ limitations under the License.
     <string name="menu_preference">设置</string>
     
     <string name="setting_app">设置</string>
+    <string name="hint_no_replies">该帖子还未有人回复...</string>
     
     
     

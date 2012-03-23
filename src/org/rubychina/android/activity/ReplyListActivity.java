@@ -193,10 +193,15 @@ public class ReplyListActivity extends GDActivity {
 		public void onSuccess(TopicDetailResponse r) {
 			progress.setLoading(false);
 			replies = (ListView) findViewById(R.id.replies);
-			Collections.sort(r.getReplies());
-			replies.setAdapter(new ReplyAdapter(getApplicationContext(), R.layout.reply_item,
-					R.id.body, r.getReplies()));
-			registerForContextMenu(replies);
+			List<Reply> rs = r.getReplies();
+			if(!rs.isEmpty()) {
+				Collections.sort(r.getReplies());
+				replies.setAdapter(new ReplyAdapter(getApplicationContext(), R.layout.reply_item,
+						R.id.body, r.getReplies()));
+				registerForContextMenu(replies);
+			} else {
+				Toast.makeText(getApplicationContext(), R.string.hint_no_replies, Toast.LENGTH_LONG).show();
+			}
 		}
 		
 	}
