@@ -13,6 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.*/
 package org.rubychina.android;
 
+import java.net.URL;
 import java.util.List;
 
 import org.rubychina.android.database.RCDBResolver;
@@ -24,14 +25,20 @@ import org.rubychina.android.util.GravatarUtil;
 import android.app.Service;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Binder;
 import android.os.IBinder;
+import android.text.Html;
+import android.text.Html.ImageGetter;
 import android.text.TextUtils;
 import android.widget.ImageView;
 
 public class RCService extends Service {
 
     private final IBinder mBinder = new LocalBinder();
+    private ImageGetter imgGetter;
     
     public class LocalBinder extends Binder {
     	public RCService getService() {
@@ -42,6 +49,29 @@ public class RCService extends Service {
 	@Override
 	public IBinder onBind(Intent arg0) {
 		return mBinder;
+	}
+	
+	public ImageGetter getImageGetter() {
+		if(imgGetter == null) {
+			imgGetter = new Html.ImageGetter() {
+				
+				public Drawable getDrawable(String source) {
+					Drawable drawable = new BitmapDrawable();
+					URL url;
+					try {
+						url = new URL(source);
+						drawable = Drawable.createFromStream(url.openStream(), "");
+					} catch (Exception e) {
+						return new BitmapDrawable();
+					}
+					drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable
+							.getIntrinsicHeight());
+					return drawable;
+				}
+				
+			};
+		}
+		return imgGetter;
 	}
 	
 	public void requestUserAvatar(User user, ImageView view, int size) {

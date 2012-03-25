@@ -26,6 +26,7 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ImageSpan;
 
+@Deprecated
 public class ImageParser {
 
 	private static final String TAG = "ImageParser";

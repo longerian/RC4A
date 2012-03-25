@@ -17,6 +17,7 @@ limitations under the License.
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFFFFFFF"
     >
     <RelativeLayout
         android:id="@+id/title_bar" 
@@ -30,6 +31,7 @@ limitations under the License.
 		    android:layout_width="48dip"
 		    android:layout_height="48dip"
 		    android:src="@drawable/default_gravatar"
+		    android:contentDescription="@string/hint_image_alt"
 		    />
 	    <TextView 
 	        android:id="@+id/title"
@@ -46,36 +48,15 @@ limitations under the License.
 	        android:shadowRadius="1.0"
 	        />
     </RelativeLayout>
-    <ScrollView
-        android:layout_width="match_parent"
-	    android:layout_height="match_parent"
+    <TextView 
+        android:id="@+id/body"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
 	    android:layout_below="@+id/title_bar"
-	    android:layout_above="@+id/comment" 
-        >
-	    <TextView 
-	        android:id="@+id/body"
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:background="#ffffffff"
-		    android:padding="10.0dip"
-		    android:autoLink="all"
-		    android:textSize="18.0sp"
-	        />
-   	</ScrollView>
-	<!-- no api for reply, so remove reply box -->
-<!-- 	<include  -->
-<!-- 	    android:id="@+id/comment" -->
-<!-- 	    layout="@layout/block_compose" -->
-<!-- 	    android:layout_width="match_parent" -->
-<!-- 	    android:layout_height="wrap_content" -->
-<!-- 	    android:layout_alignParentBottom="true" -->
-<!-- 	    /> -->
-<!-- 	<include  -->
-<!-- 	    android:id="@+id/login_note" -->
-<!-- 	    layout="@layout/block_login_note" -->
-<!-- 	    android:layout_width="match_parent" -->
-<!-- 	    android:layout_height="wrap_content" -->
-<!-- 	    android:layout_alignParentBottom="true" -->
-<!-- 	    android:layout_alignBaseline="@+id/comment" -->
-<!-- 	    /> -->
+	    android:background="#ffffffff"
+	    android:padding="10.0dip"
+	    android:autoLink="all"
+	    android:textSize="18.0sp"
+	    android:textAppearance="@style/RCTextAppearance"
+        />
 </RelativeLayout>

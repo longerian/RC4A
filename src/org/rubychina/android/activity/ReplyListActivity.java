@@ -61,6 +61,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+@Deprecated
 public class ReplyListActivity extends GDActivity {
 
 	public static final String BELONG_TO_TOPIC = "org.rubychina.android.activity.ReplyListActivity.TOPIC_ID";
