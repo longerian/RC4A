@@ -16,6 +16,7 @@ package org.rubychina.android.api.request;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.rubychina.android.activity.NodesActivity;
 import org.rubychina.android.activity.TopicsActivity;
 import org.rubychina.android.api.RCAPIContext;
 import org.rubychina.android.api.response.TopicsResponse;
@@ -31,7 +32,7 @@ public class TopicsRequest extends RCAPIGet<TopicsResponse> {
 	private static final String SIZE_KEY = "size";
 	
 	private int size = DEFAULT_SIZE;
-	private int nodeId = TopicsActivity.HOT_TOPICS_NODE_ID;
+	private int nodeId = NodesActivity.ACTIVE_TOPICS_NODE_ID;
 	
 	public void setSize(int size) {
 		if(size < 0 || size > 100) {
@@ -47,7 +48,7 @@ public class TopicsRequest extends RCAPIGet<TopicsResponse> {
 	
 	@Override
 	public String getRequestURL(RCAPIContext context) {
-		if(nodeId == TopicsActivity.HOT_TOPICS_NODE_ID) {
+		if(nodeId == NodesActivity.ACTIVE_TOPICS_NODE_ID) {
 			return context.getServer() + "api/topics.json";
 		} else {
 			return context.getServer() + "api/topics/node/" + nodeId + ".json";

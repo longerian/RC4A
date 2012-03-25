@@ -29,6 +29,12 @@ public class Node implements Parcelable {
 		super();
 	}
 
+	public Node(int id, String name) {
+		super();
+		this.id = id;
+		this.name = name;
+	}
+
 	public int getId() {
 		return id;
 	}

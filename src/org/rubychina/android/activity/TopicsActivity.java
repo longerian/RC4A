@@ -58,12 +58,13 @@ public class TopicsActivity extends GDListActivity {
 	private static final String TAG = "TopicsActivity";
 	private TopicsRequest request;
 	
-	public static final int HOT_TOPICS_NODE_ID = -1;
 	
 	private RCService mService;
 	private boolean isBound = false; 
 	
 	private LoaderActionBarItem progress;
+	
+	private Node node = NodesActivity.ACTIVE_TOPICS_NODE;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -107,7 +108,7 @@ public class TopicsActivity extends GDListActivity {
 	private void initialize() {
 		List<Topic> cachedTopics = mService.fetchTopics();
 		refreshPage(cachedTopics);
-		startTopicsRequest(HOT_TOPICS_NODE_ID);
+		startTopicsRequest(node);
 	}
 	
 	private void refreshPage(List<Topic> topics) {
@@ -118,13 +119,11 @@ public class TopicsActivity extends GDListActivity {
 		setListAdapter(adapter);
 	}
 	
-	private void startTopicsRequest(int nodeId) {
+	private void startTopicsRequest(Node node) {
 		if(request == null) {
 			request = new TopicsRequest();
 		}
-		if(!(nodeId == HOT_TOPICS_NODE_ID)) {
-			request.setNodeId(nodeId);
-		}
+		request.setNodeId(node.getId());
 		request.setSize(((RCApplication) getApplication()).getPageSize());
 		((RCApplication) getApplication()).getAPIClient().request(request, new HotTopicsCallback());
 		progress.setLoading(true);
@@ -146,7 +145,7 @@ public class TopicsActivity extends GDListActivity {
 			startActivityForResult(i, NodesActivity.PICK_NODE);
 			return true;
         case R.id.action_bar_refresh:
-        	startTopicsRequest(HOT_TOPICS_NODE_ID);
+        	startTopicsRequest(node);
         	return true;
         case R.id.action_bar_compose:
         	if(((RCApplication) getApplication()).isLogin()) {
@@ -177,7 +176,8 @@ public class TopicsActivity extends GDListActivity {
 		if(requestCode == NodesActivity.PICK_NODE) {
 			if(resultCode == RESULT_OK) {
 				Node n = data.getParcelableExtra(NodesActivity.PICKED_NODE);
-				startTopicsRequest(n.getId());
+				node = n;
+				startTopicsRequest(n);
 			}
 		}
 	}

@@ -53,10 +53,15 @@ public class NodesActivity extends GDListActivity {
 	public static final int PICK_NODE = 0x7001;
 	public static final String PICKED_NODE = "org.rubychina.android.activity.NodesActivity.PICKED_NODE";
 	private static final String TAG = "NodesActivity";
+	
+	public static final String ACTIVE_TOPICS_NODE_NAME = "热门话题";
+	public static final int ACTIVE_TOPICS_NODE_ID = -1;
+	public static final Node ACTIVE_TOPICS_NODE = new Node(ACTIVE_TOPICS_NODE_ID, ACTIVE_TOPICS_NODE_NAME);
+	
 	private NodesRequest request;
 	private LoaderActionBarItem progress;
 	private RCService mService;
-	private boolean isBound = false; 
+	private boolean isBound = false;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -148,6 +153,9 @@ public class NodesActivity extends GDListActivity {
 	}
 	
 	private void refreshPage(List<Node> nodes) {
+		if(!nodes.contains(ACTIVE_TOPICS_NODE)) {
+			nodes.add(0, ACTIVE_TOPICS_NODE);
+		}
 		NodeAdapter adapter = new NodeAdapter(getApplicationContext(), R.layout.node_item,
 				R.id.name, nodes);
 		setListAdapter(adapter);
