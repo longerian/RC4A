@@ -28,6 +28,7 @@ import org.rubychina.android.api.request.TopicsRequest;
 import org.rubychina.android.api.response.TopicsResponse;
 import org.rubychina.android.type.Node;
 import org.rubychina.android.type.Topic;
+import org.rubychina.android.type.User;
 
 import yek.api.ApiCallback;
 import yek.api.ApiException;
@@ -43,6 +44,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -273,7 +275,7 @@ public class TopicsActivity extends GDListActivity {
 			} else {
 				viewHolder = (ViewHolder) convertView.getTag();
 			}
-			Topic t = items.get(position);
+			final Topic t = items.get(position);
 			if(isBound) {
 				mService.requestUserAvatar(t.getUser(), viewHolder.gravatar, 0);
 			}
@@ -284,6 +286,13 @@ public class TopicsActivity extends GDListActivity {
 			} else {
 				viewHolder.replies.setText(t.getRepliesCount() + "");
 			}
+			viewHolder.gravatar.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					visitUserProfile(t.getUser());
+				}
+			});
 			return convertView;
 		}
 		
@@ -298,4 +307,11 @@ public class TopicsActivity extends GDListActivity {
 		
 	}
 
+	private void visitUserProfile(User u) {
+		Gson g = new Gson();
+		Intent i = new Intent(getApplicationContext(), UserProfileActivity.class);
+		i.putExtra(UserProfileActivity.VIEW_PROFILE, g.toJson(u));
+		startActivity(i);
+	}
+	
 }

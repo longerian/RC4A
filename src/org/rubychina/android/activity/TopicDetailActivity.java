@@ -31,6 +31,7 @@ import org.rubychina.android.api.request.TopicDetailRequest;
 import org.rubychina.android.api.response.TopicDetailResponse;
 import org.rubychina.android.type.Reply;
 import org.rubychina.android.type.Topic;
+import org.rubychina.android.type.User;
 import org.rubychina.android.util.ImageParser;
 
 import yek.api.ApiCallback;
@@ -184,7 +185,7 @@ public class TopicDetailActivity extends GDActivity {
 		}
 		
 		@Override
-		public View getView(final int position, View convertView, ViewGroup parent) {
+		public View getView(int position, View convertView, ViewGroup parent) {
 			final ViewHolder viewHolder;
 			if(convertView == null) {
 				viewHolder = new ViewHolder();
@@ -198,12 +199,19 @@ public class TopicDetailActivity extends GDActivity {
 			} else {
 				viewHolder = (ViewHolder) convertView.getTag();
 			}
-			Reply r = items.get(position);
+			final Reply r = items.get(position);
 			mService.requestUserAvatar(r.getUser(), viewHolder.gravatar, 0);
 			viewHolder.userName.setText(r.getUser().getLogin());
 			viewHolder.floor.setText(position + 1 + "" + getString(R.string.reply_list_unit));
 //			new RetrieveSpannedTask(viewHolder.body).execute(r.getBodyHTML());
 			viewHolder.body.setText(Html.fromHtml(r.getBodyHTML()));
+			viewHolder.gravatar.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					visitUserProfile(r.getUser());
+				}
+			});
 			return convertView;
 		}
 		
@@ -233,7 +241,13 @@ public class TopicDetailActivity extends GDActivity {
 		View body = LayoutInflater.from(getApplicationContext()).inflate(R.layout.topic_body_layout, null);
 		
 		gravatar = (ImageView) body.findViewById(R.id.gravatar);
-		gravatar.setOnClickListener(mVisitProfileListener);
+		gravatar.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				visitUserProfile(t.getUser());
+			}
+		});
 		requestUserAvatar();
 		
 		TextView title = (TextView) body.findViewById(R.id.title);
@@ -245,16 +259,12 @@ public class TopicDetailActivity extends GDActivity {
 		return body;
 	}
 	
-	private OnClickListener mVisitProfileListener = new OnClickListener() {
-		
-		@Override
-		public void onClick(View v) {
-			Gson g = new Gson();
-			Intent i = new Intent(getApplicationContext(), UserProfileActivity.class);
-			i.putExtra(UserProfileActivity.VIEW_PROFILE, g.toJson(t.getUser()));
-			startActivity(i);
-		}
-	};
+	private void visitUserProfile(User u) {
+		Gson g = new Gson();
+		Intent i = new Intent(getApplicationContext(), UserProfileActivity.class);
+		i.putExtra(UserProfileActivity.VIEW_PROFILE, g.toJson(u));
+		startActivity(i);
+	}
 	
 	private void requestUserAvatar() {
 		if(gravatar == null) {
