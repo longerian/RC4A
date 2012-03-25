@@ -202,7 +202,8 @@ public class TopicDetailActivity extends GDActivity {
 			mService.requestUserAvatar(r.getUser(), viewHolder.gravatar, 0);
 			viewHolder.userName.setText(r.getUser().getLogin());
 			viewHolder.floor.setText(position + 1 + "" + getString(R.string.reply_list_unit));
-			new RetrieveSpannedTask(viewHolder.body).execute(r.getBodyHTML());
+//			new RetrieveSpannedTask(viewHolder.body).execute(r.getBodyHTML());
+			viewHolder.body.setText(Html.fromHtml(r.getBodyHTML()));
 			return convertView;
 		}
 		
