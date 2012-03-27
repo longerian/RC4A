@@ -20,16 +20,13 @@ import greendroid.widget.LoaderActionBarItem;
 
 import java.util.List;
 
-import org.rubychina.android.GlobalResource;
 import org.rubychina.android.R;
 import org.rubychina.android.RCApplication;
 import org.rubychina.android.RCService;
 import org.rubychina.android.RCService.LocalBinder;
 import org.rubychina.android.api.request.NodesRequest;
 import org.rubychina.android.api.response.NodesResponse;
-import org.rubychina.android.database.RCDBResolver;
 import org.rubychina.android.type.Node;
-import org.rubychina.android.type.Topic;
 
 import yek.api.ApiCallback;
 import yek.api.ApiException;

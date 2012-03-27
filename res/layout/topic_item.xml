@@ -26,7 +26,7 @@ limitations under the License.
 	    android:layout_width="48dip"
 	    android:layout_height="48dip"
 	    android:src="@drawable/default_gravatar"
-	    android:contentDescription="@string/hint_image_alt"
+	    android:contentDescription="@string/alt_avatar"
 	    />
     <TextView
         android:id="@+id/title"

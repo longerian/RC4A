@@ -37,6 +37,8 @@ limitations under the License.
         android:layout_height="wrap_content"
         android:layout_below="@+id/lb_title"
         android:singleLine="true"
+        android:hint="@string/hint_please_input_title"
+        android:imeOptions="actionNext"
         />
     <Spinner 
         android:id="@+id/node"
@@ -65,5 +67,7 @@ limitations under the License.
         android:layout_height="match_parent"
         android:layout_below="@+id/lb_body"
         android:gravity="top"
+        android:hint="@string/hint_please_input_body"
+        android:imeOptions="actionDone"
         />
 </RelativeLayout>

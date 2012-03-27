@@ -17,7 +17,6 @@ limitations under the License.
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFFFF"
     >
     <RelativeLayout
         android:id="@+id/title_bar" 
@@ -31,7 +30,7 @@ limitations under the License.
 		    android:layout_width="48dip"
 		    android:layout_height="48dip"
 		    android:src="@drawable/default_gravatar"
-		    android:contentDescription="@string/hint_image_alt"
+		    android:contentDescription="@string/alt_avatar"
 		    />
 	    <TextView 
 	        android:id="@+id/title"
@@ -63,5 +62,6 @@ limitations under the License.
         android:layout_height="1px"
         android:layout_below="@+id/body"
         android:src="@drawable/list_divider"
+        android:contentDescription="@string/alt_divider"
         />
 </RelativeLayout>
