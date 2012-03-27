@@ -88,13 +88,9 @@ public class TopicDetailActivity extends GDActivity {
 		t = g.fromJson(getIntent().getStringExtra(TOPIC), Topic.class);
 		
 		ip = new ImageParser(getApplicationContext());
-	}
-	
-	@Override
-	protected void onStart() {
-		super.onStart();
-        Intent intent = new Intent(this, RCService.class);
-        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+		
+		Intent intent = new Intent(this, RCService.class);
+		bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 	}
 	
     private ServiceConnection mConnection = new ServiceConnection() {
@@ -115,8 +111,8 @@ public class TopicDetailActivity extends GDActivity {
     };
     
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onDestroy() {
+        super.onDestroy();
         if (isBound) {
             unbindService(mConnection);
             isBound = false;
@@ -203,7 +199,6 @@ public class TopicDetailActivity extends GDActivity {
 			mService.requestUserAvatar(r.getUser(), viewHolder.gravatar, 0);
 			viewHolder.userName.setText(r.getUser().getLogin());
 			viewHolder.floor.setText(position + 1 + "" + getString(R.string.reply_list_unit));
-//			new RetrieveSpannedTask(viewHolder.body).execute(r.getBodyHTML());
 			viewHolder.body.setText(Html.fromHtml(r.getBodyHTML()));
 			viewHolder.gravatar.setOnClickListener(new OnClickListener() {
 				

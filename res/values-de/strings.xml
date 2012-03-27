@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+Copyright (C) 2012 Longerian (http://www.longerian.me)
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+###fake de ressource now ###
+ -->
+<resources>
+    <string name="app_user_token">个人私钥</string><string name="app_name">Ruby China for Android</string><string name="app_page_size">帖子加载页数</string>
+    <string name="hint_reply">请输入......</string>
+    <string name="hot_topics">热门话题</string>
+    <string name="reply_list_unit">楼</string>
+    <string name="action_view_profile">查看个人资料</string>
+    <string name="action_reply">回复</string><string name="action_save">保存</string><string name="action_clear_token">清除token</string><string name="user_account_label">用户信息</string>
+    <string name="user_id">ID</string>
+    <string name="user_name">Name</string>
+    <string name="user_location">城市</string><string name="user_bio">简介</string>
+    <string name="user_tagline">签名</string><string name="user_website">个人主页</string>
+    <string name="user_github">Github</string>
+    <string name="hint_login_to_reply">登录发表回复</string>
+    
+    <string name="hint_no_token">请输入你的个人私钥</string>
+    <string name="hint_page_size">请输入1-100之间的数字</string><string name="topic_title">标题</string>
+    <string name="topic_node">选择节点</string>
+    <string name="topic_body">正文</string>
+    <string name="hint_submiting_topic">正在发送帖子......</string>
+    <string name="hint_network_or_token_problem">网络连接异常或token错误</string>
+    <string name="hint_stoping_editing_topic_or_not">你要放弃发帖吗？</string>
+    <string name="hint_loading_nodes">正在加载节点信息......</string><string name="hint_no_nodes">没有节点信息</string><string name="p_yek">是</string>
+    <string name="p_no">否</string>
+    <string name="hint_image_alt">avartar</string>
+    <string name="hint_loading_data_failed">获取数据失败......</string>
+    <string name="menu_preference">设置</string>
+    
+    <string name="setting_app">设置</string>
+    <string name="hint_no_replies">该帖子还未有人回复...</string>
+    
+    
+    
+    
+    
+    
+    
+    
+
+</resources>

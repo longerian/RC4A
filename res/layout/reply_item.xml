@@ -56,7 +56,6 @@ limitations under the License.
 	    android:layout_height="wrap_content"
 	    android:layout_marginLeft="8dip"
 	    android:layout_marginRight="8dip"
-	    android:layout_marginBottom="8dip"
 	    android:layout_toRightOf="@+id/gravatar"
 	    android:layout_below="@+id/user_name"
 	    android:textColor="#ff000000"

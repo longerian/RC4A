@@ -58,4 +58,10 @@ limitations under the License.
 	    android:textSize="18.0sp"
 	    android:textAppearance="@style/RCTextAppearance"
         />
+    <ImageView 
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_below="@+id/body"
+        android:src="@drawable/list_divider"
+        />
 </RelativeLayout>
