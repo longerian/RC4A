@@ -18,8 +18,6 @@ import greendroid.widget.ActionBarItem;
 import greendroid.widget.ActionBarItem.Type;
 import greendroid.widget.LoaderActionBarItem;
 
-import java.lang.ref.Reference;
-import java.net.URL;
 import java.util.Collections;
 import java.util.List;
 
@@ -32,7 +30,6 @@ import org.rubychina.android.api.response.TopicDetailResponse;
 import org.rubychina.android.type.Reply;
 import org.rubychina.android.type.Topic;
 import org.rubychina.android.type.User;
-import org.rubychina.android.util.ImageParser;
 
 import yek.api.ApiCallback;
 import yek.api.ApiException;
@@ -40,12 +37,10 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.text.Html;
-import android.text.Html.ImageGetter;
 import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -69,7 +64,6 @@ public class TopicDetailActivity extends GDActivity {
 	private LoaderActionBarItem progress;
 	private ImageView gravatar;
 	private ListView replies;
-	private ImageParser ip;
 
 	private RCService mService;
 	private boolean isBound = false; 
@@ -86,8 +80,6 @@ public class TopicDetailActivity extends GDActivity {
 		
 		Gson g = new Gson(); 
 		t = g.fromJson(getIntent().getStringExtra(TOPIC), Topic.class);
-		
-		ip = new ImageParser(getApplicationContext());
 		
 		Intent intent = new Intent(this, RCService.class);
 		bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
@@ -122,11 +114,6 @@ public class TopicDetailActivity extends GDActivity {
 	@Override
 	public boolean onHandleActionBarItemClick(ActionBarItem item, int position) {
 		switch (item.getItemId()) {
-        case R.id.action_bar_replies:
-        	Intent i = new Intent(getApplicationContext(), ReplyListActivity.class);
-        	i.putExtra(ReplyListActivity.BELONG_TO_TOPIC, t.getId());
-        	startActivity(i);
-        	return true;
         case R.id.action_bar_refresh:
         	startTopicDetailRequest(t.getId());
         	return true;
