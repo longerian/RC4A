@@ -5,6 +5,15 @@ This project requires GreenDroid as library to support it's UI presentation, you
 or the origin one which is https://github.com/cyrilmottier/GreenDroid. These two are almost the same at current time, but I may do little modification
 in the future.
 
+##REQUIREMENTS
+
+###Runtime
+* Android 2.2 +
+
+###DEVELOPMENT
+* require ADT 17.0.0 +
+* project GreenDroid must be included, download it from https://github.com/longerian/GreenDroid
+
 ##LICENSE
 
 Copyright (C) 2012 Longerian (http://www.longerian.me)
