@@ -18,7 +18,14 @@ import greendroid.widget.ActionBarItem;
 import greendroid.widget.ActionBarItem.Type;
 import greendroid.widget.LoaderActionBarItem;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import org.rubychina.android.R;
 import org.rubychina.android.RCApplication;
@@ -27,6 +34,8 @@ import org.rubychina.android.RCService.LocalBinder;
 import org.rubychina.android.api.request.NodesRequest;
 import org.rubychina.android.api.response.NodesResponse;
 import org.rubychina.android.type.Node;
+import org.rubychina.android.type.Section;
+import org.rubychina.android.widget.SeparatedListAdapter;
 
 import yek.api.ApiCallback;
 import yek.api.ApiException;
@@ -37,6 +46,7 @@ import android.content.ServiceConnection;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,15 +55,18 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class NodesActivity extends GDListActivity {
+public class NodesActivity<V> extends GDListActivity {
 
 	public static final int PICK_NODE = 0x7001;
 	public static final String PICKED_NODE = "org.rubychina.android.activity.NodesActivity.PICKED_NODE";
 	private static final String TAG = "NodesActivity";
 	
-	public static final String ACTIVE_TOPICS_NODE_NAME = "热门话题";
 	public static final int ACTIVE_TOPICS_NODE_ID = -1;
-	public static final Node ACTIVE_TOPICS_NODE = new Node(ACTIVE_TOPICS_NODE_ID, ACTIVE_TOPICS_NODE_NAME);
+	public static final String ACTIVE_TOPICS_NODE_NAME = "热门话题";
+	public static final int ACTIVE_TOPICS_NODE_SECTION_ID = -1;
+	public static final String ACTIVE_TOPICS_NODE_SECTION_NAME = "热门话题";
+	public static final Node ACTIVE_TOPICS_NODE = new Node(ACTIVE_TOPICS_NODE_ID, ACTIVE_TOPICS_NODE_NAME,
+																						ACTIVE_TOPICS_NODE_SECTION_ID, ACTIVE_TOPICS_NODE_SECTION_NAME);
 	
 	private NodesRequest request;
 	private LoaderActionBarItem progress;
@@ -153,8 +166,24 @@ public class NodesActivity extends GDListActivity {
 		if(!nodes.contains(ACTIVE_TOPICS_NODE)) {
 			nodes.add(0, ACTIVE_TOPICS_NODE);
 		}
-		NodeAdapter adapter = new NodeAdapter(getApplicationContext(), R.layout.node_item,
-				R.id.name, nodes);
+		Map<Section, List<Node>> groupedNodes = new TreeMap<Section, List<Node>>();
+		for(Node n : nodes) {
+			Section s = n.whichSection();
+			if(groupedNodes.containsKey(s)) {
+				groupedNodes.get(s).add(n);
+			} else {
+				List<Node> ns = new ArrayList<Node>();
+				ns.add(n);
+				groupedNodes.put(s, ns);
+			}
+		}
+		SeparatedListAdapter adapter = new SeparatedListAdapter(getApplicationContext());
+		Iterator<Entry<Section, List<Node>>> iter = groupedNodes.entrySet().iterator();
+		while(iter.hasNext()) {
+			Map.Entry<Section, List<Node>> entry = (Entry<Section, List<Node>>) iter.next();
+			adapter.addSection(entry.getKey(), 
+					new NodeAdapter(getApplicationContext(), R.layout.node_item, R.id.name, entry.getValue()));
+		}
 		setListAdapter(adapter);
 	}
 	

@@ -18,13 +18,26 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Node implements Parcelable {
+public class Node implements Parcelable, Comparable<Node> {
 
 	@SerializedName("_id")
 	private int id;
 	
 	private String name;
-
+	
+	@SerializedName("topics_count")
+	private int topicsCount;
+	
+	private String summary;
+	
+	@SerializedName("section_id")
+	private int sectionId;
+	
+	private int sort;
+	
+	@SerializedName("section_name")
+	private String sectionName;
+	
 	public Node() {
 		super();
 	}
@@ -35,12 +48,40 @@ public class Node implements Parcelable {
 		this.name = name;
 	}
 
+	public Node(int id, String name, int sectionId, String sectionName) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.sectionId = sectionId;
+		this.sectionName = sectionName;
+	}
+
 	public int getId() {
 		return id;
 	}
 
 	public String getName() {
 		return name;
+	}
+
+	public int getTopicsCount() {
+		return topicsCount;
+	}
+
+	public String getSummary() {
+		return summary;
+	}
+
+	public int getSectionId() {
+		return sectionId;
+	}
+
+	public int getSort() {
+		return sort;
+	}
+
+	public String getSectionName() {
+		return sectionName;
 	}
 
 	@Override
@@ -69,6 +110,14 @@ public class Node implements Parcelable {
 	public String toString() {
 		return name;
 	}
+	
+	public Section whichSection() {
+		Section s = new Section();
+		s.setSectionId(sectionId);
+		s.setSort(sort);
+		s.setSectionName(sectionName);
+		return s;
+	}
 
 	public Node(Parcel in) {
 		readFromParcel(in);
@@ -83,13 +132,24 @@ public class Node implements Parcelable {
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeInt(id);
 		dest.writeString(name);
+		dest.writeInt(topicsCount);
+		dest.writeString(summary);
+		dest.writeInt(sectionId);
+		dest.writeInt(sort);
+		dest.writeString(sectionName);
 	}
 	
 	private void readFromParcel(Parcel in) {
 		id = in.readInt();
 		name = in.readString();
+		topicsCount = in.readInt();
+		summary = in.readString();
+		sectionId = in.readInt();
+		sort = in.readInt();
+		sectionName = in.readString();
 	}
 	
+	@SuppressWarnings("rawtypes")
 	public static final Parcelable.Creator CREATOR = 
 			new Parcelable.Creator() {
 		
@@ -102,5 +162,14 @@ public class Node implements Parcelable {
 	            }
 	            
 	        };
+
+	@Override
+	public int compareTo(Node other) {
+		int sectionIdDiff = sectionId - other.sectionId;
+		if(sectionIdDiff != 0) {
+			return sectionIdDiff;
+		}
+		return id - other.id;
+	}
 	
 }

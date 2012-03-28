@@ -165,7 +165,7 @@ public enum RCDBResolver {
 	public class SQLiteHelper extends SQLiteOpenHelper {
 
 		private static final String DATABASE_NAME = "RubyChina.db";
-		private static final int DATABASE_VERSION = 3;
+		private static final int DATABASE_VERSION = 4;
 		
 		public static final String TBL_TOPIC = "topics";
 		public static final String CLM_TOPIC = "topic";
