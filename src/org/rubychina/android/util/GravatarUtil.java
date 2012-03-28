@@ -21,6 +21,10 @@ public class GravatarUtil {
 
 	private static final String BASE_URL = "http://www.gravatar.com/avatar/";
 	
+	private GravatarUtil() {
+		
+	}
+	
 	public static String getBaseURL(String hash) {
 		StringBuilder builder = new StringBuilder(BASE_URL);
 		return builder.append(hash).toString();

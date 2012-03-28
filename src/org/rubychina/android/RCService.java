@@ -13,6 +13,8 @@ See the License for the specific language governing permissions and
 limitations under the License.*/
 package org.rubychina.android;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 
@@ -21,10 +23,12 @@ import org.rubychina.android.type.Node;
 import org.rubychina.android.type.Topic;
 import org.rubychina.android.type.User;
 import org.rubychina.android.util.GravatarUtil;
+import org.rubychina.android.util.ImageUtil;
 
 import android.app.Service;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Binder;
@@ -55,17 +59,21 @@ public class RCService extends Service {
 			imgGetter = new Html.ImageGetter() {
 				
 				public Drawable getDrawable(String source) {
-					Drawable drawable = new BitmapDrawable();
-					URL url;
+					Drawable drawable;
 					try {
-						url = new URL(source);
-						drawable = Drawable.createFromStream(url.openStream(), "");
-					} catch (Exception e) {
+						URL url = new URL(source);
+						InputStream is = url.openStream();
+						drawable = Drawable.createFromStream(is, "");
+						drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+					} catch (IOException e) {
+						e.printStackTrace();
 						return new BitmapDrawable();
 					}
-					drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable
-							.getIntrinsicHeight());
-					return drawable;
+					 Bitmap sb = ImageUtil.getScaledBitmap((RCApplication) getApplication(), 
+							 ((BitmapDrawable) drawable).getBitmap());
+					 drawable = new BitmapDrawable(sb);
+					 drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+					 return drawable;
 				}
 				
 			};

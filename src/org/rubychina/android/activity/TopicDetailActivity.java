@@ -30,6 +30,7 @@ import org.rubychina.android.api.response.TopicDetailResponse;
 import org.rubychina.android.type.Reply;
 import org.rubychina.android.type.Topic;
 import org.rubychina.android.type.User;
+import org.rubychina.android.util.HtmlUtil;
 
 import yek.api.ApiCallback;
 import yek.api.ApiException;
@@ -186,7 +187,11 @@ public class TopicDetailActivity extends GDActivity {
 			mService.requestUserAvatar(r.getUser(), viewHolder.gravatar, 0);
 			viewHolder.userName.setText(r.getUser().getLogin());
 			viewHolder.floor.setText(position + 1 + "" + getString(R.string.reply_list_unit));
-			viewHolder.body.setText(Html.fromHtml(r.getBodyHTML()));
+			if(HtmlUtil.existsImg(r.getBodyHTML())) {
+				new RetrieveSpannedTask(viewHolder.body).execute(r.getBodyHTML());
+			} else {
+				viewHolder.body.setText(Html.fromHtml(r.getBodyHTML()));
+			}
 			viewHolder.gravatar.setOnClickListener(new OnClickListener() {
 				
 				@Override

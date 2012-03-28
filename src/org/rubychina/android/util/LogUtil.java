@@ -19,6 +19,10 @@ public class LogUtil {
 
 	private static final boolean IS_DEBUG = true;
 	
+	private LogUtil() {
+		
+	}
+	
 	public static void d(String tag, String msg) {
 		if(IS_DEBUG) {
 			Log.d(tag, msg);
