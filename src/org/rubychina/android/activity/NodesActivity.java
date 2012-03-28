@@ -19,8 +19,6 @@ import greendroid.widget.ActionBarItem.Type;
 import greendroid.widget.LoaderActionBarItem;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +33,7 @@ import org.rubychina.android.api.request.NodesRequest;
 import org.rubychina.android.api.response.NodesResponse;
 import org.rubychina.android.type.Node;
 import org.rubychina.android.type.Section;
+import org.rubychina.android.widget.NodeAdapter;
 import org.rubychina.android.widget.SeparatedListAdapter;
 
 import yek.api.ApiCallback;
@@ -46,13 +45,8 @@ import android.content.ServiceConnection;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 public class NodesActivity<V> extends GDListActivity {
@@ -227,44 +221,6 @@ public class NodesActivity<V> extends GDListActivity {
 		@Override
 		protected void onPostExecute(Void result) {
 			progress.setLoading(false);
-		}
-		
-	}
-	
-	private class NodeAdapter extends ArrayAdapter<Node> {
-
-		private List<Node> items;
-		private Context context;
-		private int resource;
-		
-		public NodeAdapter(Context context, int resource,
-				int textViewResourceId, List<Node> items) {
-			super(context, resource, textViewResourceId, items);
-			this.context = context;
-			this.resource = resource;
-			this.items = items;
-		}
-		
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			ViewHolder viewHolder;
-			if(convertView == null) {
-				viewHolder = new ViewHolder();
-				convertView = LayoutInflater.from(context).inflate(resource, null);
-				viewHolder.name = (TextView) convertView.findViewById(R.id.name);
-				convertView.setTag(viewHolder);
-			} else {
-				viewHolder = (ViewHolder) convertView.getTag();
-			}
-			Node n = items.get(position);
-			viewHolder.name.setText(n.getName());
-			return convertView;
-		}
-		
-		private class ViewHolder {
-			
-			public TextView name;
-			
 		}
 		
 	}

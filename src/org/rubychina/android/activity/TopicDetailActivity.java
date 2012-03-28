@@ -30,7 +30,7 @@ import org.rubychina.android.api.response.TopicDetailResponse;
 import org.rubychina.android.type.Reply;
 import org.rubychina.android.type.Topic;
 import org.rubychina.android.type.User;
-import org.rubychina.android.util.HtmlUtil;
+import org.rubychina.android.widget.ReplyAdapter;
 
 import yek.api.ApiCallback;
 import yek.api.ApiException;
@@ -46,9 +46,7 @@ import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -154,73 +152,13 @@ public class TopicDetailActivity extends GDActivity {
 		
 	}
 	
-	private class ReplyAdapter extends ArrayAdapter<Reply> {
-
-		private List<Reply> items;
-		private Context context;
-		private int resource;
-		
-		public ReplyAdapter(Context context, int resource,
-				int textViewResourceId, List<Reply> items) {
-			super(context, resource, textViewResourceId, items);
-			this.context = context;
-			this.resource = resource;
-			this.items = items;
-		}
-		
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			final ViewHolder viewHolder;
-			if(convertView == null) {
-				viewHolder = new ViewHolder();
-				convertView = LayoutInflater.from(context).inflate(resource, null);
-				viewHolder.gravatar = (ImageView) convertView.findViewById(R.id.gravatar);
-				viewHolder.userName = (TextView) convertView.findViewById(R.id.user_name);
-				viewHolder.floor = (TextView) convertView.findViewById(R.id.floor);
-				viewHolder.body = (TextView) convertView.findViewById(R.id.body);
-				viewHolder.forward = (ImageView) convertView.findViewById(R.id.forward);
-				convertView.setTag(viewHolder);
-			} else {
-				viewHolder = (ViewHolder) convertView.getTag();
-			}
-			final Reply r = items.get(position);
-			mService.requestUserAvatar(r.getUser(), viewHolder.gravatar, 0);
-			viewHolder.userName.setText(r.getUser().getLogin());
-			viewHolder.floor.setText(position + 1 + "" + getString(R.string.reply_list_unit));
-			if(HtmlUtil.existsImg(r.getBodyHTML())) {
-				new RetrieveSpannedTask(viewHolder.body).execute(r.getBodyHTML());
-			} else {
-				viewHolder.body.setText(Html.fromHtml(r.getBodyHTML()));
-			}
-			viewHolder.gravatar.setOnClickListener(new OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					visitUserProfile(r.getUser());
-				}
-			});
-			return convertView;
-		}
-		
-		private class ViewHolder {
-			
-			public ImageView gravatar;
-			public TextView userName;
-			public TextView floor;
-			public TextView body;
-			public ImageView forward;
-			
-		}
-		
-	}
-	
 	private void refreshView(List<Reply> rs) {
 		if(replies == null) {
 			replies = (ListView) findViewById(R.id.replies);
 			replies.addHeaderView(initializeTopicBody(), null, false);
 		}
 		Collections.sort(rs);
-		replies.setAdapter(new ReplyAdapter(getApplicationContext(), R.layout.reply_item,
+		replies.setAdapter(new ReplyAdapter(this, R.layout.reply_item,
 				R.id.body, rs));
 	}
 	
@@ -235,7 +173,7 @@ public class TopicDetailActivity extends GDActivity {
 				visitUserProfile(t.getUser());
 			}
 		});
-		requestUserAvatar();
+		mService.requestUserAvatar(t.getUser(), gravatar, 0);
 		
 		TextView title = (TextView) body.findViewById(R.id.title);
 		title.setText(t.getTitle());
@@ -246,18 +184,21 @@ public class TopicDetailActivity extends GDActivity {
 		return body;
 	}
 	
-	private void visitUserProfile(User u) {
+	public void visitUserProfile(User u) {
 		Gson g = new Gson();
 		Intent i = new Intent(getApplicationContext(), UserProfileActivity.class);
 		i.putExtra(UserProfileActivity.VIEW_PROFILE, g.toJson(u));
 		startActivity(i);
 	}
 	
-	private void requestUserAvatar() {
-		if(gravatar == null) {
-			gravatar = (ImageView) findViewById(R.id.gravatar);
+	public void requestUserAvatar(User u, ImageView v, int size) {
+		if(isBound) {
+			mService.requestUserAvatar(u, v, size);
 		}
-		mService.requestUserAvatar(t.getUser(), gravatar, 0);
+	}
+	
+	public void executeRetrieveSpannedTask(TextView tv, String html) {
+		new RetrieveSpannedTask(tv).execute(html);
 	}
 	
 	private class RetrieveSpannedTask extends AsyncTask<String, Void, Spanned> {

@@ -16,22 +16,17 @@ package org.rubychina.android.activity;
 import greendroid.app.GDActivity;
 
 import org.rubychina.android.R;
-import org.rubychina.android.RCApplication;
 import org.rubychina.android.RCService;
 import org.rubychina.android.RCService.LocalBinder;
 import org.rubychina.android.type.User;
-import org.rubychina.android.util.GravatarUtil;
 
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.text.TextUtils;
 import android.util.DisplayMetrics;
-import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 

@@ -15,8 +15,8 @@ package org.rubychina.android.activity;
 
 import greendroid.app.GDListActivity;
 import greendroid.widget.ActionBarItem;
-import greendroid.widget.LoaderActionBarItem;
 import greendroid.widget.ActionBarItem.Type;
+import greendroid.widget.LoaderActionBarItem;
 
 import java.util.List;
 
@@ -29,6 +29,7 @@ import org.rubychina.android.api.response.TopicsResponse;
 import org.rubychina.android.type.Node;
 import org.rubychina.android.type.Topic;
 import org.rubychina.android.type.User;
+import org.rubychina.android.widget.TopicAdapter;
 
 import yek.api.ApiCallback;
 import yek.api.ApiException;
@@ -39,17 +40,12 @@ import android.content.ServiceConnection;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -114,7 +110,7 @@ public class TopicsActivity extends GDListActivity {
 	}
 	
 	private void refreshPage(List<Topic> topics) {
-		TopicAdapter adapter = new TopicAdapter(getApplicationContext(), 
+		TopicAdapter adapter = new TopicAdapter(this, 
 				R.layout.topic_item,
 				R.id.title, 
 				topics);
@@ -246,72 +242,18 @@ public class TopicsActivity extends GDListActivity {
 		}
 		
 	}
-	
-	private class TopicAdapter extends ArrayAdapter<Topic> {
 
-		private List<Topic> items;
-		private Context context;
-		private int resource;
-		
-		public TopicAdapter(Context context, int resource,
-				int textViewResourceId, List<Topic> items) {
-			super(context, resource, textViewResourceId, items);
-			this.context = context;
-			this.resource = resource;
-			this.items = items;
-		}
-		
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			ViewHolder viewHolder;
-			if(convertView == null) {
-				viewHolder = new ViewHolder();
-				convertView = LayoutInflater.from(context).inflate(resource, null);
-				viewHolder.gravatar = (ImageView) convertView.findViewById(R.id.gravatar);
-				viewHolder.title = (TextView) convertView.findViewById(R.id.title);
-				viewHolder.author = (TextView) convertView.findViewById(R.id.author);
-				viewHolder.replies = (TextView) convertView.findViewById(R.id.reply_count);
-				convertView.setTag(viewHolder);
-			} else {
-				viewHolder = (ViewHolder) convertView.getTag();
-			}
-			final Topic t = items.get(position);
-			if(isBound) {
-				mService.requestUserAvatar(t.getUser(), viewHolder.gravatar, 0);
-			}
-			viewHolder.title.setText(t.getTitle());
-			viewHolder.author.setText(" >> " + t.getUser().getLogin() + " 在  " + t.getNodeName() + " 中发起");
-			if(t.getRepliesCount() > 99) {
-				viewHolder.replies.setText("99+");
-			} else {
-				viewHolder.replies.setText(t.getRepliesCount() + "");
-			}
-			viewHolder.gravatar.setOnClickListener(new OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					visitUserProfile(t.getUser());
-				}
-			});
-			return convertView;
-		}
-		
-		private class ViewHolder {
-			
-			public ImageView gravatar;
-			public TextView title;
-			public TextView author;
-			public TextView replies;
-			
-		}
-		
-	}
-
-	private void visitUserProfile(User u) {
+	public void visitUserProfile(User u) {
 		Gson g = new Gson();
 		Intent i = new Intent(getApplicationContext(), UserProfileActivity.class);
 		i.putExtra(UserProfileActivity.VIEW_PROFILE, g.toJson(u));
 		startActivity(i);
+	}
+	
+	public void requestUserAvatar(User u, ImageView v, int size) {
+		if(isBound) {
+			mService.requestUserAvatar(u, v, size);
+		}
 	}
 	
 }
