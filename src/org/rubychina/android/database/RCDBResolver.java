@@ -35,14 +35,14 @@ public enum RCDBResolver {
 	
 	private SQLiteHelper usHelper;
 	
-	private SQLiteHelper sHelperFromUs(Context ctx) {
+	private synchronized SQLiteHelper sHelperFromUs(Context ctx) {
 		if(usHelper == null) {
 			usHelper = new SQLiteHelper(ctx, SQLiteHelper.DATABASE_NAME, null, SQLiteHelper.DATABASE_VERSION);
 		}
 		return usHelper;
 	}
 	
-	public boolean clearTopics(Context context) {
+	public synchronized boolean clearTopics(Context context) {
 		SQLiteHelper sHelper = sHelperFromUs(context);
 		SQLiteDatabase db = sHelper.getWritableDatabase();
 		try {
@@ -56,7 +56,7 @@ public enum RCDBResolver {
 		return true;
 	}
 
-	public boolean insertTopics(Context context, List<Topic> topics) {
+	public synchronized boolean insertTopics(Context context, List<Topic> topics) {
 		SQLiteHelper sHelper = sHelperFromUs(context);
 		ContentValues values = new ContentValues();
 		Gson g = new Gson();
@@ -75,7 +75,7 @@ public enum RCDBResolver {
 		return true;
 	}
 	
-	public List<Topic> fetchTopics(Context context) {
+	public synchronized List<Topic> fetchTopics(Context context) {
 		SQLiteHelper sHelper = sHelperFromUs(context);
 		SQLiteDatabase db = sHelper.getWritableDatabase();
 		Cursor cursor = null;
@@ -102,7 +102,7 @@ public enum RCDBResolver {
 		return ts;
 	}
 	
-	public boolean clearNodes(Context context) {
+	public synchronized boolean clearNodes(Context context) {
 		SQLiteHelper sHelper = sHelperFromUs(context);
 		SQLiteDatabase db = sHelper.getWritableDatabase();
 		try {
@@ -116,7 +116,7 @@ public enum RCDBResolver {
 		return true;
 	}
 	
-	public boolean insertNodes(Context context, List<Node> nodes) {
+	public synchronized boolean insertNodes(Context context, List<Node> nodes) {
 		SQLiteHelper sHelper = sHelperFromUs(context);
 		ContentValues values = new ContentValues();
 		Gson g = new Gson();
@@ -135,7 +135,7 @@ public enum RCDBResolver {
 		return true;
 	}
 	
-	public List<Node> fetchNodes(Context context) {
+	public synchronized List<Node> fetchNodes(Context context) {
 		SQLiteHelper sHelper = sHelperFromUs(context);
 		SQLiteDatabase db = sHelper.getWritableDatabase();
 		Cursor cursor = null;

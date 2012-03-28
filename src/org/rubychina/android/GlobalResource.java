@@ -30,19 +30,19 @@ public enum GlobalResource {
 	
 	private List<Node> nodes = new ArrayList<Node>();
 	
-	public List<Topic> getCurTopics() {
+	public synchronized List<Topic> getCurTopics() {
 		return curTopics;
 	}
 
-	public void setCurTopics(List<Topic> curTopics) {
+	public synchronized void setCurTopics(List<Topic> curTopics) {
 		this.curTopics = curTopics;
 	}
 
-	public List<Node> getNodes() {
+	public synchronized List<Node> getNodes() {
 		return nodes;
 	}
 
-	public void setNodes(List<Node> nodes) {
+	public synchronized void setNodes(List<Node> nodes) {
 		this.nodes = nodes;
 	}
 	

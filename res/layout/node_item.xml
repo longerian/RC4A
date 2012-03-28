@@ -16,19 +16,30 @@ limitations under the License.
  -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="48dip"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
     android:padding="8dip"
     android:background="@drawable/list_bg_selector"
     >
     <TextView
         android:id="@+id/name"
         android:layout_width="match_parent"
-	    android:layout_height="match_parent"
-	    android:layout_centerVertical="true"
+	    android:layout_height="wrap_content"
 	    android:gravity="center_vertical"
 	    android:singleLine="true"
 	    android:ellipsize="end"
 	    android:textSize="16sp"
 	    android:textColor="#ff000000"
+        />
+    <TextView
+        android:id="@+id/summary"
+        android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_below="@+id/name"
+	    android:gravity="center_vertical"
+	    android:singleLine="true"
+	    android:ellipsize="marquee"
+	    android:textSize="12sp"
+	    android:textColor="#ff464646"
         />
 </RelativeLayout>

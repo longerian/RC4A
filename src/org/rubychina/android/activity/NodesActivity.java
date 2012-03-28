@@ -176,7 +176,7 @@ public class NodesActivity<V> extends GDListActivity {
 		while(iter.hasNext()) {
 			Map.Entry<Section, List<Node>> entry = (Entry<Section, List<Node>>) iter.next();
 			adapter.addSection(entry.getKey(), 
-					new NodeAdapter(getApplicationContext(), R.layout.node_item, R.id.name, entry.getValue()));
+					new NodeAdapter(getApplicationContext(), R.layout.node_item, entry.getValue()));
 		}
 		setListAdapter(adapter);
 	}

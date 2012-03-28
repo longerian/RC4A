@@ -19,6 +19,7 @@ import org.rubychina.android.R;
 import org.rubychina.android.type.Node;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,8 +33,8 @@ public class NodeAdapter extends ArrayAdapter<Node> {
 	private int resource;
 	
 	public NodeAdapter(Context context, int resource,
-			int textViewResourceId, List<Node> items) {
-		super(context, resource, textViewResourceId, items);
+			List<Node> items) {
+		super(context, resource, items);
 		this.context = context;
 		this.resource = resource;
 		this.items = items;
@@ -46,18 +47,26 @@ public class NodeAdapter extends ArrayAdapter<Node> {
 			viewHolder = new ViewHolder();
 			convertView = LayoutInflater.from(context).inflate(resource, null);
 			viewHolder.name = (TextView) convertView.findViewById(R.id.name);
+			viewHolder.summary = (TextView) convertView.findViewById(R.id.summary);
 			convertView.setTag(viewHolder);
 		} else {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
 		Node n = items.get(position);
 		viewHolder.name.setText(n.getName());
+		if(TextUtils.isEmpty(n.getSummary())) {
+			viewHolder.summary.setVisibility(View.GONE);
+		} else {
+			viewHolder.summary.setVisibility(View.VISIBLE);
+			viewHolder.summary.setText(n.getSummary());
+		}
 		return convertView;
 	}
 	
 	private class ViewHolder {
 		
 		public TextView name;
+		public TextView summary;
 		
 	}
 	
