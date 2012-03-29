@@ -152,7 +152,7 @@ public class TopicEditingActivity extends GDActivity {
 		nodeSelector = (Spinner) findViewById(R.id.node);
 		ArrayAdapter<Node> adapter = new ArrayAdapter<Node>(getApplicationContext(), 
 				android.R.layout.simple_spinner_item, 
-				mService.fetchNodes());
+				mService.fetchNodes());//TODO remove activie node
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		nodeSelector.setAdapter(adapter);
 		body = (EditText) findViewById(R.id.body);

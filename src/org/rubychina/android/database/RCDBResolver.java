@@ -144,7 +144,7 @@ public enum RCDBResolver {
 			if(cursor != null) {
 				cursor.moveToFirst();
 				Gson g = new Gson();
-				Type type = new TypeToken<List<Topic>>(){}.getType();
+				Type type = new TypeToken<List<Node>>(){}.getType();
 				while(!cursor.isAfterLast()) {
 					 ns = g.fromJson(
 							cursor.getString(cursor.getColumnIndexOrThrow(SQLiteHelper.CLM_NODE)), 

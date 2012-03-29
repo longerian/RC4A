@@ -28,7 +28,6 @@ import org.rubychina.android.util.ImageUtil;
 import android.app.Service;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Binder;
@@ -59,6 +58,15 @@ public class RCService extends Service {
 			imgGetter = new Html.ImageGetter() {
 				
 				public Drawable getDrawable(String source) {
+//					Bitmap img = ((RCApplication) getApplication()).getImgLoader().load(source, null);
+//					if(img != null) {
+//						Bitmap sb = ImageUtil.getScaledBitmap((RCApplication) getApplication(), img);
+//						BitmapDrawable bd = new BitmapDrawable(sb);
+//						bd.setBounds(0, 0, bd.getIntrinsicWidth(), bd.getIntrinsicHeight());
+//						return bd;
+//					} else {
+//						return new BitmapDrawable();
+//					}
 					Drawable drawable;
 					try {
 						URL url = new URL(source);
