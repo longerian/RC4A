@@ -55,13 +55,6 @@ public class NodesActivity<V> extends GDListActivity {
 	public static final String PICKED_NODE = "org.rubychina.android.activity.NodesActivity.PICKED_NODE";
 	private static final String TAG = "NodesActivity";
 	
-	public static final int ACTIVE_TOPICS_NODE_ID = -1;
-	public static final String ACTIVE_TOPICS_NODE_NAME = "热门话题";
-	public static final int ACTIVE_TOPICS_NODE_SECTION_ID = -1;
-	public static final String ACTIVE_TOPICS_NODE_SECTION_NAME = "热门话题";
-	public static final Node ACTIVE_TOPICS_NODE = new Node(ACTIVE_TOPICS_NODE_ID, ACTIVE_TOPICS_NODE_NAME,
-																						ACTIVE_TOPICS_NODE_SECTION_ID, ACTIVE_TOPICS_NODE_SECTION_NAME);
-	
 	private NodesRequest request;
 	private LoaderActionBarItem progress;
 	private RCService mService;
@@ -157,8 +150,8 @@ public class NodesActivity<V> extends GDListActivity {
 	}
 	
 	private void refreshPage(List<Node> nodes) {
-		if(!nodes.contains(ACTIVE_TOPICS_NODE)) {
-			nodes.add(0, ACTIVE_TOPICS_NODE);
+		if(!nodes.contains(Node.MOCK_ACTIVE_NODE)) {
+			nodes.add(0, Node.MOCK_ACTIVE_NODE);
 		}
 		Map<Section, List<Node>> groupedNodes = new TreeMap<Section, List<Node>>();
 		for(Node n : nodes) {

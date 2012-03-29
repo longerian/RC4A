@@ -62,7 +62,7 @@ public class TopicsActivity extends GDListActivity {
 	
 	private LoaderActionBarItem progress;
 	
-	private Node node = NodesActivity.ACTIVE_TOPICS_NODE;
+	private Node node = Node.MOCK_ACTIVE_NODE;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

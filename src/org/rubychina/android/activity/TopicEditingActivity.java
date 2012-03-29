@@ -150,14 +150,18 @@ public class TopicEditingActivity extends GDActivity {
 	private void initialize() {
 		title = (EditText) findViewById(R.id.title);
 		nodeSelector = (Spinner) findViewById(R.id.node);
+		List<Node> nodes = mService.fetchNodes();
+		if(nodes.contains(Node.MOCK_ACTIVE_NODE)) {
+			nodes.remove(Node.MOCK_ACTIVE_NODE);
+		}
 		ArrayAdapter<Node> adapter = new ArrayAdapter<Node>(getApplicationContext(), 
 				android.R.layout.simple_spinner_item, 
-				mService.fetchNodes());//TODO remove activie node
+				nodes);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		nodeSelector.setAdapter(adapter);
 		body = (EditText) findViewById(R.id.body);
 		
-		if(mService.fetchNodes().isEmpty()) {
+		if(nodes.isEmpty()) {
 			startNodesRequest();
 		}
 	}
