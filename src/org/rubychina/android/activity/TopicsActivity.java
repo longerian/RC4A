@@ -29,6 +29,7 @@ import org.rubychina.android.api.response.TopicsResponse;
 import org.rubychina.android.type.Node;
 import org.rubychina.android.type.Topic;
 import org.rubychina.android.type.User;
+import org.rubychina.android.util.JsonUtil;
 import org.rubychina.android.widget.TopicAdapter;
 
 import yek.api.ApiCallback;
@@ -165,9 +166,8 @@ public class TopicsActivity extends GDListActivity {
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		Intent i = new Intent(getApplicationContext(), TopicDetailActivity.class);
-		Gson g = new Gson();
 		Topic t = (Topic) l.getItemAtPosition(position);
-		i.putExtra(TopicDetailActivity.TOPIC, g.toJson(t));
+		i.putExtra(TopicDetailActivity.TOPIC, JsonUtil.toJsonObject(t));
 		i.putExtra(TopicDetailActivity.POS, position);
 		startActivity(i);
 	}
@@ -247,9 +247,8 @@ public class TopicsActivity extends GDListActivity {
 	}
 
 	public void visitUserProfile(User u) {
-		Gson g = new Gson();
 		Intent i = new Intent(getApplicationContext(), UserProfileActivity.class);
-		i.putExtra(UserProfileActivity.VIEW_PROFILE, g.toJson(u));
+		i.putExtra(UserProfileActivity.VIEW_PROFILE, JsonUtil.toJsonObject(u));
 		startActivity(i);
 	}
 	
@@ -258,24 +257,5 @@ public class TopicsActivity extends GDListActivity {
 			mService.requestUserAvatar(u, v, size);
 		}
 	}
-	
-//	private View initiNodeSummary(Node node) {
-//		View header = LayoutInflater.from(getApplicationContext()).inflate(R.layout.block_node_summary, null);
-//		TextView name = (TextView) header.findViewById(R.id.node_name);
-//		name.setText(node.getName());
-//
-//		TextView topicStatistics = (TextView) header.findViewById(R.id.node_topic_statistics);
-//		TextView summary = (TextView) header.findViewById(R.id.node_summary);
-//		if(node.equals(Node.MOCK_ACTIVE_NODE)) {
-//			topicStatistics.setVisibility(View.GONE);
-//			summary.setVisibility(View.GONE);
-//		} else {
-//			topicStatistics.setVisibility(View.VISIBLE);
-//			topicStatistics.setText("共有" + node.getTopicsCount() + "个讨论主题");
-//			summary.setVisibility(View.VISIBLE);
-//			summary.setText(node.getSummary());
-//		}
-//		return header;
-//	}
 	
 }

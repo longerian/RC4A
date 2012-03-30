@@ -31,6 +31,7 @@ import org.rubychina.android.api.response.TopicDetailResponse;
 import org.rubychina.android.type.Reply;
 import org.rubychina.android.type.Topic;
 import org.rubychina.android.type.User;
+import org.rubychina.android.util.JsonUtil;
 import org.rubychina.android.widget.ReplyAdapter;
 
 import yek.api.ApiCallback;
@@ -78,8 +79,7 @@ public class TopicDetailActivity extends GDActivity {
 		setActionBarContentView(R.layout.topic_layout);
 		progress = (LoaderActionBarItem) addActionBarItem(Type.Refresh, R.id.action_bar_refresh);
 		
-		Gson g = new Gson(); 
-		t = g.fromJson(getIntent().getStringExtra(TOPIC), Topic.class);
+		t = JsonUtil.fromJsonObject(getIntent().getStringExtra(TOPIC), Topic.class);
 		
 		setTitle(t.getTitle());
 		
@@ -190,9 +190,8 @@ public class TopicDetailActivity extends GDActivity {
 	}
 	
 	public void visitUserProfile(User u) {
-		Gson g = new Gson();
 		Intent i = new Intent(getApplicationContext(), UserProfileActivity.class);
-		i.putExtra(UserProfileActivity.VIEW_PROFILE, g.toJson(u));
+		i.putExtra(UserProfileActivity.VIEW_PROFILE, JsonUtil.toJsonObject(u));
 		startActivity(i);
 	}
 	

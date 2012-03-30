@@ -13,16 +13,18 @@ See the License for the specific language governing permissions and
 limitations under the License.*/
 package org.rubychina.android.api.parser;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.rubychina.android.api.response.NodesResponse;
 import org.rubychina.android.type.Node;
+import org.rubychina.android.type.Topic;
+import org.rubychina.android.util.JsonUtil;
 
-import com.google.gson.Gson;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
 
 public class NodesParser extends JSONParseHandler<NodesResponse> {
 
@@ -36,24 +38,18 @@ public class NodesParser extends JSONParseHandler<NodesResponse> {
 	@Override
 	public void parse(String source) {
 		try {
-			JSONArray jsonNodes = new JSONArray(source);
 			List<Node> nodes = new ArrayList<Node>();
-			int length = jsonNodes.length();
-			for(int i = 0; i < length; i++) {
-				nodes.add(json2Node(jsonNodes.getJSONObject(i)));
-			}
+			Type type = new TypeToken<List<Node>>(){}.getType();
+			nodes = JsonUtil.fromJsonArray(source, type);
 			resp.setNodes(nodes);
 			resp.setSuccess(true);
-		} catch (JSONException e) {
-			//TODO set meaningful failure msg
+		} catch (JsonSyntaxException e) {
+			resp.setSuccess(false);
+			e.printStackTrace();
+		} catch (JsonParseException e) {
 			resp.setSuccess(false);
 			e.printStackTrace();
 		}
 	}
 
-	private Node json2Node(JSONObject json) {
-		Gson gson = new Gson();
-		Node n = gson.fromJson(json.toString(), Node.class);
-		return n;
-	}
 }

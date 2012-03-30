@@ -19,6 +19,9 @@ import java.util.List;
 
 import org.rubychina.android.type.Node;
 import org.rubychina.android.type.Topic;
+import org.rubychina.android.util.JsonUtil;
+
+import com.google.gson.reflect.TypeToken;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -27,9 +30,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
-
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 public enum RCDBResolver {
 
@@ -61,11 +61,10 @@ public enum RCDBResolver {
 	public synchronized boolean insertTopics(Context context, List<Topic> topics) {
 		SQLiteHelper sHelper = sHelperFromUs(context);
 		ContentValues values = new ContentValues();
-		Gson g = new Gson();
-		Type type = new TypeToken<List<Topic>>(){}.getType();
 		SQLiteDatabase db = sHelper.getWritableDatabase();
 		try {
-			values.put(SQLiteHelper.CLM_TOPIC, g.toJson(topics, type));
+			Type type = new TypeToken<List<Topic>>(){}.getType();
+			values.put(SQLiteHelper.CLM_TOPIC, JsonUtil.toJsonArray(topics, type));
 			db.insert(SQLiteHelper.TBL_TOPIC, null, values);
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -85,11 +84,9 @@ public enum RCDBResolver {
 			cursor = db.query(SQLiteHelper.TBL_TOPIC, null, null, null, null, null, null);
 			if(cursor != null) {
 				cursor.moveToFirst();
-				Gson g = new Gson();
-				Type type = new TypeToken<List<Topic>>(){}.getType();
 				while(!cursor.isAfterLast()) {
-					ts = g.fromJson(cursor.getString(cursor.getColumnIndexOrThrow(SQLiteHelper.CLM_TOPIC)), 
-							type);
+					ts = JsonUtil.fromJsonArray(cursor.getString(cursor.getColumnIndexOrThrow(SQLiteHelper.CLM_TOPIC)), 
+							Topic.class);
 					cursor.moveToNext();
 				}
 			}
@@ -119,11 +116,10 @@ public enum RCDBResolver {
 	public synchronized boolean insertNodes(Context context, List<Node> nodes) {
 		SQLiteHelper sHelper = sHelperFromUs(context);
 		ContentValues values = new ContentValues();
-		Gson g = new Gson();
-		Type type = new TypeToken<List<Node>>(){}.getType();
 		SQLiteDatabase db = sHelper.getWritableDatabase();
 		try {
-			values.put(SQLiteHelper.CLM_NODE, g.toJson(nodes, type));
+			Type type = new TypeToken<List<Node>>(){}.getType();
+			values.put(SQLiteHelper.CLM_NODE, JsonUtil.toJsonArray(nodes, type));
 			db.insert(SQLiteHelper.TBL_NODE, null, values);
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -143,12 +139,10 @@ public enum RCDBResolver {
 			cursor = db.query(SQLiteHelper.TBL_NODE, null, null, null, null, null, null);
 			if(cursor != null) {
 				cursor.moveToFirst();
-				Gson g = new Gson();
-				Type type = new TypeToken<List<Node>>(){}.getType();
 				while(!cursor.isAfterLast()) {
-					 ns = g.fromJson(
+					 ns = JsonUtil.fromJsonArray(
 							cursor.getString(cursor.getColumnIndexOrThrow(SQLiteHelper.CLM_NODE)), 
-							type);
+							Node.class);
 					cursor.moveToNext();
 				}
 			}
@@ -164,7 +158,7 @@ public enum RCDBResolver {
 	public class SQLiteHelper extends SQLiteOpenHelper {
 
 		private static final String DATABASE_NAME = "RubyChina.db";
-		private static final int DATABASE_VERSION = 5;
+		private static final int DATABASE_VERSION = 6;
 		
 		public static final String TBL_TOPIC = "topics";
 		public static final String CLM_TOPIC = "topic";

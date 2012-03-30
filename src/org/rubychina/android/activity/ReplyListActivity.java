@@ -31,6 +31,7 @@ import org.rubychina.android.api.response.TopicDetailResponse;
 import org.rubychina.android.type.Reply;
 import org.rubychina.android.util.GravatarUtil;
 import org.rubychina.android.util.ImageParser;
+import org.rubychina.android.util.JsonUtil;
 import org.rubychina.android.util.LogUtil;
 
 import yek.api.ApiCallback;
@@ -154,10 +155,9 @@ public class ReplyListActivity extends GDActivity {
 		AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
 		switch (item.getItemId()) {  
 		  case VIEW_PROFILE:
-			  Gson g = new Gson();
 			  Reply r = (Reply) replies.getItemAtPosition(menuInfo.position);
 			  Intent i = new Intent(getApplicationContext(), UserProfileActivity.class);
-			  i.putExtra(UserProfileActivity.VIEW_PROFILE, g.toJson(r.getUser()));
+			  i.putExtra(UserProfileActivity.VIEW_PROFILE, JsonUtil.toJsonObject(r.getUser()));
 			  startActivity(i);
 			  return true;  
 		  default:  

@@ -19,6 +19,7 @@ import org.rubychina.android.R;
 import org.rubychina.android.RCService;
 import org.rubychina.android.RCService.LocalBinder;
 import org.rubychina.android.type.User;
+import org.rubychina.android.util.JsonUtil;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -51,8 +52,7 @@ public class UserProfileActivity extends GDActivity {
 		
 		setActionBarContentView(R.layout.user_profile_layout);
 		
-		Gson g = new Gson();
-		u = g.fromJson(getIntent().getStringExtra(VIEW_PROFILE), User.class);
+		u = JsonUtil.fromJsonObject(getIntent().getStringExtra(VIEW_PROFILE), User.class);
 		
 		TextView login = (TextView) findViewById(R.id.login);
 		login.setText(u.getLogin());
