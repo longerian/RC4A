@@ -38,7 +38,7 @@ public class RCPreferenceActivity extends GDActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+		setTitle(R.string.title_preference);
 		setActionBarContentView(R.layout.rc_preference_layout);
 
 		tokenEdit = (EditText) findViewById(R.id.token);

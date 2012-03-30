@@ -40,12 +40,15 @@ import android.content.ServiceConnection;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.text.Layout;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -123,7 +126,7 @@ public class TopicsActivity extends GDListActivity {
 		}
 		request.setNodeId(node.getId());
 		request.setSize(((RCApplication) getApplication()).getPageSize());
-		((RCApplication) getApplication()).getAPIClient().request(request, new HotTopicsCallback());
+		((RCApplication) getApplication()).getAPIClient().request(request, new ActiveTopicsCallback());
 		progress.setLoading(true);
 	}
 	
@@ -199,11 +202,11 @@ public class TopicsActivity extends GDListActivity {
 		return true;
 	}
 
-	private class HotTopicsCallback implements ApiCallback<TopicsResponse> {
+	private class ActiveTopicsCallback implements ApiCallback<TopicsResponse> {
 
 		@Override
 		public void onException(ApiException e) {
-			Toast.makeText(getApplicationContext(), R.string.hint_loading_data_failed, Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext(), R.string.hint_network_error, Toast.LENGTH_SHORT).show();
 			progress.setLoading(false);
 		}
 
@@ -255,5 +258,24 @@ public class TopicsActivity extends GDListActivity {
 			mService.requestUserAvatar(u, v, size);
 		}
 	}
+	
+//	private View initiNodeSummary(Node node) {
+//		View header = LayoutInflater.from(getApplicationContext()).inflate(R.layout.block_node_summary, null);
+//		TextView name = (TextView) header.findViewById(R.id.node_name);
+//		name.setText(node.getName());
+//
+//		TextView topicStatistics = (TextView) header.findViewById(R.id.node_topic_statistics);
+//		TextView summary = (TextView) header.findViewById(R.id.node_summary);
+//		if(node.equals(Node.MOCK_ACTIVE_NODE)) {
+//			topicStatistics.setVisibility(View.GONE);
+//			summary.setVisibility(View.GONE);
+//		} else {
+//			topicStatistics.setVisibility(View.VISIBLE);
+//			topicStatistics.setText("共有" + node.getTopicsCount() + "个讨论主题");
+//			summary.setVisibility(View.VISIBLE);
+//			summary.setText(node.getSummary());
+//		}
+//		return header;
+//	}
 	
 }

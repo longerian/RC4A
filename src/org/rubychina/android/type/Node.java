@@ -173,9 +173,9 @@ public class Node implements Parcelable, Comparable<Node> {
 	}
 	
 	public static final int ACTIVE_TOPICS_NODE_ID = -1;
-	public static final String ACTIVE_TOPICS_NODE_NAME = "热门话题";
+	public static final String ACTIVE_TOPICS_NODE_NAME = "热门帖子";
 	public static final int ACTIVE_TOPICS_NODE_SECTION_ID = -1;
-	public static final String ACTIVE_TOPICS_NODE_SECTION_NAME = "热门话题";
+	public static final String ACTIVE_TOPICS_NODE_SECTION_NAME = "热门帖子";
 	
 	public static final Node MOCK_ACTIVE_NODE = new Node(ACTIVE_TOPICS_NODE_ID, ACTIVE_TOPICS_NODE_NAME,
 			ACTIVE_TOPICS_NODE_SECTION_ID, ACTIVE_TOPICS_NODE_SECTION_NAME);

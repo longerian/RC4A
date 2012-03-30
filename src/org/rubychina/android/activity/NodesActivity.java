@@ -63,6 +63,9 @@ public class NodesActivity<V> extends GDListActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		setTitle(R.string.title_nodes);
+		
 		progress = (LoaderActionBarItem) addActionBarItem(Type.Refresh, R.id.action_bar_refresh);
 	}
 	
@@ -178,7 +181,7 @@ public class NodesActivity<V> extends GDListActivity {
 
 		@Override
 		public void onException(ApiException e) {
-			Toast.makeText(getApplicationContext(), R.string.hint_loading_data_failed, Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext(), R.string.hint_network_error, Toast.LENGTH_SHORT).show();
 			progress.setLoading(false);
 		}
 

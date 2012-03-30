@@ -47,6 +47,8 @@ public class UserProfileActivity extends GDActivity {
 		metrics = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(metrics);
 		
+		setTitle(R.string.title_profile);
+		
 		setActionBarContentView(R.layout.user_profile_layout);
 		
 		Gson g = new Gson();

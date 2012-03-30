@@ -68,6 +68,7 @@ public class TopicEditingActivity extends GDActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setTitle(R.string.title_posting_new_topic);
 		setActionBarContentView(R.layout.topic_editing_layout);
 		addActionBarItem(Type.Add, R.id.action_bar_add);
 		Intent intent = new Intent(this, RCService.class);
@@ -270,7 +271,7 @@ public class TopicEditingActivity extends GDActivity {
 		public void onException(ApiException e) {
 			dismissProgress();
 			Toast.makeText(getApplicationContext(), 
-					R.string.hint_network_or_token_problem, 
+					R.string.hint_network_or_token_error, 
 					Toast.LENGTH_SHORT)
 					.show();
 			e.printStackTrace();
@@ -280,7 +281,7 @@ public class TopicEditingActivity extends GDActivity {
 		public void onFail(PostTopicResponse r) {
 			dismissProgress();
 			Toast.makeText(getApplicationContext(), 
-					R.string.hint_network_or_token_problem, 
+					R.string.hint_network_or_token_error, 
 					Toast.LENGTH_SHORT)
 					.show();
 		}

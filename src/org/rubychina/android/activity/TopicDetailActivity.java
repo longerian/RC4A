@@ -18,6 +18,7 @@ import greendroid.widget.ActionBarItem;
 import greendroid.widget.ActionBarItem.Type;
 import greendroid.widget.LoaderActionBarItem;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -80,6 +81,8 @@ public class TopicDetailActivity extends GDActivity {
 		Gson g = new Gson(); 
 		t = g.fromJson(getIntent().getStringExtra(TOPIC), Topic.class);
 		
+		setTitle(t.getTitle());
+		
 		Intent intent = new Intent(this, RCService.class);
 		bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 	}
@@ -134,14 +137,16 @@ public class TopicDetailActivity extends GDActivity {
 
 		@Override
 		public void onException(ApiException e) {
-			Toast.makeText(getApplicationContext(), R.string.hint_loading_data_failed, Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext(), R.string.hint_network_error, Toast.LENGTH_SHORT).show();
 			progress.setLoading(false);
+			refreshView(new ArrayList<Reply>());
 		}
 
 		@Override
 		public void onFail(TopicDetailResponse r) {
 			Toast.makeText(getApplicationContext(), R.string.hint_loading_data_failed, Toast.LENGTH_SHORT).show();
 			progress.setLoading(false);
+			refreshView(new ArrayList<Reply>());
 		}
 
 		@Override
