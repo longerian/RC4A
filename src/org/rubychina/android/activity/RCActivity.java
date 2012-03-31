@@ -39,14 +39,12 @@ import android.view.Display;
 import android.view.KeyEvent;
 import android.view.WindowManager;
 
-import com.google.gson.Gson;
-
 public class RCActivity extends Activity {
 
 	private static final String TAG = "RCActivity";
 	private NodesRequest request;
 	private RCService mService;
-	private boolean isBound = false; 
+	private boolean isBound = false;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
