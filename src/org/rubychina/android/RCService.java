@@ -60,34 +60,35 @@ public class RCService extends Service {
 			imgGetter = new Html.ImageGetter() {
 				
 				public Drawable getDrawable(String source) {
-					Bitmap img = ((RCApplication) getApplication()).getImgLoader().load(source, null);
-					if(img != null) {
-						LogUtil.d(TAG, "img loaded");
-						Bitmap sb = ImageUtil.getScaledBitmap((RCApplication) getApplication(), img);
-						BitmapDrawable bd = new BitmapDrawable(sb);
-						bd.setBounds(0, 0, bd.getIntrinsicWidth(), bd.getIntrinsicHeight());
-						return bd;
-					} else {
-						LogUtil.d(TAG, "img null");
-						BitmapDrawable bd = new BitmapDrawable();
-						bd.setBounds(0, 0, bd.getIntrinsicWidth(), bd.getIntrinsicHeight());
-						return bd;
-					}
-//					Drawable drawable;
-//					try {
-//						URL url = new URL(source);
-//						InputStream is = url.openStream();
-//						drawable = Drawable.createFromStream(is, "");
-//						drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
-//					} catch (IOException e) {
-//						e.printStackTrace();
-//						return new BitmapDrawable();
+//					Bitmap img = ((RCApplication) getApplication()).getImgLoader().load(source, null);
+//					if(img != null) {
+//						LogUtil.d(TAG, "img loaded");
+//						Bitmap sb = ImageUtil.getScaledBitmap((RCApplication) getApplication(), img);
+//						BitmapDrawable bd = new BitmapDrawable(sb);
+//						bd.setBounds(0, 0, bd.getIntrinsicWidth(), bd.getIntrinsicHeight());
+//						return bd;
+//					} else {
+//						LogUtil.d(TAG, "img null");
+////						BitmapDrawable bd = new BitmapDrawable();
+////						bd.setBounds(0, 0, bd.getIntrinsicWidth(), bd.getIntrinsicHeight());
+////						return bd;
+//						return getDrawable(source);
 //					}
-//					 Bitmap sb = ImageUtil.getScaledBitmap((RCApplication) getApplication(), 
-//							 ((BitmapDrawable) drawable).getBitmap());
-//					 drawable = new BitmapDrawable(sb);
-//					 drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
-//					 return drawable;
+					Drawable drawable;
+					try {
+						URL url = new URL(source);
+						InputStream is = url.openStream();
+						drawable = Drawable.createFromStream(is, "");
+						drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+					} catch (IOException e) {
+						e.printStackTrace();
+						return new BitmapDrawable();
+					}
+					 Bitmap sb = ImageUtil.getScaledBitmap((RCApplication) getApplication(), 
+							 ((BitmapDrawable) drawable).getBitmap());
+					 drawable = new BitmapDrawable(sb);
+					 drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+					 return drawable;
 				}
 				
 			};

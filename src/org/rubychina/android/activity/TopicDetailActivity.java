@@ -184,8 +184,7 @@ public class TopicDetailActivity extends GDActivity {
 		title.setText(t.getTitle());
 		
 		TextView bodyText = (TextView) body.findViewById(R.id.body);
-
-		new RetrieveSpannedTask(bodyText).execute(t.getBodyHTML());
+		executeRetrieveSpannedTask(bodyText, t.getBodyHTML());
 		return body;
 	}
 	
