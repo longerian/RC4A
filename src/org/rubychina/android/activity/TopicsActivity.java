@@ -13,7 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.*/
 package org.rubychina.android.activity;
 
-import greendroid.app.GDListActivity;
+import greendroid.app.GDActivity;
 import greendroid.widget.ActionBarItem;
 import greendroid.widget.ActionBarItem.Type;
 import greendroid.widget.LoaderActionBarItem;
@@ -41,21 +41,20 @@ import android.content.ServiceConnection;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 
-
-public class TopicsActivity extends GDListActivity {
+public class TopicsActivity extends GDActivity {
 
 	private static final String TAG = "TopicsActivity";
 	private TopicsRequest request;
@@ -65,13 +64,15 @@ public class TopicsActivity extends GDListActivity {
 	private boolean isBound = false; 
 	
 	private LoaderActionBarItem progress;
+	private ListView topicsView;
+	private TextView nodeSection;
 	
 	private Node node = Node.MOCK_ACTIVE_NODE;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+		setActionBarContentView(R.layout.topics_layout);
 		addActionBarItem(Type.List, R.id.action_bar_nodes);
 		progress = (LoaderActionBarItem) addActionBarItem(Type.Refresh, R.id.action_bar_refresh);
 		addActionBarItem(Type.Compose, R.id.action_bar_compose);
@@ -109,16 +110,40 @@ public class TopicsActivity extends GDListActivity {
 	
 	private void initialize() {
 		List<Topic> cachedTopics = mService.fetchTopics();
-		refreshPage(cachedTopics);
+		refreshPage(cachedTopics, node);//TODO node info must also be persisted
 		startTopicsRequest(node);
 	}
 	
-	private void refreshPage(List<Topic> topics) {
+	private void initializeView(Node node) {
+		if(topicsView == null) {
+			topicsView = (ListView) findViewById(R.id.topics);
+			if(nodeSection == null) {
+				nodeSection = (TextView) LayoutInflater.from(getApplicationContext()).inflate(R.layout.node_section_header, null);
+			}
+			topicsView.addHeaderView(nodeSection, null, false);
+			topicsView.setOnItemClickListener(new OnItemClickListener() {
+
+				@Override
+				public void onItemClick(AdapterView<?> parent, View v,
+						int position, long id) {
+						Intent i = new Intent(getApplicationContext(), TopicDetailActivity.class);
+						Topic t = (Topic) parent.getItemAtPosition(position);
+						i.putExtra(TopicDetailActivity.TOPIC, JsonUtil.toJsonObject(t));
+						i.putExtra(TopicDetailActivity.POS, position);
+						startActivity(i);
+				}
+			});
+		}
+		nodeSection.setText(node.getName());
+	}
+	
+	private void refreshPage(List<Topic> topics, Node node) {
+		initializeView(node);
 		TopicAdapter adapter = new TopicAdapter(this, 
 				R.layout.topic_item,
 				R.id.title, 
 				topics);
-		setListAdapter(adapter);
+		topicsView.setAdapter(adapter);
 	}
 	
 	private void startTopicsRequest(Node node) {
@@ -164,20 +189,11 @@ public class TopicsActivity extends GDListActivity {
 	}
 	
 	@Override
-	protected void onListItemClick(ListView l, View v, int position, long id) {
-		Intent i = new Intent(getApplicationContext(), TopicDetailActivity.class);
-		Topic t = (Topic) l.getItemAtPosition(position);
-		i.putExtra(TopicDetailActivity.TOPIC, JsonUtil.toJsonObject(t));
-		i.putExtra(TopicDetailActivity.POS, position);
-		startActivity(i);
-	}
-	
-	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if(requestCode == NodesActivity.PICK_NODE) {
 			if(resultCode == RESULT_OK) {
 				Node n = data.getParcelableExtra(NodesActivity.PICKED_NODE);
-				node = n;
+				node = n; 
 				startTopicsRequest(n);
 			}
 		}
@@ -219,7 +235,7 @@ public class TopicsActivity extends GDListActivity {
 		@Override
 		public void onSuccess(TopicsResponse r) {
 			progress.setLoading(false);
-			refreshPage(r.getTopics());
+			refreshPage(r.getTopics(), node);
 			new CacheTopicsTask().execute(r.getTopics());
 		}
 		
