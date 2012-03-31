@@ -17,6 +17,9 @@ import greendroid.app.GDActivity;
 import greendroid.widget.ActionBarItem;
 import greendroid.widget.ActionBarItem.Type;
 import greendroid.widget.LoaderActionBarItem;
+import greendroid.widget.QuickActionBar;
+import greendroid.widget.QuickActionWidget;
+import greendroid.widget.QuickActionWidget.OnQuickActionClickListener;
 
 import java.util.List;
 
@@ -107,7 +110,7 @@ public class TopicsActivity extends GDActivity {
 		}
 		cancelTopicsRequest();
 	}
-	
+    
 	private void initialize() {
 		List<Topic> cachedTopics = mService.fetchTopics();
 		refreshPage(cachedTopics, node);//TODO node info must also be persisted
@@ -175,13 +178,7 @@ public class TopicsActivity extends GDActivity {
         	startTopicsRequest(node);
         	return true;
         case R.id.action_bar_compose:
-        	if(((RCApplication) getApplication()).isLogin()) {
-        		i.setClass(getApplicationContext(), TopicEditingActivity.class);
-        	} else {
-        		i.setClass(getApplicationContext(), RCPreferenceActivity.class);
-        		Toast.makeText(getApplicationContext(), R.string.hint_no_token, Toast.LENGTH_SHORT).show();
-        	}
-        	startActivity(i);
+        	onCompose();
         	return true;
         default:
             return super.onHandleActionBarItemClick(item, position);
@@ -217,7 +214,18 @@ public class TopicsActivity extends GDActivity {
 		}
 		return true;
 	}
-
+	
+	private void onCompose() {
+		Intent i = new Intent();
+		if(((RCApplication) getApplication()).isLogin()) {
+    		i.setClass(getApplicationContext(), TopicEditingActivity.class);
+    	} else {
+    		i.setClass(getApplicationContext(), RCPreferenceActivity.class);
+    		Toast.makeText(getApplicationContext(), R.string.hint_no_token, Toast.LENGTH_SHORT).show();
+    	}
+    	startActivity(i);
+	}
+	
 	private class ActiveTopicsCallback implements ApiCallback<TopicsResponse> {
 
 		@Override
