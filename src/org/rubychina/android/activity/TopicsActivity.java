@@ -17,9 +17,6 @@ import greendroid.app.GDActivity;
 import greendroid.widget.ActionBarItem;
 import greendroid.widget.ActionBarItem.Type;
 import greendroid.widget.LoaderActionBarItem;
-import greendroid.widget.QuickActionBar;
-import greendroid.widget.QuickActionWidget;
-import greendroid.widget.QuickActionWidget.OnQuickActionClickListener;
 
 import java.util.List;
 

@@ -3,10 +3,7 @@ package org.rubychina.android.util;
 import java.lang.reflect.Type;
 import java.util.List;
 
-import org.rubychina.android.type.Node;
-
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 public class JsonUtil {
 

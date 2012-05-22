@@ -22,7 +22,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.rubychina.android.api.response.TopicDetailResponse;
 import org.rubychina.android.type.Reply;
-import org.rubychina.android.type.Topic;
 import org.rubychina.android.util.JsonUtil;
 
 import com.google.gson.JsonParseException;

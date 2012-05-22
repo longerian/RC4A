@@ -20,10 +20,6 @@ import java.util.List;
 import org.rubychina.android.type.Node;
 import org.rubychina.android.type.Topic;
 import org.rubychina.android.util.JsonUtil;
-import org.rubychina.android.util.LogUtil;
-
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -32,6 +28,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
+
+import com.google.gson.reflect.TypeToken;
 
 public enum RCDBResolver {
 

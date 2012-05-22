@@ -31,8 +31,6 @@ import android.util.DisplayMetrics;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-
 public class UserProfileActivity extends GDActivity {
 	
 	public static final String VIEW_PROFILE = "org.rubychina.android.activity.UserProfileActivity.VIEW_PROFILE";

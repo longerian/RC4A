@@ -16,8 +16,6 @@ package org.rubychina.android.api.request;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.rubychina.android.activity.NodesActivity;
-import org.rubychina.android.activity.TopicsActivity;
 import org.rubychina.android.api.RCAPIContext;
 import org.rubychina.android.api.response.TopicsResponse;
 import org.rubychina.android.type.Node;

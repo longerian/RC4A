@@ -14,7 +14,6 @@ limitations under the License.*/
 package org.rubychina.android.api;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -24,7 +23,6 @@ import org.apache.http.impl.client.BasicCookieStore;
 import org.rubychina.android.RCApplication;
 import org.rubychina.android.api.request.RCAPIRequest;
 import org.rubychina.android.api.response.RCAPIResponse;
-import org.rubychina.android.util.LogUtil;
 
 import yek.api.ApiClient;
 import yek.api.parser.Parser;

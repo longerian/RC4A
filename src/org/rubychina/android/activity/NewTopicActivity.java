@@ -1,13 +1,13 @@
 package org.rubychina.android.activity;
 
-import org.rubychina.android.R;
-
-import android.content.Intent;
-import android.os.Bundle;
-import android.widget.Toast;
 import greendroid.app.GDActivity;
 import greendroid.widget.ActionBarItem;
 import greendroid.widget.ActionBarItem.Type;
+
+import org.rubychina.android.R;
+
+import android.os.Bundle;
+import android.widget.Toast;
 
 public class NewTopicActivity extends GDActivity {
 

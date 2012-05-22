@@ -19,7 +19,6 @@ import java.util.List;
 
 import org.rubychina.android.api.response.NodesResponse;
 import org.rubychina.android.type.Node;
-import org.rubychina.android.type.Topic;
 import org.rubychina.android.util.JsonUtil;
 
 import com.google.gson.JsonParseException;

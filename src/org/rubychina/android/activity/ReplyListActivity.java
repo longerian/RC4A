@@ -15,10 +15,9 @@ package org.rubychina.android.activity;
 
 import greendroid.app.GDActivity;
 import greendroid.widget.ActionBarItem;
-import greendroid.widget.LoaderActionBarItem;
 import greendroid.widget.ActionBarItem.Type;
+import greendroid.widget.LoaderActionBarItem;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -29,10 +28,8 @@ import org.rubychina.android.RCService.LocalBinder;
 import org.rubychina.android.api.request.TopicDetailRequest;
 import org.rubychina.android.api.response.TopicDetailResponse;
 import org.rubychina.android.type.Reply;
-import org.rubychina.android.util.GravatarUtil;
 import org.rubychina.android.util.ImageParser;
 import org.rubychina.android.util.JsonUtil;
-import org.rubychina.android.util.LogUtil;
 
 import yek.api.ApiCallback;
 import yek.api.ApiException;
@@ -40,13 +37,10 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.text.TextUtils;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
-import android.view.View.OnClickListener;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -54,13 +48,10 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.gson.Gson;
 
 @Deprecated
 public class ReplyListActivity extends GDActivity {

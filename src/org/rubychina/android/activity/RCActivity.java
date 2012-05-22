@@ -22,7 +22,6 @@ import org.rubychina.android.RCService.LocalBinder;
 import org.rubychina.android.api.request.NodesRequest;
 import org.rubychina.android.api.response.NodesResponse;
 import org.rubychina.android.type.Node;
-import org.rubychina.android.util.LogUtil;
 
 import yek.api.ApiCallback;
 import yek.api.ApiException;

@@ -54,8 +54,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-
 public class TopicDetailActivity extends GDActivity {
 
 	public static final String POS = "org.rubychina.android.activity.TopicDetailActivity.POSITION";
