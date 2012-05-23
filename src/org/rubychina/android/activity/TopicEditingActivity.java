@@ -45,6 +45,8 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 
 public class TopicEditingActivity extends SherlockFragmentActivity {
 
@@ -64,7 +66,6 @@ public class TopicEditingActivity extends SherlockFragmentActivity {
 		super.onCreate(savedInstanceState);
 		setTitle(R.string.title_posting_new_topic);
 		setContentView(R.layout.topic_editing_layout);
-//		addActionBarItem(Type.Add, R.id.action_bar_add);
 		Intent intent = new Intent(this, RCService.class);
 		bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 	}
@@ -95,22 +96,30 @@ public class TopicEditingActivity extends SherlockFragmentActivity {
         }
     }
     
-//	@Override
-//	public boolean onHandleActionBarItemClick(ActionBarItem item, int position) {
-//		switch (item.getItemId()) {
-//        case R.id.action_bar_add:
-//        	if(isTopicValid()) {
-//        		startPostTopicRequest(
-//        				title.getText().toString(),
-//        				((Node) nodeSelector.getSelectedItem()).getId() + "",
-//        				body.getText().toString()
-//        				);
-//        	}
-//        	return true;
-//        default:
-//            return super.onHandleActionBarItemClick(item, position);
-//		}
-//	}
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        menu.add(0, R.id.action_bar_compose, 0, R.string.actionbar_compose)
+            .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        return true;
+    }
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch(item.getItemId()) {
+        case R.id.action_bar_compose:
+        	if(isTopicValid()) {
+        		startPostTopicRequest(
+        				title.getText().toString(),
+        				((Node) nodeSelector.getSelectedItem()).getId() + "",
+        				body.getText().toString()
+        				);
+        	}
+        	break;
+		default: 
+			break;
+		}
+		return true;
+	}
 	
 //	@Override
 //	protected Dialog onCreateDialog(int id) {
@@ -292,13 +301,13 @@ public class TopicEditingActivity extends SherlockFragmentActivity {
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if(keyCode == KeyEvent.KEYCODE_BACK) {
-			if(!TextUtils.isEmpty(title.getText().toString())
-					|| !TextUtils.isEmpty(body.getText().toString())) {
-				showDialog(DIALOG_EXIT);
-				return true;
-			}
-		}
+//		if(keyCode == KeyEvent.KEYCODE_BACK) {
+//			if(!TextUtils.isEmpty(title.getText().toString())
+//					|| !TextUtils.isEmpty(body.getText().toString())) {
+//				showDialog(DIALOG_EXIT);
+//				return true;
+//			}
+//		}
 		return super.onKeyDown(keyCode, event);
 	}
 	

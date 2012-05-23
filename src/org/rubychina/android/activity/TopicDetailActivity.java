@@ -50,6 +50,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 
 public class TopicDetailActivity extends SherlockFragmentActivity {
 
@@ -57,7 +59,6 @@ public class TopicDetailActivity extends SherlockFragmentActivity {
 	public static final String TOPIC = "org.rubychina.android.activity.TopicDetailActivity.TOPIC";
 	private static final String TAG = "TopicDetailActivity";
 	
-//	private LoaderActionBarItem progress;
 	private ImageView gravatar;
 	private ListView replies;
 
@@ -72,12 +73,8 @@ public class TopicDetailActivity extends SherlockFragmentActivity {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.topic_layout);
-//		progress = (LoaderActionBarItem) addActionBarItem(Type.Refresh, R.id.action_bar_refresh);
-		
 		t = JsonUtil.fromJsonObject(getIntent().getStringExtra(TOPIC), Topic.class);
-		
 		setTitle(t.getTitle());
-		
 		Intent intent = new Intent(this, RCService.class);
 		bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 	}
@@ -108,45 +105,53 @@ public class TopicDetailActivity extends SherlockFragmentActivity {
         }
     }
 	
-//	@Override
-//	public boolean onHandleActionBarItemClick(ActionBarItem item, int position) {
-//		switch (item.getItemId()) {
-//        case R.id.action_bar_refresh:
-//        	startTopicDetailRequest(t.getId());
-//        	return true;
-//        default:
-//            return super.onHandleActionBarItemClick(item, position);
-//		}
-//	}
-	
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        menu.add(0, R.id.action_bar_refresh, 0, R.string.actionbar_refresh)
+            .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        return true;
+    }
+    
+    @Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch(item.getItemId()) {
+        case R.id.action_bar_refresh:
+        	startTopicDetailRequest(t.getId());
+        	break;
+		default: 
+			break;
+		}
+		return true;
+	}
+    
 	private void startTopicDetailRequest(int id) {
 		if(request == null) {
 			request = new TopicDetailRequest(id);
 		}
 		request.setId(id);
 		((RCApplication) getApplication()).getAPIClient().request(request, new TopicDetailCallback());
-//		progress.setLoading(true);
+		setSupportProgressBarIndeterminateVisibility(true);
 	}
 	
 	private class TopicDetailCallback implements ApiCallback<TopicDetailResponse> {
 
 		@Override
 		public void onException(ApiException e) {
+			setSupportProgressBarIndeterminateVisibility(false);
 			Toast.makeText(getApplicationContext(), R.string.hint_network_error, Toast.LENGTH_SHORT).show();
-//			progress.setLoading(false);
 			refreshView(new ArrayList<Reply>());
 		}
 
 		@Override
 		public void onFail(TopicDetailResponse r) {
+			setSupportProgressBarIndeterminateVisibility(false);
 			Toast.makeText(getApplicationContext(), R.string.hint_loading_data_failed, Toast.LENGTH_SHORT).show();
-//			progress.setLoading(false);
 			refreshView(new ArrayList<Reply>());
 		}
 
 		@Override
 		public void onSuccess(TopicDetailResponse r) {
-//			progress.setLoading(false);
+			setSupportProgressBarIndeterminateVisibility(false);
 			refreshView(r.getReplies());
 		}
 		
@@ -209,7 +214,7 @@ public class TopicDetailActivity extends SherlockFragmentActivity {
 		
 		@Override
 		protected void onPreExecute() {
-//			progress.setLoading(true);
+			setSupportProgressBarIndeterminateVisibility(true);
 		}
 
 		@Override
@@ -219,7 +224,7 @@ public class TopicDetailActivity extends SherlockFragmentActivity {
 		
 		@Override
 		protected void onPostExecute(Spanned result) {
-//			progress.setLoading(false);
+			setSupportProgressBarIndeterminateVisibility(false);
 			htmlView.setText(result);
 		}
 		

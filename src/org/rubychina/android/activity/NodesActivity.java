@@ -28,7 +28,6 @@ import org.rubychina.android.api.request.NodesRequest;
 import org.rubychina.android.api.response.NodesResponse;
 import org.rubychina.android.type.Node;
 import org.rubychina.android.type.Section;
-import org.rubychina.android.util.LogUtil;
 import org.rubychina.android.widget.NodeAdapter;
 import org.rubychina.android.widget.SeparatedListAdapter;
 
@@ -47,31 +46,29 @@ import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.app.SherlockListFragment;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.Window;
 
 public class NodesActivity<V> extends SherlockFragmentActivity {
 
+	private static final String TAG = "NodesActivity";
 	public static final int PICK_NODE = 0x7001;
 	public static final String PICKED_NODE = "org.rubychina.android.activity.NodesActivity.PICKED_NODE";
-	private static final String TAG = "NodesActivity";
 	
 	private NodesRequest request;
-//	private LoaderActionBarItem progress;
 	private RCService mService;
 	private boolean isBound = false;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setTitle(R.string.title_nodes);
-		
-//		progress = (LoaderActionBarItem) addActionBarItem(Type.Refresh, R.id.action_bar_refresh);
-		
-		 if (getSupportFragmentManager().findFragmentById(android.R.id.content) == null) {
-	            NodeListFragment list = new NodeListFragment();
-	            getSupportFragmentManager().beginTransaction().add(android.R.id.content, list).commit();
-	     }
-		 
+		if (getSupportFragmentManager().findFragmentById(android.R.id.content) == null) {
+			NodeListFragment list = new NodeListFragment();
+	        getSupportFragmentManager().beginTransaction().add(android.R.id.content, list).commit();
+		}
 	}
 	
     private ServiceConnection mConnection = new ServiceConnection() {
@@ -91,32 +88,25 @@ public class NodesActivity<V> extends SherlockFragmentActivity {
         }
     };
     
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		cancelNodesRequest();
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        menu.add(0, R.id.action_bar_refresh, 0, R.string.actionbar_refresh)
+            .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        return true;
+    }
+    
+    @Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch(item.getItemId()) {
+        case R.id.action_bar_refresh:
+        	startNodesRequest();
+        	break;
+		default: 
+			break;
+		}
+		return true;
 	}
-	
-//	@Override
-//	public boolean onHandleActionBarItemClick(ActionBarItem item, int position) {
-//		switch (item.getItemId()) {
-//        case R.id.action_bar_refresh:
-//        	startNodesRequest();
-//        	return true;
-//        default:
-//            return super.onHandleActionBarItemClick(item, position);
-//		}
-//	}
-
-//	@Override
-//	protected void onListItemClick(ListView l, View v, int position, long id) {
-//		Node n = (Node) l.getItemAtPosition(position);
-//		Intent i = new Intent();
-//		i.putExtra(PICKED_NODE, n);
-//		setResult(RESULT_OK, i);
-//		finish();
-//	}
-
+    
 	private void initialize() {
 		List<Node> nodes = mService.fetchNodes();
 		if(nodes.isEmpty()) {
@@ -131,14 +121,14 @@ public class NodesActivity<V> extends SherlockFragmentActivity {
 			request = new NodesRequest();
 		}
 		((RCApplication) getApplication()).getAPIClient().request(request, new NodesCallback());
-//		progress.setLoading(true);
+		setSupportProgressBarIndeterminateVisibility(true);
 	}
 	
 	private void cancelNodesRequest() {
 		if(request != null) {
 			((RCApplication) getApplication()).getAPIClient().cancel(request);
-//			progress.setLoading(false);
 		}
+		setSupportProgressBarIndeterminateVisibility(false);
 	}
 	
 	private void refreshPage(List<Node> nodes) {
@@ -171,19 +161,19 @@ public class NodesActivity<V> extends SherlockFragmentActivity {
 
 		@Override
 		public void onException(ApiException e) {
+			setSupportProgressBarIndeterminateVisibility(false);
 			Toast.makeText(getApplicationContext(), R.string.hint_network_error, Toast.LENGTH_SHORT).show();
-//			progress.setLoading(false);
 		}
 
 		@Override
 		public void onFail(NodesResponse r) {
+			setSupportProgressBarIndeterminateVisibility(false);
 			Toast.makeText(getApplicationContext(), R.string.hint_loading_data_failed, Toast.LENGTH_SHORT).show();
-//			progress.setLoading(false);
 		}
 
 		@Override
 		public void onSuccess(NodesResponse r) {
-//			progress.setLoading(false);
+			setSupportProgressBarIndeterminateVisibility(false);
 			refreshPage(r.getNodes());
 			new CacheNodesTask().execute(r.getNodes());
 		}
@@ -194,7 +184,7 @@ public class NodesActivity<V> extends SherlockFragmentActivity {
 
 		@Override
 		protected void onPreExecute() {
-//			progress.setLoading(true);
+			setSupportProgressBarIndeterminateVisibility(true);
 		}
 
 		@Override
@@ -206,7 +196,7 @@ public class NodesActivity<V> extends SherlockFragmentActivity {
 		
 		@Override
 		protected void onPostExecute(Void result) {
-//			progress.setLoading(false);
+			setSupportProgressBarIndeterminateVisibility(false);
 		}
 		
 	}
@@ -230,6 +220,12 @@ public class NodesActivity<V> extends SherlockFragmentActivity {
 		}
 
         @Override
+		public void onDestroy() {
+			super.onDestroy();
+			cancelNodesRequest();
+		}
+
+		@Override
         public void onListItemClick(ListView l, View v, int position, long id) {
             Node n = (Node) l.getItemAtPosition(position);
     		Intent i = new Intent();

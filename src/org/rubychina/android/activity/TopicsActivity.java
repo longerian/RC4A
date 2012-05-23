@@ -48,6 +48,7 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.Window;
 
 
 public class TopicsActivity extends SherlockFragmentActivity {
@@ -67,6 +68,7 @@ public class TopicsActivity extends SherlockFragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.topics_layout);
 		
 		Intent intent = new Intent(this, RCService.class);
@@ -145,13 +147,13 @@ public class TopicsActivity extends SherlockFragmentActivity {
 		request.setNodeId(node.getId());
 		request.setSize(((RCApplication) getApplication()).getPageSize());
 		((RCApplication) getApplication()).getAPIClient().request(request, new ActiveTopicsCallback());
-//		progress.setLoading(true);
+		setSupportProgressBarIndeterminateVisibility(true);
 	}
 	
 	private void cancelTopicsRequest() {
 		if(request != null) {
 			((RCApplication) getApplication()).getAPIClient().cancel(request);
-//			progress.setLoading(false);
+			setSupportProgressBarIndeterminateVisibility(false);
 		}
 	}
 
@@ -218,19 +220,19 @@ public class TopicsActivity extends SherlockFragmentActivity {
 
 		@Override
 		public void onException(ApiException e) {
+			setSupportProgressBarIndeterminateVisibility(false);
 			Toast.makeText(getApplicationContext(), R.string.hint_network_error, Toast.LENGTH_SHORT).show();
-//			progress.setLoading(false);
 		}
 
 		@Override
 		public void onFail(TopicsResponse r) {
+			setSupportProgressBarIndeterminateVisibility(false);
 			Toast.makeText(getApplicationContext(), R.string.hint_loading_data_failed, Toast.LENGTH_SHORT).show();
-//			progress.setLoading(false);
 		}
 
 		@Override
 		public void onSuccess(TopicsResponse r) {
-//			progress.setLoading(false);
+			setSupportProgressBarIndeterminateVisibility(false);
 			refreshPage(r.getTopics(), node);
 			new CacheTopicsTask().execute(r.getTopics());
 		}
@@ -241,7 +243,7 @@ public class TopicsActivity extends SherlockFragmentActivity {
 
 		@Override
 		protected void onPreExecute() {
-//			progress.setLoading(true);
+			setSupportProgressBarIndeterminateVisibility(true);
 		}
 
 		@Override
@@ -253,7 +255,7 @@ public class TopicsActivity extends SherlockFragmentActivity {
 		
 		@Override
 		protected void onPostExecute(Void result) {
-//			progress.setLoading(false);
+			setSupportProgressBarIndeterminateVisibility(false);
 		}
 		
 	}
