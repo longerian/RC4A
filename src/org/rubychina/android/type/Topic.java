@@ -13,9 +13,12 @@ See the License for the specific language governing permissions and
 limitations under the License.*/
 package org.rubychina.android.type;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
-public class Topic {
+public class Topic implements Parcelable {
 	
 	@SerializedName("_id")  
 	private int id;
@@ -119,5 +122,59 @@ public class Topic {
 			return false;
 		return true;
 	}
+
+	public Topic(Parcel in) {
+		readFromParcel(in);
+	}
+	
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeInt(id);
+		dest.writeString(title);
+		dest.writeString(body);
+		dest.writeString(bodyHTML);
+		dest.writeString(createdAt);
+		dest.writeString(updatedAt);
+		dest.writeString(repliedAt);
+		dest.writeInt(repliesCount);
+		dest.writeString(nodeName);
+		dest.writeInt(nodeID);
+		dest.writeString(lastReplyUserLogin);
+		dest.writeParcelable(user, flags);
+	}
+	
+	private void readFromParcel(Parcel in) {
+		id = in.readInt();
+		title = in.readString();
+		body = in.readString();
+		bodyHTML = in.readString();
+		createdAt = in.readString();
+		updatedAt = in.readString();
+		repliedAt = in.readString();
+		repliesCount = in.readInt();
+		nodeName = in.readString();
+		nodeID = in.readInt();
+		lastReplyUserLogin = in.readString();
+		user = in.readParcelable(User.class.getClassLoader());
+	}
+	
+	@SuppressWarnings("rawtypes")
+	public static final Parcelable.Creator CREATOR = 
+			new Parcelable.Creator() {
+		
+	            public Topic createFromParcel(Parcel in) {
+	                return new Topic(in);
+	            }
+	 
+	            public Topic[] newArray(int size) {
+	                return new Topic[size];
+	            }
+	            
+	        };
 	
 }

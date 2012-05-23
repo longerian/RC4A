@@ -13,9 +13,12 @@ See the License for the specific language governing permissions and
 limitations under the License.*/
 package org.rubychina.android.type;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
-public class User {
+public class User implements Parcelable {
 
 	@SerializedName("_id")  
 	private int id;
@@ -81,4 +84,54 @@ public class User {
 		return avatarUrl;
 	}
 	
+	public User(Parcel in) {
+		readFromParcel(in);
+	}
+	
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeInt(id);
+		dest.writeString(name);
+		dest.writeString(login);
+		dest.writeString(location);
+		dest.writeString(website);
+		dest.writeString(bio);
+		dest.writeString(tagline);
+		dest.writeString(githubUrl);
+		dest.writeString(gravatarHash);
+		dest.writeString(avatarUrl);
+	}
+	
+	private void readFromParcel(Parcel in) {
+		id = in.readInt();
+		name = in.readString();
+		login = in.readString();
+		location = in.readString();
+		website = in.readString();
+		bio = in.readString();
+		tagline = in.readString();
+		githubUrl = in.readString();
+		gravatarHash = in.readString();
+		avatarUrl = in.readString();
+	}
+	
+	@SuppressWarnings("rawtypes")
+	public static final Parcelable.Creator CREATOR = 
+			new Parcelable.Creator() {
+		
+	            public User createFromParcel(Parcel in) {
+	                return new User(in);
+	            }
+	 
+	            public User[] newArray(int size) {
+	                return new User[size];
+	            }
+	            
+	        };
+	        
 }

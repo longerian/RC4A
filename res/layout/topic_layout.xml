@@ -18,13 +18,10 @@ limitations under the License.
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
-    <ListView
-        android:id="@+id/replies"
-        android:layout_width="match_parent"
-	    android:layout_height="match_parent"
-	    android:fastScrollEnabled="true"
-	    android:cacheColorHint="#00000000" 
-	    android:divider="@drawable/list_divider" 
-	    android:dividerHeight="1.0px"
-	    />
+    <android.support.v4.view.ViewPager
+    	android:id="@+id/topic_pager"
+	    android:layout_width="match_parent"
+	    android:layout_height="0dip"
+	    >
+    </android.support.v4.view.ViewPager>
 </RelativeLayout>

@@ -41,6 +41,10 @@ public class TopicAdapter extends ArrayAdapter<Topic> {
 		this.items = items;
 	}
 	
+	public List<Topic> getItems() {
+		return items;
+	}
+
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolder viewHolder;

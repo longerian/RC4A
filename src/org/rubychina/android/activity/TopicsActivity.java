@@ -13,6 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.*/
 package org.rubychina.android.activity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.rubychina.android.R;
@@ -36,10 +37,12 @@ import android.content.ServiceConnection;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.HeaderViewListAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -121,9 +124,11 @@ public class TopicsActivity extends SherlockFragmentActivity {
 				public void onItemClick(AdapterView<?> parent, View v,
 						int position, long id) {
 						Intent i = new Intent(getApplicationContext(), TopicDetailActivity.class);
-						Topic t = (Topic) parent.getItemAtPosition(position);
-						i.putExtra(TopicDetailActivity.TOPIC, JsonUtil.toJsonObject(t));
-						i.putExtra(TopicDetailActivity.POS, position);
+						Bundle bundle = new Bundle();
+						bundle.putInt(TopicDetailActivity.POS, position);
+						bundle.putParcelableArrayList(TopicDetailActivity.TOPICS, 
+								(ArrayList<? extends Parcelable>) ((TopicAdapter) ((HeaderViewListAdapter) parent.getAdapter()).getWrappedAdapter()).getItems());
+						i.putExtras(bundle);
 						startActivity(i);
 				}
 			});

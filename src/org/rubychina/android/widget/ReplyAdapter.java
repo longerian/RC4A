@@ -17,6 +17,7 @@ import java.util.List;
 
 import org.rubychina.android.R;
 import org.rubychina.android.activity.TopicDetailActivity;
+import org.rubychina.android.fragment.TopicDetailFragment;
 import org.rubychina.android.type.Reply;
 import org.rubychina.android.util.HtmlUtil;
 
@@ -32,13 +33,13 @@ import android.widget.TextView;
 public class ReplyAdapter extends ArrayAdapter<Reply> {
 
 	private List<Reply> items;
-	private TopicDetailActivity activity;
+	private TopicDetailFragment fragment;
 	private int resource;
 	
-	public ReplyAdapter(TopicDetailActivity activity, int resource,
+	public ReplyAdapter(TopicDetailFragment fragment, int resource,
 			int textViewResourceId, List<Reply> items) {
-		super(activity, resource, textViewResourceId, items);
-		this.activity = activity;
+		super(fragment.getActivity(), resource, textViewResourceId, items);
+		this.fragment = fragment;
 		this.resource = resource;
 		this.items = items;
 	}
@@ -48,7 +49,7 @@ public class ReplyAdapter extends ArrayAdapter<Reply> {
 		final ViewHolder viewHolder;
 		if(convertView == null) {
 			viewHolder = new ViewHolder();
-			convertView = LayoutInflater.from(activity).inflate(resource, null);
+			convertView = LayoutInflater.from(fragment.getActivity()).inflate(resource, null);
 			viewHolder.gravatar = (ImageView) convertView.findViewById(R.id.gravatar);
 			viewHolder.userName = (TextView) convertView.findViewById(R.id.user_name);
 			viewHolder.floor = (TextView) convertView.findViewById(R.id.floor);
@@ -59,11 +60,11 @@ public class ReplyAdapter extends ArrayAdapter<Reply> {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
 		final Reply r = items.get(position);
-		activity.requestUserAvatar(r.getUser(), viewHolder.gravatar, 0);
+		fragment.requestUserAvatar(r.getUser(), viewHolder.gravatar, 0);
 		viewHolder.userName.setText(r.getUser().getLogin());
-		viewHolder.floor.setText(position + 1 + "" + activity.getString(R.string.reply_list_unit));
+		viewHolder.floor.setText(position + 1 + "" + fragment.getString(R.string.reply_list_unit));
 		if(HtmlUtil.existsImg(r.getBodyHTML())) {
-			activity.executeRetrieveSpannedTask(viewHolder.body, r.getBodyHTML());
+			fragment.executeRetrieveSpannedTask(viewHolder.body, r.getBodyHTML());
 		} else {
 			viewHolder.body.setText(Html.fromHtml(r.getBodyHTML()));
 		}
@@ -71,7 +72,7 @@ public class ReplyAdapter extends ArrayAdapter<Reply> {
 			
 			@Override
 			public void onClick(View v) {
-				activity.visitUserProfile(r.getUser());
+				fragment.visitUserProfile(r.getUser());
 			}
 		});
 		return convertView;
