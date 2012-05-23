@@ -13,11 +13,6 @@ See the License for the specific language governing permissions and
 limitations under the License.*/
 package org.rubychina.android.activity;
 
-import greendroid.app.GDActivity;
-import greendroid.widget.ActionBarItem;
-import greendroid.widget.ActionBarItem.Type;
-import greendroid.widget.LoaderActionBarItem;
-
 import java.util.List;
 
 import org.rubychina.android.R;
@@ -42,9 +37,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -53,8 +45,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 
-public class TopicsActivity extends GDActivity {
+
+public class TopicsActivity extends SherlockFragmentActivity {
 
 	private static final String TAG = "TopicsActivity";
 	private TopicsRequest request;
@@ -63,7 +57,7 @@ public class TopicsActivity extends GDActivity {
 	private RCService mService;
 	private boolean isBound = false; 
 	
-	private LoaderActionBarItem progress;
+//	private LoaderActionBarItem progress;
 	private ListView topicsView;
 	private TextView nodeSection;
 	
@@ -72,10 +66,10 @@ public class TopicsActivity extends GDActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setActionBarContentView(R.layout.topics_layout);
-		addActionBarItem(Type.List, R.id.action_bar_nodes);
-		progress = (LoaderActionBarItem) addActionBarItem(Type.Refresh, R.id.action_bar_refresh);
-		addActionBarItem(Type.Compose, R.id.action_bar_compose);
+		setContentView(R.layout.topics_layout);
+//		addActionBarItem(Type.List, R.id.action_bar_nodes);
+//		progress = (LoaderActionBarItem) addActionBarItem(Type.Refresh, R.id.action_bar_refresh);
+//		addActionBarItem(Type.Compose, R.id.action_bar_compose);
 		
 		Intent intent = new Intent(this, RCService.class);
 		bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
@@ -153,34 +147,34 @@ public class TopicsActivity extends GDActivity {
 		request.setNodeId(node.getId());
 		request.setSize(((RCApplication) getApplication()).getPageSize());
 		((RCApplication) getApplication()).getAPIClient().request(request, new ActiveTopicsCallback());
-		progress.setLoading(true);
+//		progress.setLoading(true);
 	}
 	
 	private void cancelTopicsRequest() {
 		if(request != null) {
 			((RCApplication) getApplication()).getAPIClient().cancel(request);
-			progress.setLoading(false);
+//			progress.setLoading(false);
 		}
 	}
 
-	@Override
-	public boolean onHandleActionBarItemClick(ActionBarItem item, int position) {
-		Intent i = new Intent();
-		switch (item.getItemId()) {
-		case R.id.action_bar_nodes:
-			i.setClass(getApplicationContext(), NodesActivity.class);
-			startActivityForResult(i, NodesActivity.PICK_NODE);
-			return true;
-        case R.id.action_bar_refresh:
-        	startTopicsRequest(node);
-        	return true;
-        case R.id.action_bar_compose:
-        	onCompose();
-        	return true;
-        default:
-            return super.onHandleActionBarItemClick(item, position);
-		}
-	}
+//	@Override
+//	public boolean onHandleActionBarItemClick(ActionBarItem item, int position) {
+//		Intent i = new Intent();
+//		switch (item.getItemId()) {
+//		case R.id.action_bar_nodes:
+//			i.setClass(getApplicationContext(), NodesActivity.class);
+//			startActivityForResult(i, NodesActivity.PICK_NODE);
+//			return true;
+//        case R.id.action_bar_refresh:
+//        	startTopicsRequest(node);
+//        	return true;
+//        case R.id.action_bar_compose:
+//        	onCompose();
+//        	return true;
+//        default:
+//            return super.onHandleActionBarItemClick(item, position);
+//		}
+//	}
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -193,24 +187,24 @@ public class TopicsActivity extends GDActivity {
 		}
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		new MenuInflater(getApplication()).inflate(R.menu.menu, menu);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		Intent intent = new Intent();
-		int id = item.getItemId();
-		switch(id) {
-		case R.id.menu_preference:
-			intent.setClass(getApplicationContext(), RCPreferenceActivity.class);
-			startActivity(intent);
-			break;
-		}
-		return true;
-	}
+//	@Override
+//	public boolean onCreateOptionsMenu(Menu menu) {
+//		new MenuInflater(getApplication()).inflate(R.menu.menu, menu);
+//		return true;
+//	}
+//
+//	@Override
+//	public boolean onOptionsItemSelected(MenuItem item) {
+//		Intent intent = new Intent();
+//		int id = item.getItemId();
+//		switch(id) {
+//		case R.id.menu_preference:
+//			intent.setClass(getApplicationContext(), RCPreferenceActivity.class);
+//			startActivity(intent);
+//			break;
+//		}
+//		return true;
+//	}
 	
 	private void onCompose() {
 		Intent i = new Intent();
@@ -228,18 +222,18 @@ public class TopicsActivity extends GDActivity {
 		@Override
 		public void onException(ApiException e) {
 			Toast.makeText(getApplicationContext(), R.string.hint_network_error, Toast.LENGTH_SHORT).show();
-			progress.setLoading(false);
+//			progress.setLoading(false);
 		}
 
 		@Override
 		public void onFail(TopicsResponse r) {
 			Toast.makeText(getApplicationContext(), R.string.hint_loading_data_failed, Toast.LENGTH_SHORT).show();
-			progress.setLoading(false);
+//			progress.setLoading(false);
 		}
 
 		@Override
 		public void onSuccess(TopicsResponse r) {
-			progress.setLoading(false);
+//			progress.setLoading(false);
 			refreshPage(r.getTopics(), node);
 			new CacheTopicsTask().execute(r.getTopics());
 		}
@@ -250,7 +244,7 @@ public class TopicsActivity extends GDActivity {
 
 		@Override
 		protected void onPreExecute() {
-			progress.setLoading(true);
+//			progress.setLoading(true);
 		}
 
 		@Override
@@ -262,7 +256,7 @@ public class TopicsActivity extends GDActivity {
 		
 		@Override
 		protected void onPostExecute(Void result) {
-			progress.setLoading(false);
+//			progress.setLoading(false);
 		}
 		
 	}

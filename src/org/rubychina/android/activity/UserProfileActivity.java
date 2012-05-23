@@ -13,8 +13,6 @@ See the License for the specific language governing permissions and
 limitations under the License.*/
 package org.rubychina.android.activity;
 
-import greendroid.app.GDActivity;
-
 import org.rubychina.android.R;
 import org.rubychina.android.RCService;
 import org.rubychina.android.RCService.LocalBinder;
@@ -31,7 +29,9 @@ import android.util.DisplayMetrics;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class UserProfileActivity extends GDActivity {
+import com.actionbarsherlock.app.SherlockActivity;
+
+public class UserProfileActivity extends SherlockActivity {
 	
 	public static final String VIEW_PROFILE = "org.rubychina.android.activity.UserProfileActivity.VIEW_PROFILE";
 
@@ -48,7 +48,7 @@ public class UserProfileActivity extends GDActivity {
 		
 		setTitle(R.string.title_profile);
 		
-		setActionBarContentView(R.layout.user_profile_layout);
+		setContentView(R.layout.user_profile_layout);
 		
 		u = JsonUtil.fromJsonObject(getIntent().getStringExtra(VIEW_PROFILE), User.class);
 		

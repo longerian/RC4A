@@ -13,11 +13,6 @@ See the License for the specific language governing permissions and
 limitations under the License.*/
 package org.rubychina.android.activity;
 
-import greendroid.app.GDActivity;
-import greendroid.widget.ActionBarItem;
-import greendroid.widget.ActionBarItem.Type;
-import greendroid.widget.LoaderActionBarItem;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -54,13 +49,15 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class TopicDetailActivity extends GDActivity {
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+
+public class TopicDetailActivity extends SherlockFragmentActivity {
 
 	public static final String POS = "org.rubychina.android.activity.TopicDetailActivity.POSITION";
 	public static final String TOPIC = "org.rubychina.android.activity.TopicDetailActivity.TOPIC";
 	private static final String TAG = "TopicDetailActivity";
 	
-	private LoaderActionBarItem progress;
+//	private LoaderActionBarItem progress;
 	private ImageView gravatar;
 	private ListView replies;
 
@@ -74,8 +71,8 @@ public class TopicDetailActivity extends GDActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-		setActionBarContentView(R.layout.topic_layout);
-		progress = (LoaderActionBarItem) addActionBarItem(Type.Refresh, R.id.action_bar_refresh);
+		setContentView(R.layout.topic_layout);
+//		progress = (LoaderActionBarItem) addActionBarItem(Type.Refresh, R.id.action_bar_refresh);
 		
 		t = JsonUtil.fromJsonObject(getIntent().getStringExtra(TOPIC), Topic.class);
 		
@@ -111,16 +108,16 @@ public class TopicDetailActivity extends GDActivity {
         }
     }
 	
-	@Override
-	public boolean onHandleActionBarItemClick(ActionBarItem item, int position) {
-		switch (item.getItemId()) {
-        case R.id.action_bar_refresh:
-        	startTopicDetailRequest(t.getId());
-        	return true;
-        default:
-            return super.onHandleActionBarItemClick(item, position);
-		}
-	}
+//	@Override
+//	public boolean onHandleActionBarItemClick(ActionBarItem item, int position) {
+//		switch (item.getItemId()) {
+//        case R.id.action_bar_refresh:
+//        	startTopicDetailRequest(t.getId());
+//        	return true;
+//        default:
+//            return super.onHandleActionBarItemClick(item, position);
+//		}
+//	}
 	
 	private void startTopicDetailRequest(int id) {
 		if(request == null) {
@@ -128,7 +125,7 @@ public class TopicDetailActivity extends GDActivity {
 		}
 		request.setId(id);
 		((RCApplication) getApplication()).getAPIClient().request(request, new TopicDetailCallback());
-		progress.setLoading(true);
+//		progress.setLoading(true);
 	}
 	
 	private class TopicDetailCallback implements ApiCallback<TopicDetailResponse> {
@@ -136,20 +133,20 @@ public class TopicDetailActivity extends GDActivity {
 		@Override
 		public void onException(ApiException e) {
 			Toast.makeText(getApplicationContext(), R.string.hint_network_error, Toast.LENGTH_SHORT).show();
-			progress.setLoading(false);
+//			progress.setLoading(false);
 			refreshView(new ArrayList<Reply>());
 		}
 
 		@Override
 		public void onFail(TopicDetailResponse r) {
 			Toast.makeText(getApplicationContext(), R.string.hint_loading_data_failed, Toast.LENGTH_SHORT).show();
-			progress.setLoading(false);
+//			progress.setLoading(false);
 			refreshView(new ArrayList<Reply>());
 		}
 
 		@Override
 		public void onSuccess(TopicDetailResponse r) {
-			progress.setLoading(false);
+//			progress.setLoading(false);
 			refreshView(r.getReplies());
 		}
 		
@@ -212,7 +209,7 @@ public class TopicDetailActivity extends GDActivity {
 		
 		@Override
 		protected void onPreExecute() {
-			progress.setLoading(true);
+//			progress.setLoading(true);
 		}
 
 		@Override
@@ -222,7 +219,7 @@ public class TopicDetailActivity extends GDActivity {
 		
 		@Override
 		protected void onPostExecute(Spanned result) {
-			progress.setLoading(false);
+//			progress.setLoading(false);
 			htmlView.setText(result);
 		}
 		

@@ -13,11 +13,6 @@ See the License for the specific language governing permissions and
 limitations under the License.*/
 package org.rubychina.android.activity;
 
-import greendroid.app.GDListActivity;
-import greendroid.widget.ActionBarItem;
-import greendroid.widget.ActionBarItem.Type;
-import greendroid.widget.LoaderActionBarItem;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -33,6 +28,7 @@ import org.rubychina.android.api.request.NodesRequest;
 import org.rubychina.android.api.response.NodesResponse;
 import org.rubychina.android.type.Node;
 import org.rubychina.android.type.Section;
+import org.rubychina.android.util.LogUtil;
 import org.rubychina.android.widget.NodeAdapter;
 import org.rubychina.android.widget.SeparatedListAdapter;
 
@@ -49,14 +45,17 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class NodesActivity<V> extends GDListActivity {
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.app.SherlockListFragment;
+
+public class NodesActivity<V> extends SherlockFragmentActivity {
 
 	public static final int PICK_NODE = 0x7001;
 	public static final String PICKED_NODE = "org.rubychina.android.activity.NodesActivity.PICKED_NODE";
 	private static final String TAG = "NodesActivity";
 	
 	private NodesRequest request;
-	private LoaderActionBarItem progress;
+//	private LoaderActionBarItem progress;
 	private RCService mService;
 	private boolean isBound = false;
 	
@@ -66,16 +65,15 @@ public class NodesActivity<V> extends GDListActivity {
 		
 		setTitle(R.string.title_nodes);
 		
-		progress = (LoaderActionBarItem) addActionBarItem(Type.Refresh, R.id.action_bar_refresh);
+//		progress = (LoaderActionBarItem) addActionBarItem(Type.Refresh, R.id.action_bar_refresh);
+		
+		 if (getSupportFragmentManager().findFragmentById(android.R.id.content) == null) {
+	            NodeListFragment list = new NodeListFragment();
+	            getSupportFragmentManager().beginTransaction().add(android.R.id.content, list).commit();
+	     }
+		 
 	}
 	
-	@Override
-	protected void onStart() {
-		super.onStart();
-        Intent intent = new Intent(this, RCService.class);
-        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-	}
-
     private ServiceConnection mConnection = new ServiceConnection() {
 
         @Override
@@ -94,39 +92,30 @@ public class NodesActivity<V> extends GDListActivity {
     };
     
 	@Override
-    protected void onStop() {
-        super.onStop();
-        if (isBound) {
-            unbindService(mConnection);
-            isBound = false;
-        }
-    }
-	
-	@Override
 	protected void onDestroy() {
 		super.onDestroy();
 		cancelNodesRequest();
 	}
 	
-	@Override
-	public boolean onHandleActionBarItemClick(ActionBarItem item, int position) {
-		switch (item.getItemId()) {
-        case R.id.action_bar_refresh:
-        	startNodesRequest();
-        	return true;
-        default:
-            return super.onHandleActionBarItemClick(item, position);
-		}
-	}
+//	@Override
+//	public boolean onHandleActionBarItemClick(ActionBarItem item, int position) {
+//		switch (item.getItemId()) {
+//        case R.id.action_bar_refresh:
+//        	startNodesRequest();
+//        	return true;
+//        default:
+//            return super.onHandleActionBarItemClick(item, position);
+//		}
+//	}
 
-	@Override
-	protected void onListItemClick(ListView l, View v, int position, long id) {
-		Node n = (Node) l.getItemAtPosition(position);
-		Intent i = new Intent();
-		i.putExtra(PICKED_NODE, n);
-		setResult(RESULT_OK, i);
-		finish();
-	}
+//	@Override
+//	protected void onListItemClick(ListView l, View v, int position, long id) {
+//		Node n = (Node) l.getItemAtPosition(position);
+//		Intent i = new Intent();
+//		i.putExtra(PICKED_NODE, n);
+//		setResult(RESULT_OK, i);
+//		finish();
+//	}
 
 	private void initialize() {
 		List<Node> nodes = mService.fetchNodes();
@@ -142,13 +131,13 @@ public class NodesActivity<V> extends GDListActivity {
 			request = new NodesRequest();
 		}
 		((RCApplication) getApplication()).getAPIClient().request(request, new NodesCallback());
-		progress.setLoading(true);
+//		progress.setLoading(true);
 	}
 	
 	private void cancelNodesRequest() {
 		if(request != null) {
 			((RCApplication) getApplication()).getAPIClient().cancel(request);
-			progress.setLoading(false);
+//			progress.setLoading(false);
 		}
 	}
 	
@@ -174,7 +163,8 @@ public class NodesActivity<V> extends GDListActivity {
 			adapter.addSection(entry.getKey(), 
 					new NodeAdapter(getApplicationContext(), R.layout.node_item, entry.getValue()));
 		}
-		setListAdapter(adapter);
+		NodeListFragment list = (NodeListFragment) getSupportFragmentManager().findFragmentById(android.R.id.content);
+		list.setListAdapter(adapter);
 	}
 	
 	private class NodesCallback implements ApiCallback<NodesResponse> {
@@ -182,18 +172,18 @@ public class NodesActivity<V> extends GDListActivity {
 		@Override
 		public void onException(ApiException e) {
 			Toast.makeText(getApplicationContext(), R.string.hint_network_error, Toast.LENGTH_SHORT).show();
-			progress.setLoading(false);
+//			progress.setLoading(false);
 		}
 
 		@Override
 		public void onFail(NodesResponse r) {
 			Toast.makeText(getApplicationContext(), R.string.hint_loading_data_failed, Toast.LENGTH_SHORT).show();
-			progress.setLoading(false);
+//			progress.setLoading(false);
 		}
 
 		@Override
 		public void onSuccess(NodesResponse r) {
-			progress.setLoading(false);
+//			progress.setLoading(false);
 			refreshPage(r.getNodes());
 			new CacheNodesTask().execute(r.getNodes());
 		}
@@ -204,7 +194,7 @@ public class NodesActivity<V> extends GDListActivity {
 
 		@Override
 		protected void onPreExecute() {
-			progress.setLoading(true);
+//			progress.setLoading(true);
 		}
 
 		@Override
@@ -216,9 +206,38 @@ public class NodesActivity<V> extends GDListActivity {
 		
 		@Override
 		protected void onPostExecute(Void result) {
-			progress.setLoading(false);
+//			progress.setLoading(false);
 		}
 		
 	}
+	
+	private class NodeListFragment extends SherlockListFragment {
+
+        @Override
+		public void onStart() {
+			super.onStart();
+			Intent intent = new Intent(getActivity(), RCService.class);
+	        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+		}
+
+		@Override
+		public void onStop() {
+			super.onStop();
+			if (isBound) {
+	            unbindService(mConnection);
+	            isBound = false;
+	        }
+		}
+
+        @Override
+        public void onListItemClick(ListView l, View v, int position, long id) {
+            Node n = (Node) l.getItemAtPosition(position);
+            LogUtil.d(TAG, n.toString());
+//    		Intent i = new Intent();
+//    		i.putExtra(PICKED_NODE, n);
+//    		setResult(RESULT_OK, i);
+//    		finish();
+        }
+    }
 	
 }

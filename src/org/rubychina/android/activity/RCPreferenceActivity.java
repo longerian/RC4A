@@ -13,8 +13,6 @@ See the License for the specific language governing permissions and
 limitations under the License.*/
 package org.rubychina.android.activity;
 
-import greendroid.app.GDActivity;
-
 import org.rubychina.android.R;
 import org.rubychina.android.RCApplication;
 
@@ -27,7 +25,9 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 
-public class RCPreferenceActivity extends GDActivity {
+import com.actionbarsherlock.app.SherlockActivity;
+
+public class RCPreferenceActivity extends SherlockActivity {
 
 	private static final String TAG = "UserVerificationActivity";
 	private EditText tokenEdit;
@@ -37,7 +37,7 @@ public class RCPreferenceActivity extends GDActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setTitle(R.string.title_preference);
-		setActionBarContentView(R.layout.rc_preference_layout);
+		setContentView(R.layout.rc_preference_layout);
 
 		tokenEdit = (EditText) findViewById(R.id.token);
 		tokenEdit.setText(((RCApplication) getApplication()).getToken());

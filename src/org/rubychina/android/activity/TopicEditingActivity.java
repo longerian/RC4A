@@ -13,10 +13,6 @@ See the License for the specific language governing permissions and
 limitations under the License.*/
 package org.rubychina.android.activity;
 
-import greendroid.app.GDActivity;
-import greendroid.widget.ActionBarItem;
-import greendroid.widget.ActionBarItem.Type;
-
 import java.util.List;
 
 import org.rubychina.android.R;
@@ -31,13 +27,9 @@ import org.rubychina.android.type.Node;
 
 import yek.api.ApiCallback;
 import yek.api.ApiException;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.AsyncTask;
@@ -52,7 +44,9 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-public class TopicEditingActivity extends GDActivity {
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+
+public class TopicEditingActivity extends SherlockFragmentActivity {
 
 	private static final int DIALOG_EXIT = 1;
 	
@@ -69,8 +63,8 @@ public class TopicEditingActivity extends GDActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setTitle(R.string.title_posting_new_topic);
-		setActionBarContentView(R.layout.topic_editing_layout);
-		addActionBarItem(Type.Add, R.id.action_bar_add);
+		setContentView(R.layout.topic_editing_layout);
+//		addActionBarItem(Type.Add, R.id.action_bar_add);
 		Intent intent = new Intent(this, RCService.class);
 		bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 	}
@@ -101,52 +95,52 @@ public class TopicEditingActivity extends GDActivity {
         }
     }
     
-	@Override
-	public boolean onHandleActionBarItemClick(ActionBarItem item, int position) {
-		switch (item.getItemId()) {
-        case R.id.action_bar_add:
-        	if(isTopicValid()) {
-        		startPostTopicRequest(
-        				title.getText().toString(),
-        				((Node) nodeSelector.getSelectedItem()).getId() + "",
-        				body.getText().toString()
-        				);
-        	}
-        	return true;
-        default:
-            return super.onHandleActionBarItemClick(item, position);
-		}
-	}
+//	@Override
+//	public boolean onHandleActionBarItemClick(ActionBarItem item, int position) {
+//		switch (item.getItemId()) {
+//        case R.id.action_bar_add:
+//        	if(isTopicValid()) {
+//        		startPostTopicRequest(
+//        				title.getText().toString(),
+//        				((Node) nodeSelector.getSelectedItem()).getId() + "",
+//        				body.getText().toString()
+//        				);
+//        	}
+//        	return true;
+//        default:
+//            return super.onHandleActionBarItemClick(item, position);
+//		}
+//	}
 	
-	@Override
-	protected Dialog onCreateDialog(int id) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-    	switch(id) {
-    	case DIALOG_EXIT:
-    		builder.setMessage(R.string.hint_stoping_editing_topic_or_not)
-    		.setCancelable(false)
-    		.setPositiveButton(R.string.p_yek, new OnClickListener() {
-    			
-    			@Override
-    			public void onClick(DialogInterface dialog, int which) {
-    				TopicEditingActivity.this.finish();
-    				
-    			}
-    		})
-    		.setNegativeButton(R.string.p_no, new OnClickListener() {
-    			
-    			@Override
-    			public void onClick(DialogInterface dialog, int which) {
-    				dialog.cancel();
-    			}
-    		});
-    		break;
-    	default:
-    		break;
-    	}
-    	AlertDialog alert = builder.create();
-		return alert;
-	}
+//	@Override
+//	protected Dialog onCreateDialog(int id) {
+//		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//    	switch(id) {
+//    	case DIALOG_EXIT:
+//    		builder.setMessage(R.string.hint_stoping_editing_topic_or_not)
+//    		.setCancelable(false)
+//    		.setPositiveButton(R.string.p_yek, new OnClickListener() {
+//    			
+//    			@Override
+//    			public void onClick(DialogInterface dialog, int which) {
+//    				TopicEditingActivity.this.finish();
+//    				
+//    			}
+//    		})
+//    		.setNegativeButton(R.string.p_no, new OnClickListener() {
+//    			
+//    			@Override
+//    			public void onClick(DialogInterface dialog, int which) {
+//    				dialog.cancel();
+//    			}
+//    		});
+//    		break;
+//    	default:
+//    		break;
+//    	}
+//    	AlertDialog alert = builder.create();
+//		return alert;
+//	}
 	
 	private void initialize() {
 		title = (EditText) findViewById(R.id.title);
@@ -289,8 +283,7 @@ public class TopicEditingActivity extends GDActivity {
 		@Override
 		public void onSuccess(PostTopicResponse r) {
 			dismissProgress();
-			Intent homeIntent = new Intent(TopicEditingActivity.this, 
-					((RCApplication) getApplicationContext()).getHomeActivityClass());
+			Intent homeIntent = new Intent(TopicEditingActivity.this, TopicsActivity.class);
             homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(homeIntent);
 		}

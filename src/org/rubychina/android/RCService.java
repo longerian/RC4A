@@ -24,7 +24,6 @@ import org.rubychina.android.type.Topic;
 import org.rubychina.android.type.User;
 import org.rubychina.android.util.GravatarUtil;
 import org.rubychina.android.util.ImageUtil;
-import org.rubychina.android.util.LogUtil;
 
 import android.app.Service;
 import android.content.Intent;

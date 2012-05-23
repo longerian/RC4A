@@ -13,23 +13,21 @@ See the License for the specific language governing permissions and
 limitations under the License.*/
 package org.rubychina.android;
 
-import greendroid.app.GDApplication;
-
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import org.rubychina.android.activity.TopicsActivity;
 import org.rubychina.android.api.RCAPIClient;
 import org.rubychina.android.api.parser.JSONParser;
 
 import yek.cache.Cache;
 import yek.loader.AsyncLoaderEngine;
 import yek.loader.BitmapAsyncLoader;
+import android.app.Application;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 
-public class RCApplication extends GDApplication {
+public class RCApplication extends Application {
 
 	private static final String TAG = "RCApplication";
 	private BitmapAsyncLoader mImgLoader;
@@ -40,11 +38,6 @@ public class RCApplication extends GDApplication {
 	private int screenWidth;
     private int screenHeight;
 	
-	@Override
-	public Class<?> getHomeActivityClass() {
-		return TopicsActivity.class;
-	}
-
 	@Override
 	public void onCreate() {
 		super.onCreate();
