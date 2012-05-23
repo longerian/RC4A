@@ -46,6 +46,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 
 
 public class TopicsActivity extends SherlockFragmentActivity {
@@ -57,7 +59,6 @@ public class TopicsActivity extends SherlockFragmentActivity {
 	private RCService mService;
 	private boolean isBound = false; 
 	
-//	private LoaderActionBarItem progress;
 	private ListView topicsView;
 	private TextView nodeSection;
 	
@@ -67,9 +68,6 @@ public class TopicsActivity extends SherlockFragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.topics_layout);
-//		addActionBarItem(Type.List, R.id.action_bar_nodes);
-//		progress = (LoaderActionBarItem) addActionBarItem(Type.Refresh, R.id.action_bar_refresh);
-//		addActionBarItem(Type.Compose, R.id.action_bar_compose);
 		
 		Intent intent = new Intent(this, RCService.class);
 		bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
@@ -157,24 +155,42 @@ public class TopicsActivity extends SherlockFragmentActivity {
 		}
 	}
 
-//	@Override
-//	public boolean onHandleActionBarItemClick(ActionBarItem item, int position) {
-//		Intent i = new Intent();
-//		switch (item.getItemId()) {
-//		case R.id.action_bar_nodes:
-//			i.setClass(getApplicationContext(), NodesActivity.class);
-//			startActivityForResult(i, NodesActivity.PICK_NODE);
-//			return true;
-//        case R.id.action_bar_refresh:
-//        	startTopicsRequest(node);
-//        	return true;
-//        case R.id.action_bar_compose:
-//        	onCompose();
-//        	return true;
-//        default:
-//            return super.onHandleActionBarItemClick(item, position);
-//		}
-//	}
+	@Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        menu.add(0, R.id.action_bar_nodes, 0, R.string.actionbar_nodes)
+            .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        menu.add(0, R.id.action_bar_compose, 1, R.string.actionbar_compose)
+            .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        menu.add(0, R.id.action_bar_refresh, 2, R.string.actionbar_refresh)
+            .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        menu.add(0, R.id.action_bar_setting, 2, R.string.actionbar_setting)
+        	.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        return true;
+    }
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		Intent i = new Intent();
+		switch(item.getItemId()) {
+		case R.id.action_bar_nodes:
+			i.setClass(getApplicationContext(), NodesActivity.class);
+			startActivityForResult(i, NodesActivity.PICK_NODE);
+			break;
+        case R.id.action_bar_refresh:
+        	startTopicsRequest(node);
+        	break;
+        case R.id.action_bar_compose:
+        	onCompose();
+        	break;
+        case R.id.action_bar_setting:
+			i.setClass(getApplicationContext(), RCPreferenceActivity.class);
+			startActivity(i);
+			break;
+		default: 
+			break;
+		}
+		return true;
+	}
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -187,25 +203,6 @@ public class TopicsActivity extends SherlockFragmentActivity {
 		}
 	}
 
-//	@Override
-//	public boolean onCreateOptionsMenu(Menu menu) {
-//		new MenuInflater(getApplication()).inflate(R.menu.menu, menu);
-//		return true;
-//	}
-//
-//	@Override
-//	public boolean onOptionsItemSelected(MenuItem item) {
-//		Intent intent = new Intent();
-//		int id = item.getItemId();
-//		switch(id) {
-//		case R.id.menu_preference:
-//			intent.setClass(getApplicationContext(), RCPreferenceActivity.class);
-//			startActivity(intent);
-//			break;
-//		}
-//		return true;
-//	}
-	
 	private void onCompose() {
 		Intent i = new Intent();
 		if(((RCApplication) getApplication()).isLogin()) {

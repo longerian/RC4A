@@ -25,7 +25,6 @@ import org.rubychina.android.type.Node;
 
 import yek.api.ApiCallback;
 import yek.api.ApiException;
-import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -38,7 +37,10 @@ import android.view.Display;
 import android.view.KeyEvent;
 import android.view.WindowManager;
 
-public class RCActivity extends Activity {
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Window;
+
+public class RCActivity extends SherlockActivity {
 
 	private static final String TAG = "RCActivity";
 	private NodesRequest request;
@@ -47,6 +49,7 @@ public class RCActivity extends Activity {
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.rc_layout);
 		WindowManager windowManager = getWindowManager();

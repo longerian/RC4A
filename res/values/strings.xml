@@ -21,7 +21,7 @@ limitations under the License.
     <string name="alt_forward">forward</string>
     <string name="alt_logo">logo</string>
     <string name="app_user_token">个人私钥</string>
-    <string name="app_name">Ruby China for Android</string>
+    <string name="app_name">Ruby China</string>
     <string name="app_page_size">帖子加载页数</string>
     <string name="action_view_profile">查看个人资料</string>
     <string name="action_save">保存</string>
@@ -39,7 +39,7 @@ limitations under the License.
     <string name="hint_no_replies">该帖子还未有人回复......</string>
     <string name="hint_please_input_title">在这儿输入帖子标题</string>
     <string name="hint_please_input_body">在这儿输入帖子内容</string>
-    <string name="menu_preference">设置</string>
+    <string name="actionbar_preference">设置</string>
     <string name="p_no">否</string>
     <string name="p_yek">是</string>
     <string name="reply_list_unit">楼</string>
@@ -59,4 +59,8 @@ limitations under the License.
     <string name="user_tagline">签名</string>
     <string name="user_website">个人主页</string>
     <string name="user_github">Github</string>
+    <string name="actionbar_nodes">节点</string>
+    <string name="actionbar_compose">发帖</string>
+    <string name="actionbar_refresh">刷新</string>
+    <string name="actionbar_setting">设置</string>
 </resources>

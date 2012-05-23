@@ -15,10 +15,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
  -->
 <resources>
-    <style parent="@style/Theme.GreenDroid.Light.NoTitleBar" name="Theme.RC">
-		<item name="gdActionBarBackground">@drawable/action_bar_background</item>
-		<item name="gdActionBarDividerWidth">2px</item>
+<!--     <style parent="@style/Theme.GreenDroid.Light.NoTitleBar" name="Theme.RC"> -->
+<!-- 		<item name="gdActionBarBackground">@drawable/action_bar_background</item> -->
+<!-- 		<item name="gdActionBarDividerWidth">2px</item> -->
 <!-- 		<item name="gdActionBarApplicationDrawable">@drawable/app_logo</item> -->
-    </style>
+<!--     </style> -->
     
 </resources>

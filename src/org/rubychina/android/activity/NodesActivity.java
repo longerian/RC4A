@@ -232,11 +232,10 @@ public class NodesActivity<V> extends SherlockFragmentActivity {
         @Override
         public void onListItemClick(ListView l, View v, int position, long id) {
             Node n = (Node) l.getItemAtPosition(position);
-            LogUtil.d(TAG, n.toString());
-//    		Intent i = new Intent();
-//    		i.putExtra(PICKED_NODE, n);
-//    		setResult(RESULT_OK, i);
-//    		finish();
+    		Intent i = new Intent();
+    		i.putExtra(PICKED_NODE, n);
+    		setResult(RESULT_OK, i);
+    		finish();
         }
     }
 	

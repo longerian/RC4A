@@ -21,7 +21,7 @@ limitations under the License.
     <string name="alt_forward">forward</string>
     <string name="alt_logo">logo</string>
     <string name="app_user_token">个人私钥</string>
-    <string name="app_name">Ruby China for Android</string>
+    <string name="app_name">Ruby China</string>
     <string name="app_page_size">帖子加载页数</string>
     <string name="action_view_profile">查看个人资料</string>
     <string name="action_save">保存</string>
