@@ -25,7 +25,6 @@ import org.rubychina.android.type.Node;
 import org.rubychina.android.type.Topic;
 import org.rubychina.android.type.User;
 import org.rubychina.android.util.JsonUtil;
-import org.rubychina.android.util.LogUtil;
 import org.rubychina.android.widget.TopicAdapter;
 
 import yek.api.ApiCallback;
@@ -129,6 +128,8 @@ public class TopicListFragment extends SherlockListFragment {
 				R.id.title, 
 				topics);
 		setListAdapter(adapter);
+		getListView().setDivider(getResources().getDrawable(R.drawable.list_divider));
+		getListView().setDividerHeight(1);
 	}
 	
 	public void startTopicsRequest(Node node) {

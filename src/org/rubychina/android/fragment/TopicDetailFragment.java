@@ -38,28 +38,30 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.Spanned;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockListFragment;
+import com.actionbarsherlock.app.SherlockFragment;
 
-public class TopicDetailFragment extends SherlockListFragment {
+public class TopicDetailFragment extends SherlockFragment {
 	
 	private static final String TAG = "TopicDetailFragment";
 	public static final String TOPIC = "topic";
 
 	private TopicDetailActivity hostActivity;
 	private Topic topic;
-	private List<Reply> replies;
 	private TopicDetailRequest request;
 	
+	private ListView reply;
+	private ProgressBar bar;
 	private View body;
 	
 	public static TopicDetailFragment newInstance(Topic topic) {
@@ -89,17 +91,16 @@ public class TopicDetailFragment extends SherlockListFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
     	LogUtil.d(TAG, "in onCreateView");
-    	if(replies != null) {
-    		refreshView(replies);
-    	} else {
-    		startTopicDetailRequest(topic);
-    	}
-		return super.onCreateView(inflater, container, savedInstanceState);
+    	FrameLayout frame = (FrameLayout) inflater.inflate(R.layout.topic_detail_layout, null); 
+    	reply = (ListView) frame.findViewById(R.id.replies);
+    	bar = (ProgressBar) frame.findViewById(R.id.progress_bar);
+    	return frame;
 	}
 
 	@Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        startTopicDetailRequest(topic);
         LogUtil.d(TAG, "in onActivityCreated");
     }
 
@@ -121,11 +122,6 @@ public class TopicDetailFragment extends SherlockListFragment {
 			((RCApplication) hostActivity.getApplication()).getAPIClient().cancel(request);
 		}
 	}
-
-	@Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        Log.i("FragmentList", "Item clicked: " + id + " at position: " + position);
-    }
     
     public void startTopicDetailRequest(Topic topic) {
 		if(request == null) {
@@ -133,25 +129,28 @@ public class TopicDetailFragment extends SherlockListFragment {
 		}
 		request.setId(topic.getId());
 		((RCApplication) hostActivity.getApplication()).getAPIClient().request(request, new TopicDetailCallback());
+		showProgress();
 	}
 	
 	private class TopicDetailCallback implements ApiCallback<TopicDetailResponse> {
 
 		@Override
 		public void onException(ApiException e) {
+			dismissProgress();
 			Toast.makeText(hostActivity, R.string.hint_network_error, Toast.LENGTH_SHORT).show();
 			refreshView(new ArrayList<Reply>());
 		}
 
 		@Override
 		public void onFail(TopicDetailResponse r) {
+			dismissProgress();
 			Toast.makeText(hostActivity, R.string.hint_loading_data_failed, Toast.LENGTH_SHORT).show();
 			refreshView(new ArrayList<Reply>());
 		}
 
 		@Override
 		public void onSuccess(TopicDetailResponse r) {
-			replies = r.getReplies();
+			dismissProgress();
 			refreshView(r.getReplies());
 		}
 		
@@ -160,15 +159,15 @@ public class TopicDetailFragment extends SherlockListFragment {
 	private void refreshView(List<Reply> rs) {
 		initializeTopicBody();
 		Collections.sort(rs);
-		setListAdapter(new ReplyAdapter(this, R.layout.reply_item,
+		reply.setAdapter(new ReplyAdapter(this, R.layout.reply_item,
 				R.id.body, rs));
 	}
 	
 	private void initializeTopicBody() {
 		if(body == null) {
 			body = LayoutInflater.from(hostActivity).inflate(R.layout.topic_body_layout, null);
-			getListView().addHeaderView(body, null, false);
 		}
+		reply.addHeaderView(body, null, false);
 		ImageView gravatar = (ImageView) body.findViewById(R.id.gravatar);
 		gravatar.setOnClickListener(new OnClickListener() {
 			
@@ -217,5 +216,15 @@ public class TopicDetailFragment extends SherlockListFragment {
 		}
 		
 	}
+	
+	private void showProgress() {
+		bar.setVisibility(View.VISIBLE);
+		bar.setIndeterminate(true);
+	}
     
+	private void dismissProgress() {
+		bar.setVisibility(View.INVISIBLE);
+		bar.setIndeterminate(false);
+	}
+	
 }

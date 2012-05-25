@@ -109,8 +109,9 @@ public class NodeListFragment extends SherlockListFragment {
 			adapter.addSection(entry.getKey(), 
 					new NodeAdapter(hostActivity.getApplicationContext(), R.layout.node_item, entry.getValue()));
 		}
-		NodeListFragment list = (NodeListFragment) hostActivity.getSupportFragmentManager().findFragmentById(android.R.id.content);
-		list.setListAdapter(adapter);
+		setListAdapter(adapter);
+		getListView().setDivider(getResources().getDrawable(R.drawable.list_divider));
+		getListView().setDividerHeight(1);
 	}
 	
 	private class NodesCallback implements ApiCallback<NodesResponse> {

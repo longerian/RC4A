@@ -20,7 +20,6 @@ import org.rubychina.android.RCService;
 import org.rubychina.android.RCService.LocalBinder;
 import org.rubychina.android.type.Topic;
 import org.rubychina.android.type.User;
-import org.rubychina.android.util.LogUtil;
 import org.rubychina.android.widget.TopicPagerAdapter;
 
 import android.content.ComponentName;
@@ -31,7 +30,6 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.view.ViewPager;
 import android.text.Html.ImageGetter;
-import android.view.Window;
 import android.widget.ImageView;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
