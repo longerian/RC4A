@@ -20,43 +20,31 @@ import org.rubychina.android.R;
 import org.rubychina.android.RCApplication;
 import org.rubychina.android.RCService;
 import org.rubychina.android.RCService.LocalBinder;
-import org.rubychina.android.api.request.TopicsRequest;
-import org.rubychina.android.api.response.TopicsResponse;
 import org.rubychina.android.fragment.TopicListFragment;
+import org.rubychina.android.fragment.TopicListFragment.OnTopicSelectedListener;
 import org.rubychina.android.type.Node;
 import org.rubychina.android.type.Topic;
 import org.rubychina.android.type.User;
-import org.rubychina.android.util.JsonUtil;
 import org.rubychina.android.widget.TopicAdapter;
 
-import yek.api.ApiCallback;
-import yek.api.ApiException;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Parcelable;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.HeaderViewListAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 
 
-public class TopicsActivity extends SherlockFragmentActivity {
+public class TopicsActivity extends SherlockFragmentActivity implements OnTopicSelectedListener {
 
 	private static final String TAG = "TopicsActivity";
 	
@@ -181,6 +169,17 @@ public class TopicsActivity extends SherlockFragmentActivity {
 	
 	public void insertTopics(List<Topic> topics) {
 		mService.insertTopics(topics);
+	}
+
+	@Override
+	public void onTopicSelected(List<Topic> topics, int position) {
+		Intent i = new Intent(this, TopicDetailActivity.class);
+		Bundle bundle = new Bundle();
+		bundle.putInt(TopicDetailActivity.POS, position);
+		bundle.putParcelableArrayList(TopicDetailActivity.TOPICS,
+				(ArrayList<? extends Parcelable>) topics);
+		i.putExtras(bundle);
+		startActivity(i);
 	}
 	
 }

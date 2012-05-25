@@ -23,6 +23,7 @@ import org.rubychina.android.activity.TopicsActivity;
 import org.rubychina.android.activity.UserProfileActivity;
 import org.rubychina.android.api.request.TopicsRequest;
 import org.rubychina.android.api.response.TopicsResponse;
+import org.rubychina.android.fragment.NodeListFragment.OnNodeSelectedListener;
 import org.rubychina.android.type.Node;
 import org.rubychina.android.type.Topic;
 import org.rubychina.android.type.User;
@@ -31,6 +32,7 @@ import org.rubychina.android.widget.TopicAdapter;
 
 import yek.api.ApiCallback;
 import yek.api.ApiException;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -49,6 +51,7 @@ public class TopicListFragment extends SherlockListFragment {
 
 	public static final String NODE = "node";
 	
+	private OnTopicSelectedListener listener;
 	private TopicsActivity hostActivity;
 	private TopicsRequest request;
 	private TextView nodeSection;
@@ -72,6 +75,17 @@ public class TopicListFragment extends SherlockListFragment {
 	}
 
 	@Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            listener = (OnTopicSelectedListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement OnTopicSelectedListener");
+        }
+        hostActivity = (TopicsActivity) activity;
+    }
+	
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if(getArguments() != null) {
@@ -82,7 +96,6 @@ public class TopicListFragment extends SherlockListFragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		hostActivity = (TopicsActivity) getSherlockActivity();
 		List<Topic> cachedTopics = fetchTopics();
 		refreshPage(cachedTopics, node);//TODO node info must also be persisted
 		startTopicsRequest(node);
@@ -100,13 +113,8 @@ public class TopicListFragment extends SherlockListFragment {
 
 	@Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-		Intent i = new Intent(hostActivity, TopicDetailActivity.class);
-		Bundle bundle = new Bundle();
-		bundle.putInt(TopicDetailActivity.POS, position);
-		bundle.putParcelableArrayList(TopicDetailActivity.TOPICS, 
-				(ArrayList<? extends Parcelable>) ((TopicAdapter) ((HeaderViewListAdapter) l.getAdapter()).getWrappedAdapter()).getItems());
-		i.putExtras(bundle);
-		startActivity(i);
+		listener.onTopicSelected(((TopicAdapter) ((HeaderViewListAdapter) l.getAdapter()).getWrappedAdapter()).getItems(), 
+				position);
     }
 	
 	private void initializeView(Node node) {
@@ -196,5 +204,9 @@ public class TopicListFragment extends SherlockListFragment {
 	public void requestUserAvatar(User u, ImageView v, int size) {
 		hostActivity.requestUserAvatar(u, v, size);
 	}
+	
+	public interface OnTopicSelectedListener {
+        public void onTopicSelected(List<Topic> topics, int position);
+    }
 	
 }
