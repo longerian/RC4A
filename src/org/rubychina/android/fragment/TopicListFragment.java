@@ -13,21 +13,19 @@ See the License for the specific language governing permissions and
 limitations under the License.*/
 package org.rubychina.android.fragment;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.rubychina.android.R;
 import org.rubychina.android.RCApplication;
-import org.rubychina.android.activity.TopicDetailActivity;
 import org.rubychina.android.activity.TopicsActivity;
 import org.rubychina.android.activity.UserProfileActivity;
 import org.rubychina.android.api.request.TopicsRequest;
 import org.rubychina.android.api.response.TopicsResponse;
-import org.rubychina.android.fragment.NodeListFragment.OnNodeSelectedListener;
 import org.rubychina.android.type.Node;
 import org.rubychina.android.type.Topic;
 import org.rubychina.android.type.User;
 import org.rubychina.android.util.JsonUtil;
+import org.rubychina.android.util.LogUtil;
 import org.rubychina.android.widget.TopicAdapter;
 
 import yek.api.ApiCallback;
@@ -36,7 +34,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.HeaderViewListAdapter;
@@ -114,10 +111,10 @@ public class TopicListFragment extends SherlockListFragment {
 	@Override
     public void onListItemClick(ListView l, View v, int position, long id) {
 		listener.onTopicSelected(((TopicAdapter) ((HeaderViewListAdapter) l.getAdapter()).getWrappedAdapter()).getItems(), 
-				position);
+				position - 1);
     }
 	
-	private void initializeView(Node node) {
+	private void initializeNode(Node node) {
 		if(nodeSection == null) {
 			nodeSection = (TextView) LayoutInflater.from(hostActivity).inflate(R.layout.node_section_header, null);
 			getListView().addHeaderView(nodeSection, null, false);
@@ -126,7 +123,7 @@ public class TopicListFragment extends SherlockListFragment {
 	}
 	
 	private void refreshPage(List<Topic> topics, Node node) {
-		initializeView(node);
+		initializeNode(node);
 		TopicAdapter adapter = new TopicAdapter(this, 
 				R.layout.topic_item,
 				R.id.title, 

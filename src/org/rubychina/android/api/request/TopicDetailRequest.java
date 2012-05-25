@@ -62,7 +62,7 @@ public class TopicDetailRequest extends RCAPIGet<TopicDetailResponse> {
 
 	@Override
 	public long getCacheTime() {
-		return Cache.EXPIRED;
+		return 30;
 	}
 
 }

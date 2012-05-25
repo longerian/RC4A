@@ -24,6 +24,7 @@ import org.rubychina.android.type.Topic;
 import org.rubychina.android.type.User;
 import org.rubychina.android.util.GravatarUtil;
 import org.rubychina.android.util.ImageUtil;
+import org.rubychina.android.util.LogUtil;
 
 import android.app.Service;
 import android.content.Intent;
@@ -76,6 +77,7 @@ public class RCService extends Service {
 					Drawable drawable;
 					try {
 						URL url = new URL(source);
+						LogUtil.d(TAG, source);
 						InputStream is = url.openStream();
 						drawable = Drawable.createFromStream(is, "");
 						drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());

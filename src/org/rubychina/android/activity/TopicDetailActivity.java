@@ -20,6 +20,7 @@ import org.rubychina.android.RCService;
 import org.rubychina.android.RCService.LocalBinder;
 import org.rubychina.android.type.Topic;
 import org.rubychina.android.type.User;
+import org.rubychina.android.util.LogUtil;
 import org.rubychina.android.widget.TopicPagerAdapter;
 
 import android.content.ComponentName;
@@ -53,11 +54,7 @@ public class TopicDetailActivity extends SherlockFragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.topic_layout);
-		topics = getIntent().getExtras().getParcelableArrayList(TOPICS);
-		currentPosition = getIntent().getExtras().getInt(POS);
-		
 		Intent intent = new Intent(this, RCService.class);
 		bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 	}
@@ -70,10 +67,7 @@ public class TopicDetailActivity extends SherlockFragmentActivity {
             LocalBinder binder = (LocalBinder) service;
             mService = binder.getService();
             isBound = true;
-            mPager = (ViewPager) findViewById(R.id.topic_pager);
-    		pagerAdapter = new TopicPagerAdapter(getSupportFragmentManager(), topics);
-    		mPager.setAdapter(pagerAdapter);
-    		mPager.setCurrentItem(currentPosition);
+            initialize();
         }
 
         @Override
@@ -91,10 +85,15 @@ public class TopicDetailActivity extends SherlockFragmentActivity {
         }
     }
 
-	public boolean isBound() {
-		return isBound;
-	}
-	
+    private void initialize() {
+    	topics = getIntent().getExtras().getParcelableArrayList(TOPICS);
+		currentPosition = getIntent().getExtras().getInt(POS);
+    	mPager = (ViewPager) findViewById(R.id.topic_pager);
+		pagerAdapter = new TopicPagerAdapter(getSupportFragmentManager(), topics);
+		mPager.setAdapter(pagerAdapter);
+		mPager.setCurrentItem(currentPosition);
+    }
+    
 	public void requestUserAvatar(User u, ImageView v, int size) {
 		if(isBound) {
 			mService.requestUserAvatar(u, v, size);

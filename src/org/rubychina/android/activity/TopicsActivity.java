@@ -25,7 +25,6 @@ import org.rubychina.android.fragment.TopicListFragment.OnTopicSelectedListener;
 import org.rubychina.android.type.Node;
 import org.rubychina.android.type.Topic;
 import org.rubychina.android.type.User;
-import org.rubychina.android.widget.TopicAdapter;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -34,7 +33,6 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Parcelable;
-import android.widget.HeaderViewListAdapter;
 import android.widget.ImageView;
 import android.widget.Toast;
 
