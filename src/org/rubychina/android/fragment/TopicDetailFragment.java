@@ -57,6 +57,7 @@ public class TopicDetailFragment extends SherlockListFragment {
 
 	private TopicDetailActivity hostActivity;
 	private Topic topic;
+	private List<Reply> replies;
 	private TopicDetailRequest request;
 	
 	private View body;
@@ -88,13 +89,17 @@ public class TopicDetailFragment extends SherlockListFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
     	LogUtil.d(TAG, "in onCreateView");
+    	if(replies != null) {
+    		refreshView(replies);
+    	} else {
+    		startTopicDetailRequest(topic);
+    	}
 		return super.onCreateView(inflater, container, savedInstanceState);
 	}
 
 	@Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        startTopicDetailRequest(topic);
         LogUtil.d(TAG, "in onActivityCreated");
     }
 
@@ -102,12 +107,12 @@ public class TopicDetailFragment extends SherlockListFragment {
 	public void onDestroyView() {
 		super.onDestroyView();
 		LogUtil.d(TAG, "in onDestroyView");
+		cancelTopicDetailRequest();
 	}
 	
     @Override
 	public void onDestroy() {
 		super.onDestroy();
-		cancelTopicDetailRequest();
 		LogUtil.d(TAG, "in onDestroy");
 	}
     
@@ -146,6 +151,7 @@ public class TopicDetailFragment extends SherlockListFragment {
 
 		@Override
 		public void onSuccess(TopicDetailResponse r) {
+			replies = r.getReplies();
 			refreshView(r.getReplies());
 		}
 		
