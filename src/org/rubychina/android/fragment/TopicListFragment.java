@@ -17,7 +17,7 @@ import java.util.List;
 
 import org.rubychina.android.R;
 import org.rubychina.android.RCApplication;
-import org.rubychina.android.activity.TopicsActivity;
+import org.rubychina.android.activity.RubyChinaActor;
 import org.rubychina.android.activity.UserProfileActivity;
 import org.rubychina.android.api.request.TopicsRequest;
 import org.rubychina.android.api.response.TopicsResponse;
@@ -48,8 +48,9 @@ public class TopicListFragment extends SherlockListFragment {
 	public static final String NODE = "node";
 	
 	private OnTopicSelectedListener listener;
-	private TopicsActivity hostActivity;
+	private RubyChinaActor rubyChina;
 	private TopicsRequest request;
+	
 	private TextView nodeSection;
 	
 	private Node node;
@@ -78,7 +79,11 @@ public class TopicListFragment extends SherlockListFragment {
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement OnTopicSelectedListener");
         }
-        hostActivity = (TopicsActivity) activity;
+        try {
+        	rubyChina = (RubyChinaActor) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement RubyChinaActor");
+        }
     }
 	
 	@Override
@@ -98,7 +103,7 @@ public class TopicListFragment extends SherlockListFragment {
 	}
 
 	private List<Topic> fetchTopics() {
-		return hostActivity.fetchTopics();
+		return rubyChina.getService().fetchTopics();
 	}
 
     @Override
@@ -115,7 +120,7 @@ public class TopicListFragment extends SherlockListFragment {
 	
 	private void initializeNode(Node node) {
 		if(nodeSection == null) {
-			nodeSection = (TextView) LayoutInflater.from(hostActivity).inflate(R.layout.node_section_header, null);
+			nodeSection = (TextView) LayoutInflater.from(getActivity()).inflate(R.layout.node_section_header, null);
 			getListView().addHeaderView(nodeSection, null, false);
 		}
 		nodeSection.setText(node.getName());
@@ -137,15 +142,15 @@ public class TopicListFragment extends SherlockListFragment {
 			request = new TopicsRequest();
 		}
 		request.setNodeId(node.getId());
-		request.setSize(((RCApplication) hostActivity.getApplication()).getPageSize());
-		((RCApplication) hostActivity.getApplication()).getAPIClient().request(request, new ActiveTopicsCallback());
-		hostActivity.setSupportProgressBarIndeterminateVisibility(true);
+		request.setSize(rubyChina.getApp().getPageSize());
+		rubyChina.getClient().request(request, new ActiveTopicsCallback());
+		rubyChina.showIndeterminateProgressBar();
 	}
 	
 	private void cancelTopicsRequest() {
 		if(request != null) {
-			((RCApplication) hostActivity.getApplication()).getAPIClient().cancel(request);
-			hostActivity.setSupportProgressBarIndeterminateVisibility(false);
+			rubyChina.getClient().cancel(request);
+			rubyChina.hideIndeterminateProgressBar();
 		}
 	}
 	
@@ -153,19 +158,19 @@ public class TopicListFragment extends SherlockListFragment {
 
 		@Override
 		public void onException(ApiException e) {
-			hostActivity.setSupportProgressBarIndeterminateVisibility(false);
-			Toast.makeText(hostActivity, R.string.hint_network_error, Toast.LENGTH_SHORT).show();
+			rubyChina.hideIndeterminateProgressBar();
+			Toast.makeText(getActivity(), R.string.hint_network_error, Toast.LENGTH_SHORT).show();
 		}
 
 		@Override
 		public void onFail(TopicsResponse r) {
-			hostActivity.setSupportProgressBarIndeterminateVisibility(false);
-			Toast.makeText(hostActivity, R.string.hint_loading_data_failed, Toast.LENGTH_SHORT).show();
+			rubyChina.hideIndeterminateProgressBar();
+			Toast.makeText(getActivity(), R.string.hint_loading_data_failed, Toast.LENGTH_SHORT).show();
 		}
 
 		@Override
 		public void onSuccess(TopicsResponse r) {
-			hostActivity.setSupportProgressBarIndeterminateVisibility(false);
+			rubyChina.hideIndeterminateProgressBar();
 			refreshPage(r.getTopics(), node);
 			new CacheTopicsTask().execute(r.getTopics());
 		}
@@ -176,31 +181,31 @@ public class TopicListFragment extends SherlockListFragment {
 
 		@Override
 		protected void onPreExecute() {
-			hostActivity.setSupportProgressBarIndeterminateVisibility(true);
+			rubyChina.showIndeterminateProgressBar();
 		}
 
 		@Override
 		protected Void doInBackground(List<Topic>... params) {
-			hostActivity.clearTopics();
-			hostActivity.insertTopics(params[0]);
+			rubyChina.getService().clearTopics();
+			rubyChina.getService().insertTopics(params[0]);
 			return null;
 		}
 		
 		@Override
 		protected void onPostExecute(Void result) {
-			hostActivity.setSupportProgressBarIndeterminateVisibility(false);
+			rubyChina.hideIndeterminateProgressBar();
 		}
 		
 	}
 
 	public void visitUserProfile(User u) {
-		Intent i = new Intent(hostActivity, UserProfileActivity.class);
+		Intent i = new Intent(getActivity(), UserProfileActivity.class);
 		i.putExtra(UserProfileActivity.VIEW_PROFILE, JsonUtil.toJsonObject(u));
 		startActivity(i);
 	}
 	
 	public void requestUserAvatar(User u, ImageView v, int size) {
-		hostActivity.requestUserAvatar(u, v, size);
+		rubyChina.getService().requestUserAvatar(u, v, size);
 	}
 	
 	public interface OnTopicSelectedListener {

@@ -35,6 +35,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 
+@Deprecated
 public class NodesActivity extends SherlockFragmentActivity implements OnNodeSelectedListener {
 
 	private static final String TAG = "NodesActivity";

@@ -8,8 +8,7 @@ import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import org.rubychina.android.R;
-import org.rubychina.android.RCApplication;
-import org.rubychina.android.activity.NodesActivity;
+import org.rubychina.android.activity.RubyChinaActor;
 import org.rubychina.android.api.request.NodesRequest;
 import org.rubychina.android.api.response.NodesResponse;
 import org.rubychina.android.type.Node;
@@ -31,7 +30,7 @@ import com.actionbarsherlock.app.SherlockListFragment;
 public class NodeListFragment extends SherlockListFragment {
 
 	private OnNodeSelectedListener listener;
-	private NodesActivity hostActivity;
+	private RubyChinaActor rubyChina;
 	private NodesRequest request;
 	
 	@Override
@@ -42,7 +41,11 @@ public class NodeListFragment extends SherlockListFragment {
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement OnNodeSelectedListener");
         }
-        hostActivity = (NodesActivity) activity;
+        try {
+        	rubyChina = (RubyChinaActor) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement RubyChinaActor");
+        }
     }
 	 
     @Override
@@ -69,22 +72,22 @@ public class NodeListFragment extends SherlockListFragment {
 	}
 	
 	private List<Node> fetchNodes() {
-		return hostActivity.fetchNodes();
+		return rubyChina.getService().fetchNodes();
 	}
 	
 	public void startNodesRequest() {
 		if(request == null) {
 			request = new NodesRequest();
 		}
-		((RCApplication) hostActivity.getApplication()).getAPIClient().request(request, new NodesCallback());
-		hostActivity.setSupportProgressBarIndeterminateVisibility(true);
+		rubyChina.getClient().request(request, new NodesCallback());
+		rubyChina.showIndeterminateProgressBar();
 	}
 	
 	private void cancelNodesRequest() {
 		if(request != null) {
-			((RCApplication) hostActivity.getApplication()).getAPIClient().cancel(request);
+			rubyChina.getClient().cancel(request);
 		}
-		hostActivity.setSupportProgressBarIndeterminateVisibility(false);
+		rubyChina.hideIndeterminateProgressBar();
 	}
 	
 	private void refreshPage(List<Node> nodes) {
@@ -102,12 +105,12 @@ public class NodeListFragment extends SherlockListFragment {
 				groupedNodes.put(s, ns);
 			}
 		}
-		SeparatedListAdapter adapter = new SeparatedListAdapter(hostActivity);
+		SeparatedListAdapter adapter = new SeparatedListAdapter(getActivity());
 		Iterator<Entry<Section, List<Node>>> iter = groupedNodes.entrySet().iterator();
 		while(iter.hasNext()) {
 			Map.Entry<Section, List<Node>> entry = (Entry<Section, List<Node>>) iter.next();
 			adapter.addSection(entry.getKey(), 
-					new NodeAdapter(hostActivity.getApplicationContext(), R.layout.node_item, entry.getValue()));
+					new NodeAdapter(getActivity(), R.layout.node_item, entry.getValue()));
 		}
 		setListAdapter(adapter);
 		getListView().setDivider(getResources().getDrawable(R.drawable.list_divider));
@@ -118,19 +121,19 @@ public class NodeListFragment extends SherlockListFragment {
 
 		@Override
 		public void onException(ApiException e) {
-			hostActivity.setSupportProgressBarIndeterminateVisibility(false);
-			Toast.makeText(hostActivity, R.string.hint_network_error, Toast.LENGTH_SHORT).show();
+			rubyChina.hideIndeterminateProgressBar();
+			Toast.makeText(getActivity(), R.string.hint_network_error, Toast.LENGTH_SHORT).show();
 		}
 
 		@Override
 		public void onFail(NodesResponse r) {
-			hostActivity.setSupportProgressBarIndeterminateVisibility(false);
-			Toast.makeText(hostActivity, R.string.hint_loading_data_failed, Toast.LENGTH_SHORT).show();
+			rubyChina.hideIndeterminateProgressBar();
+			Toast.makeText(getActivity(), R.string.hint_loading_data_failed, Toast.LENGTH_SHORT).show();
 		}
 
 		@Override
 		public void onSuccess(NodesResponse r) {
-			hostActivity.setSupportProgressBarIndeterminateVisibility(false);
+			rubyChina.hideIndeterminateProgressBar();
 			refreshPage(r.getNodes());
 			new CacheNodesTask().execute(r.getNodes());
 		}
@@ -141,19 +144,19 @@ public class NodeListFragment extends SherlockListFragment {
 
 		@Override
 		protected void onPreExecute() {
-			hostActivity.setSupportProgressBarIndeterminateVisibility(true);
+			rubyChina.showIndeterminateProgressBar();
 		}
 
 		@Override
 		protected Void doInBackground(List<Node>... params) {
-			hostActivity.clearNodes();
-			hostActivity.insertNodes(params[0]);
+			rubyChina.getService().clearNodes();
+			rubyChina.getService().insertNodes(params[0]);
 			return null;
 		}
 		
 		@Override
 		protected void onPostExecute(Void result) {
-			hostActivity.setSupportProgressBarIndeterminateVisibility(false);
+			rubyChina.hideIndeterminateProgressBar();
 		}
 		
 	}

@@ -20,8 +20,14 @@ import org.rubychina.android.R;
 import org.rubychina.android.RCApplication;
 import org.rubychina.android.RCService;
 import org.rubychina.android.RCService.LocalBinder;
+import org.rubychina.android.api.RCAPIClient;
+import org.rubychina.android.fragment.NodeListFragment;
+import org.rubychina.android.fragment.NodeListFragment.OnNodeSelectedListener;
+import org.rubychina.android.fragment.SiteListFragment;
 import org.rubychina.android.fragment.TopicListFragment;
 import org.rubychina.android.fragment.TopicListFragment.OnTopicSelectedListener;
+import org.rubychina.android.fragment.UserListFragment.OnUserSelectedListener;
+import org.rubychina.android.fragment.UserListFragment;
 import org.rubychina.android.type.Node;
 import org.rubychina.android.type.Topic;
 import org.rubychina.android.type.User;
@@ -33,23 +39,35 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Parcelable;
-import android.widget.ImageView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.widget.Toast;
 
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 
 
-public class TopicsActivity extends SherlockFragmentActivity implements OnTopicSelectedListener {
+public class TopicsActivity extends SherlockFragmentActivity implements OnTopicSelectedListener, OnUserSelectedListener,
+	OnNodeSelectedListener, ActionBar.TabListener, RubyChinaActor {
 
 	private static final String TAG = "TopicsActivity";
 	
 	private RCService mService;
 	private boolean isBound = false; 
 	
-	private TopicListFragment topicList;
+	private final int TAB_TOPIC = 0;
+	private final int TAB_NODE = 1;
+	private final int TAB_SITE = 2;
+	private final int TAB_USER = 3;
+	
+	private TopicListFragment topicListFragment;
+	private NodeListFragment nodeListFragment;
+	private SiteListFragment siteListFragment;
+	private UserListFragment userListFragment;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -86,16 +104,58 @@ public class TopicsActivity extends SherlockFragmentActivity implements OnTopicS
 	}
     
 	private void initialize() {
+		getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        getSupportActionBar().addTab(getTopicTab());
+        getSupportActionBar().addTab(getNodeTab());
+        getSupportActionBar().addTab(getSiteTab());
+        getSupportActionBar().addTab(getUserTab());
+        getSupportActionBar().setSelectedNavigationItem(TAB_TOPIC);
+	}
+	
+	private ActionBar.Tab getTopicTab() {
+		ActionBar.Tab tab = getSupportActionBar().newTab();
+        tab.setText(R.string.tab_topic);
+        tab.setTabListener(this);
+        return tab;
+	}
+	
+	private ActionBar.Tab getNodeTab() {
+		ActionBar.Tab tab = getSupportActionBar().newTab();
+        tab.setText(R.string.tab_node);
+        tab.setTabListener(this);
+        return tab;
+	}
+	
+	private ActionBar.Tab getSiteTab() {
+		ActionBar.Tab tab = getSupportActionBar().newTab();
+		tab.setText(R.string.tab_site);
+		tab.setTabListener(this);
+		return tab;
+	}
+	
+	private ActionBar.Tab getUserTab() {
+		ActionBar.Tab tab = getSupportActionBar().newTab();
+		tab.setText(R.string.tab_user);
+		tab.setTabListener(this);
+		return tab;
+	}
+	
+	private void displayContent(Fragment fragment) {
 		if (getSupportFragmentManager().findFragmentById(android.R.id.content) == null) {
-			topicList = TopicListFragment.newInstance(Node.MOCK_ACTIVE_NODE);
-	        getSupportFragmentManager().beginTransaction().add(android.R.id.content, topicList).commit();
+	        getSupportFragmentManager().beginTransaction().add(android.R.id.content, fragment).commit();
+		} else {
+			getSupportFragmentManager()
+				.beginTransaction()
+				.replace(android.R.id.content, fragment)
+				.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+				.commit();
 		}
 	}
 	
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        menu.add(0, R.id.action_bar_nodes, 0, R.string.actionbar_nodes)
-            .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+//        menu.add(0, R.id.action_bar_nodes, 0, R.string.actionbar_nodes)
+//            .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
         menu.add(0, R.id.action_bar_compose, 1, R.string.actionbar_compose)
             .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
         menu.add(0, R.id.action_bar_refresh, 2, R.string.actionbar_refresh)
@@ -109,12 +169,12 @@ public class TopicsActivity extends SherlockFragmentActivity implements OnTopicS
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Intent i = new Intent();
 		switch(item.getItemId()) {
-		case R.id.action_bar_nodes:
-			i.setClass(getApplicationContext(), NodesActivity.class);
-			startActivityForResult(i, NodesActivity.PICK_NODE);
-			break;
+//		case R.id.action_bar_nodes:
+//			i.setClass(getApplicationContext(), NodesActivity.class);
+//			startActivityForResult(i, NodesActivity.PICK_NODE);
+//			break;
         case R.id.action_bar_refresh:
-        	topicList.startTopicsRequest(topicList.getNode());
+        	topicListFragment.startTopicsRequest(topicListFragment.getNode());
         	break;
         case R.id.action_bar_compose:
         	onCompose();
@@ -129,16 +189,16 @@ public class TopicsActivity extends SherlockFragmentActivity implements OnTopicS
 		return true;
 	}
 	
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if(requestCode == NodesActivity.PICK_NODE) {
-			if(resultCode == RESULT_OK) {
-				Node n = data.getParcelableExtra(NodesActivity.PICKED_NODE);
-				topicList.setNode(n);
-				topicList.startTopicsRequest(n);
-			}
-		}
-	}
+//	@Override
+//	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//		if(requestCode == NodesActivity.PICK_NODE) {
+//			if(resultCode == RESULT_OK) {
+//				Node n = data.getParcelableExtra(NodesActivity.PICKED_NODE);
+//				topicListFragment.setNode(n);
+//				topicListFragment.startTopicsRequest(n);
+//			}
+//		}
+//	}
 
 	private void onCompose() {
 		Intent i = new Intent();
@@ -151,24 +211,17 @@ public class TopicsActivity extends SherlockFragmentActivity implements OnTopicS
     	startActivity(i);
 	}
 	
-	public void requestUserAvatar(User u, ImageView v, int size) {
-		if(isBound) {
-			mService.requestUserAvatar(u, v, size);
-		}
+	@Override
+	public void onUserSelected(User user) {
+		Toast.makeText(getApplicationContext(), user.getLogin(), Toast.LENGTH_SHORT).show();
 	}
 	
-	public List<Topic> fetchTopics() {
-		return mService.fetchTopics();
+	@Override
+	public void onNodeSelected(Node node) {
+		topicListFragment = TopicListFragment.newInstance(node);
+		getSupportActionBar().setSelectedNavigationItem(TAB_TOPIC);
 	}
 	
-	public void clearTopics() {
-		mService.clearTopics();
-	}
-	
-	public void insertTopics(List<Topic> topics) {
-		mService.insertTopics(topics);
-	}
-
 	@Override
 	public void onTopicSelected(List<Topic> topics, int position) {
 		Intent i = new Intent(this, TopicDetailActivity.class);
@@ -179,5 +232,72 @@ public class TopicsActivity extends SherlockFragmentActivity implements OnTopicS
 		i.putExtras(bundle);
 		startActivity(i);
 	}
+
+	@Override
+	public void onTabSelected(Tab tab, FragmentTransaction ft) {
+		switch(tab.getPosition()) {
+		case TAB_TOPIC:
+			if(topicListFragment == null) {
+				topicListFragment = TopicListFragment.newInstance(Node.MOCK_ACTIVE_NODE);
+			}
+			displayContent(topicListFragment);
+			break;
+		case TAB_NODE:
+			if(nodeListFragment == null) {
+				nodeListFragment = new NodeListFragment();
+			}
+			displayContent(nodeListFragment);
+			break;
+		case TAB_SITE:
+			if(siteListFragment == null) {
+				siteListFragment = new SiteListFragment();
+			}
+			displayContent(siteListFragment);
+			break;
+		case TAB_USER:
+			if(userListFragment == null) {
+				userListFragment = new UserListFragment();
+			}
+			displayContent(userListFragment);
+			break;
+		default:
+			break;
+		}
+	}
+
+	@Override
+	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+		
+	}
+
+	@Override
+	public void onTabReselected(Tab tab, FragmentTransaction ft) {
+		
+	}
+
+	@Override
+	public RCApplication getApp() {
+		return (RCApplication) getApplication();
+	}
 	
+	@Override
+	public RCService getService() {
+		return mService;
+	}
+	
+	@Override
+	public RCAPIClient getClient() {
+		return ((RCApplication) getApplication()).getAPIClient();
+	}
+
+	@Override
+	public void showIndeterminateProgressBar() {
+		setSupportProgressBarIndeterminate(true);
+	}
+
+	@Override
+	public void hideIndeterminateProgressBar() {
+		setSupportProgressBarIndeterminate(false);
+	}
+
 }
