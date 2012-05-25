@@ -66,8 +66,8 @@ public class NodesActivity<V> extends SherlockFragmentActivity {
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setTitle(R.string.title_nodes);
 		if (getSupportFragmentManager().findFragmentById(android.R.id.content) == null) {
-			NodeListFragment list = new NodeListFragment();
-	        getSupportFragmentManager().beginTransaction().add(android.R.id.content, list).commit();
+			NodeListFragment nodesList = new NodeListFragment();
+	        getSupportFragmentManager().beginTransaction().add(android.R.id.content, nodesList).commit();
 		}
 	}
 	

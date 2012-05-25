@@ -27,7 +27,6 @@ import org.rubychina.android.type.Reply;
 import org.rubychina.android.type.Topic;
 import org.rubychina.android.type.User;
 import org.rubychina.android.util.JsonUtil;
-import org.rubychina.android.util.LogUtil;
 import org.rubychina.android.widget.ReplyAdapter;
 
 import yek.api.ApiCallback;
@@ -46,7 +45,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.app.SherlockListFragment;
 
 public class TopicDetailFragment extends SherlockListFragment {
@@ -62,7 +60,7 @@ public class TopicDetailFragment extends SherlockListFragment {
 	public static TopicDetailFragment newInstance(Topic topic) {
 		TopicDetailFragment f = new TopicDetailFragment();
         Bundle bundle = new Bundle();
-        bundle.putString(TOPIC, JsonUtil.toJsonObject(topic));
+        bundle.putParcelable(TOPIC, topic);
         f.setArguments(bundle);
         return f;
     }
@@ -71,7 +69,7 @@ public class TopicDetailFragment extends SherlockListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null) {
-        	topic = JsonUtil.fromJsonObject(getArguments().getString(TOPIC), Topic.class);
+        	topic = getArguments().getParcelable(TOPIC);
         }
     }
 
@@ -125,7 +123,6 @@ public class TopicDetailFragment extends SherlockListFragment {
 		Collections.sort(rs);
 		setListAdapter(new ReplyAdapter(this, R.layout.reply_item,
 				R.id.body, rs));
-		
 	}
 	
 	private View initializeTopicBody() {
@@ -178,7 +175,6 @@ public class TopicDetailFragment extends SherlockListFragment {
 
 		@Override
 		protected Spanned doInBackground(String... params) {
-			while(!hostActivity.isBound());
 			return Html.fromHtml(params[0], hostActivity.getImageGetter(), null);
 		}
 		

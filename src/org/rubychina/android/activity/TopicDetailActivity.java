@@ -20,7 +20,6 @@ import org.rubychina.android.RCService;
 import org.rubychina.android.RCService.LocalBinder;
 import org.rubychina.android.type.Topic;
 import org.rubychina.android.type.User;
-import org.rubychina.android.util.LogUtil;
 import org.rubychina.android.widget.TopicPagerAdapter;
 
 import android.content.ComponentName;
@@ -56,16 +55,11 @@ public class TopicDetailActivity extends SherlockFragmentActivity {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.topic_layout);
-		Intent intent = new Intent(this, RCService.class);
-		bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-		
 		topics = getIntent().getExtras().getParcelableArrayList(TOPICS);
 		currentPosition = getIntent().getExtras().getInt(POS);
 		
-		mPager = (ViewPager) findViewById(R.id.topic_pager);
-		pagerAdapter = new TopicPagerAdapter(getSupportFragmentManager(), topics);
-		mPager.setAdapter(pagerAdapter);
-		mPager.setCurrentItem(currentPosition);
+		Intent intent = new Intent(this, RCService.class);
+		bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 	}
 	
     private ServiceConnection mConnection = new ServiceConnection() {
@@ -76,6 +70,10 @@ public class TopicDetailActivity extends SherlockFragmentActivity {
             LocalBinder binder = (LocalBinder) service;
             mService = binder.getService();
             isBound = true;
+            mPager = (ViewPager) findViewById(R.id.topic_pager);
+    		pagerAdapter = new TopicPagerAdapter(getSupportFragmentManager(), topics);
+    		mPager.setAdapter(pagerAdapter);
+    		mPager.setCurrentItem(currentPosition);
         }
 
         @Override

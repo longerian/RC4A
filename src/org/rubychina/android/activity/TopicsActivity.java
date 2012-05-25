@@ -22,6 +22,7 @@ import org.rubychina.android.RCService;
 import org.rubychina.android.RCService.LocalBinder;
 import org.rubychina.android.api.request.TopicsRequest;
 import org.rubychina.android.api.response.TopicsResponse;
+import org.rubychina.android.fragment.TopicListFragment;
 import org.rubychina.android.type.Node;
 import org.rubychina.android.type.Topic;
 import org.rubychina.android.type.User;
@@ -49,6 +50,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
@@ -57,23 +59,16 @@ import com.actionbarsherlock.view.Window;
 public class TopicsActivity extends SherlockFragmentActivity {
 
 	private static final String TAG = "TopicsActivity";
-	private TopicsRequest request;
-	
 	
 	private RCService mService;
 	private boolean isBound = false; 
 	
-	private ListView topicsView;
-	private TextView nodeSection;
-	
-	private Node node = Node.MOCK_ACTIVE_NODE;
+	private TopicListFragment topicList;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-		setContentView(R.layout.topics_layout);
-		
 		Intent intent = new Intent(this, RCService.class);
 		bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 	}
@@ -102,66 +97,15 @@ public class TopicsActivity extends SherlockFragmentActivity {
 			unbindService(mConnection);
 			isBound = false;
 		}
-		cancelTopicsRequest();
 	}
     
 	private void initialize() {
-		List<Topic> cachedTopics = mService.fetchTopics();
-		refreshPage(cachedTopics, node);//TODO node info must also be persisted
-		startTopicsRequest(node);
-	}
-	
-	private void initializeView(Node node) {
-		if(topicsView == null) {
-			topicsView = (ListView) findViewById(R.id.topics);
-			if(nodeSection == null) {
-				nodeSection = (TextView) LayoutInflater.from(getApplicationContext()).inflate(R.layout.node_section_header, null);
-			}
-			topicsView.addHeaderView(nodeSection, null, false);
-			topicsView.setOnItemClickListener(new OnItemClickListener() {
-
-				@Override
-				public void onItemClick(AdapterView<?> parent, View v,
-						int position, long id) {
-						Intent i = new Intent(getApplicationContext(), TopicDetailActivity.class);
-						Bundle bundle = new Bundle();
-						bundle.putInt(TopicDetailActivity.POS, position);
-						bundle.putParcelableArrayList(TopicDetailActivity.TOPICS, 
-								(ArrayList<? extends Parcelable>) ((TopicAdapter) ((HeaderViewListAdapter) parent.getAdapter()).getWrappedAdapter()).getItems());
-						i.putExtras(bundle);
-						startActivity(i);
-				}
-			});
-		}
-		nodeSection.setText(node.getName());
-	}
-	
-	private void refreshPage(List<Topic> topics, Node node) {
-		initializeView(node);
-		TopicAdapter adapter = new TopicAdapter(this, 
-				R.layout.topic_item,
-				R.id.title, 
-				topics);
-		topicsView.setAdapter(adapter);
-	}
-	
-	private void startTopicsRequest(Node node) {
-		if(request == null) {
-			request = new TopicsRequest();
-		}
-		request.setNodeId(node.getId());
-		request.setSize(((RCApplication) getApplication()).getPageSize());
-		((RCApplication) getApplication()).getAPIClient().request(request, new ActiveTopicsCallback());
-		setSupportProgressBarIndeterminateVisibility(true);
-	}
-	
-	private void cancelTopicsRequest() {
-		if(request != null) {
-			((RCApplication) getApplication()).getAPIClient().cancel(request);
-			setSupportProgressBarIndeterminateVisibility(false);
+		if (getSupportFragmentManager().findFragmentById(android.R.id.content) == null) {
+			topicList = TopicListFragment.newInstance(Node.MOCK_ACTIVE_NODE);
+	        getSupportFragmentManager().beginTransaction().add(android.R.id.content, topicList).commit();
 		}
 	}
-
+	
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         menu.add(0, R.id.action_bar_nodes, 0, R.string.actionbar_nodes)
@@ -184,7 +128,7 @@ public class TopicsActivity extends SherlockFragmentActivity {
 			startActivityForResult(i, NodesActivity.PICK_NODE);
 			break;
         case R.id.action_bar_refresh:
-        	startTopicsRequest(node);
+        	topicList.startTopicsRequest(topicList.getNode());
         	break;
         case R.id.action_bar_compose:
         	onCompose();
@@ -204,8 +148,8 @@ public class TopicsActivity extends SherlockFragmentActivity {
 		if(requestCode == NodesActivity.PICK_NODE) {
 			if(resultCode == RESULT_OK) {
 				Node n = data.getParcelableExtra(NodesActivity.PICKED_NODE);
-				node = n; 
-				startTopicsRequest(n);
+				topicList.setNode(n);
+				topicList.startTopicsRequest(n);
 			}
 		}
 	}
@@ -221,60 +165,22 @@ public class TopicsActivity extends SherlockFragmentActivity {
     	startActivity(i);
 	}
 	
-	private class ActiveTopicsCallback implements ApiCallback<TopicsResponse> {
-
-		@Override
-		public void onException(ApiException e) {
-			setSupportProgressBarIndeterminateVisibility(false);
-			Toast.makeText(getApplicationContext(), R.string.hint_network_error, Toast.LENGTH_SHORT).show();
-		}
-
-		@Override
-		public void onFail(TopicsResponse r) {
-			setSupportProgressBarIndeterminateVisibility(false);
-			Toast.makeText(getApplicationContext(), R.string.hint_loading_data_failed, Toast.LENGTH_SHORT).show();
-		}
-
-		@Override
-		public void onSuccess(TopicsResponse r) {
-			setSupportProgressBarIndeterminateVisibility(false);
-			refreshPage(r.getTopics(), node);
-			new CacheTopicsTask().execute(r.getTopics());
-		}
-		
-	}
-	
-	private class CacheTopicsTask extends AsyncTask<List<Topic>, Void, Void> {
-
-		@Override
-		protected void onPreExecute() {
-			setSupportProgressBarIndeterminateVisibility(true);
-		}
-
-		@Override
-		protected Void doInBackground(List<Topic>... params) {
-			mService.clearTopics();
-			mService.insertTopics(params[0]);
-			return null;
-		}
-		
-		@Override
-		protected void onPostExecute(Void result) {
-			setSupportProgressBarIndeterminateVisibility(false);
-		}
-		
-	}
-
-	public void visitUserProfile(User u) {
-		Intent i = new Intent(getApplicationContext(), UserProfileActivity.class);
-		i.putExtra(UserProfileActivity.VIEW_PROFILE, JsonUtil.toJsonObject(u));
-		startActivity(i);
-	}
-	
 	public void requestUserAvatar(User u, ImageView v, int size) {
 		if(isBound) {
 			mService.requestUserAvatar(u, v, size);
 		}
+	}
+	
+	public List<Topic> fetchTopics() {
+		return mService.fetchTopics();
+	}
+	
+	public void clearTopics() {
+		mService.clearTopics();
+	}
+	
+	public void insertTopics(List<Topic> topics) {
+		mService.insertTopics(topics);
 	}
 	
 }
