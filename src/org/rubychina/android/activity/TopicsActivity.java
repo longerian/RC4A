@@ -214,6 +214,7 @@ public class TopicsActivity extends SherlockFragmentActivity implements OnTopicS
 	@Override
 	public void onUserSelected(User user) {
 		Toast.makeText(getApplicationContext(), user.getLogin(), Toast.LENGTH_SHORT).show();
+		//TODO
 	}
 	
 	@Override

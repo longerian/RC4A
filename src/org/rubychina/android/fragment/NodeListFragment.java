@@ -12,7 +12,7 @@ import org.rubychina.android.activity.RubyChinaActor;
 import org.rubychina.android.api.request.NodesRequest;
 import org.rubychina.android.api.response.NodesResponse;
 import org.rubychina.android.type.Node;
-import org.rubychina.android.type.Section;
+import org.rubychina.android.type.NodeSection;
 import org.rubychina.android.widget.NodeAdapter;
 import org.rubychina.android.widget.SeparatedListAdapter;
 
@@ -94,9 +94,9 @@ public class NodeListFragment extends SherlockListFragment {
 		if(!nodes.contains(Node.MOCK_ACTIVE_NODE)) {
 			nodes.add(0, Node.MOCK_ACTIVE_NODE);
 		}
-		Map<Section, List<Node>> groupedNodes = new TreeMap<Section, List<Node>>();
+		Map<NodeSection, List<Node>> groupedNodes = new TreeMap<NodeSection, List<Node>>();
 		for(Node n : nodes) {
-			Section s = n.whichSection();
+			NodeSection s = n.whichSection();
 			if(groupedNodes.containsKey(s)) {
 				groupedNodes.get(s).add(n);
 			} else {
@@ -106,9 +106,9 @@ public class NodeListFragment extends SherlockListFragment {
 			}
 		}
 		SeparatedListAdapter adapter = new SeparatedListAdapter(getActivity());
-		Iterator<Entry<Section, List<Node>>> iter = groupedNodes.entrySet().iterator();
+		Iterator<Entry<NodeSection, List<Node>>> iter = groupedNodes.entrySet().iterator();
 		while(iter.hasNext()) {
-			Map.Entry<Section, List<Node>> entry = (Entry<Section, List<Node>>) iter.next();
+			Map.Entry<NodeSection, List<Node>> entry = (Entry<NodeSection, List<Node>>) iter.next();
 			adapter.addSection(entry.getKey(), 
 					new NodeAdapter(getActivity(), R.layout.node_item, entry.getValue()));
 		}
