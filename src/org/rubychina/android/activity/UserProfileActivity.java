@@ -31,14 +31,15 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockActivity;
 
+@Deprecated
 public class UserProfileActivity extends SherlockActivity {
 	
-	public static final String VIEW_PROFILE = "org.rubychina.android.activity.UserProfileActivity.VIEW_PROFILE";
+	private static final String VIEW_PROFILE = "org.rubychina.android.activity.UserProfileActivity.VIEW_PROFILE";
 
 	private RCService mService;
 	private boolean isBound = false; 
 	private DisplayMetrics metrics;
-	private User u;
+	private User user;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -50,28 +51,33 @@ public class UserProfileActivity extends SherlockActivity {
 		
 		setContentView(R.layout.user_profile_layout);
 		
-		u = JsonUtil.fromJsonObject(getIntent().getStringExtra(VIEW_PROFILE), User.class);
+		if(getIntent().getStringExtra(VIEW_PROFILE) != null) {
+			user = JsonUtil.fromJsonObject(getIntent().getStringExtra(VIEW_PROFILE), User.class);
+		} else {
+			user = getIntent().getExtras().getParcelable(VIEW_PROFILE);
+		}
+		
 		
 		TextView login = (TextView) findViewById(R.id.login);
-		login.setText(u.getLogin());
+		login.setText(user.getLogin());
 		
 		TextView name = (TextView) findViewById(R.id.name);
-		name.setText(u.getName());
+		name.setText(user.getName());
 		
 		TextView location = (TextView) findViewById(R.id.location);
-		location.setText(u.getLocation());
+		location.setText(user.getLocation());
 		
 		TextView website = (TextView) findViewById(R.id.website);
-		website.setText(u.getWebsite());
+		website.setText(user.getWebsite());
 		
 		TextView bio = (TextView) findViewById(R.id.bio);
-		bio.setText(u.getBio());
+		bio.setText(user.getBio());
 		
 		TextView tagline = (TextView) findViewById(R.id.tagline);
-		tagline.setText(u.getTagline());
+		tagline.setText(user.getTagline());
 		
 		TextView github = (TextView) findViewById(R.id.github_url);
-		github.setText(u.getGithubUrl());
+		github.setText(user.getGithubUrl());
 
 	}
 	
@@ -110,7 +116,7 @@ public class UserProfileActivity extends SherlockActivity {
     
     private void requestUserAvatar() {
 		ImageView gravatar = (ImageView) findViewById(R.id.gravatar);
-		mService.requestUserAvatar(u, gravatar, (int) (96 * metrics.density));
+		mService.requestUserAvatar(user, gravatar, (int) (96 * metrics.density));
 	}
 	
 }

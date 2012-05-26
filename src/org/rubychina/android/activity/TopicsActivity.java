@@ -217,8 +217,11 @@ public class TopicsActivity extends SherlockFragmentActivity implements OnTopicS
 	
 	@Override
 	public void onUserSelected(User user) {
-		Toast.makeText(getApplicationContext(), user.getLogin(), Toast.LENGTH_SHORT).show();
-		//TODO
+		Intent i = new Intent(this, UserIndexActivity.class);
+		Bundle b = new Bundle();
+		b.putParcelable(UserIndexActivity.VIEW_PROFILE, user);
+		i.putExtras(b);
+		startActivity(i);
 	}
 	
 	@Override

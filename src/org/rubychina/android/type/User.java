@@ -13,6 +13,9 @@ See the License for the specific language governing permissions and
 limitations under the License.*/
 package org.rubychina.android.type;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -43,6 +46,9 @@ public class User implements Parcelable {
 	
 	@SerializedName("avatar_url")  
 	private String avatarUrl;
+	
+	@SerializedName("topics")  
+	private List<Topic> recentTopicCreated = new ArrayList<Topic>(); //最近发布帖子
 
 	public int getId() {
 		return id;
@@ -84,6 +90,10 @@ public class User implements Parcelable {
 		return avatarUrl;
 	}
 	
+	public List<Topic> getRecentTopicCreated() {
+		return recentTopicCreated;
+	}
+
 	public User(Parcel in) {
 		readFromParcel(in);
 	}
@@ -105,8 +115,10 @@ public class User implements Parcelable {
 		dest.writeString(githubUrl);
 		dest.writeString(gravatarHash);
 		dest.writeString(avatarUrl);
+		dest.writeTypedList(recentTopicCreated);
 	}
 	
+	@SuppressWarnings("unchecked")
 	private void readFromParcel(Parcel in) {
 		id = in.readInt();
 		name = in.readString();
@@ -118,20 +130,21 @@ public class User implements Parcelable {
 		githubUrl = in.readString();
 		gravatarHash = in.readString();
 		avatarUrl = in.readString();
+		in.readTypedList(recentTopicCreated, CREATOR);
 	}
 	
 	@SuppressWarnings("rawtypes")
 	public static final Parcelable.Creator CREATOR = 
-			new Parcelable.Creator() {
-		
-	            public User createFromParcel(Parcel in) {
-	                return new User(in);
-	            }
-	 
-	            public User[] newArray(int size) {
-	                return new User[size];
-	            }
-	            
-	        };
+		new Parcelable.Creator() {
+	
+            public User createFromParcel(Parcel in) {
+                return new User(in);
+            }
+ 
+            public User[] newArray(int size) {
+                return new User[size];
+            }
+            
+        };
 	        
 }

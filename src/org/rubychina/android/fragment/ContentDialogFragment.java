@@ -26,23 +26,40 @@ import com.actionbarsherlock.app.SherlockDialogFragment;
 public class ContentDialogFragment extends SherlockDialogFragment {
 
 	private final static String CONTENT = "content";
+	private final static String STYLE = "style";
+	private final static String THEME = "theme";
 	
 	private String content;
+	private int style;
+	private int theme;
 	
 	public static ContentDialogFragment newInstance(String content) {
+        return newInstance(content, SherlockDialogFragment.STYLE_NO_TITLE);
+    }
+	
+	public static ContentDialogFragment newInstance(String content, int style) {
+        return newInstance(content, style, 0);
+    }
+	
+	public static ContentDialogFragment newInstance(String content, int style, int theme) {
 		ContentDialogFragment f = new ContentDialogFragment();
 		Bundle bundle = new Bundle();
-	    bundle.putString(CONTENT, content);
-	    f.setArguments(bundle);
-        return f;
-    }
+		bundle.putString(CONTENT, content);
+		bundle.putInt(STYLE, style);
+		bundle.putInt(THEME, theme);
+		f.setArguments(bundle);
+		return f;
+	}
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null) {
         	content = getArguments().getString(CONTENT);
+        	style = getArguments().getInt(STYLE);
+        	theme = getArguments().getInt(THEME);
         }
+        setStyle(style, theme);
     }
 
     @Override

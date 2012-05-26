@@ -67,4 +67,7 @@ limitations under the License.
     <string name="tab_node">节点</string>
     <string name="tab_site">酷站</string>
     <string name="tab_user">会员</string>
+    <string name="tab_profile">简介</string>
+    <string name="tab_favorite">收藏</string>
+    <string name="recent_topic_created">最近发布帖子</string>
 </resources>

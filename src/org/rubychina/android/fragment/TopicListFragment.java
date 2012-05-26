@@ -17,13 +17,12 @@ import java.util.List;
 
 import org.rubychina.android.R;
 import org.rubychina.android.activity.RubyChinaActor;
-import org.rubychina.android.activity.UserProfileActivity;
+import org.rubychina.android.activity.UserIndexActivity;
 import org.rubychina.android.api.request.TopicsRequest;
 import org.rubychina.android.api.response.TopicsResponse;
 import org.rubychina.android.type.Node;
 import org.rubychina.android.type.Topic;
 import org.rubychina.android.type.User;
-import org.rubychina.android.util.JsonUtil;
 import org.rubychina.android.widget.TopicAdapter;
 
 import yek.api.ApiCallback;
@@ -198,8 +197,10 @@ public class TopicListFragment extends SherlockListFragment {
 	}
 
 	public void visitUserProfile(User u) {
-		Intent i = new Intent(getActivity(), UserProfileActivity.class);
-		i.putExtra(UserProfileActivity.VIEW_PROFILE, JsonUtil.toJsonObject(u));
+		Intent i = new Intent(getActivity(), UserIndexActivity.class);
+		Bundle b = new Bundle();
+		b.putParcelable(UserIndexActivity.VIEW_PROFILE, u);
+		i.putExtras(b);
 		startActivity(i);
 	}
 	

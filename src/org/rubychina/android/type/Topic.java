@@ -20,7 +20,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class Topic implements Parcelable {
 	
-	@SerializedName("_id")  
+	@SerializedName("_id")
 	private int id;
 	
 	private String title;

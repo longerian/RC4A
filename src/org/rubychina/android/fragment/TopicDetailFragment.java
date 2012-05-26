@@ -20,6 +20,7 @@ import java.util.List;
 import org.rubychina.android.R;
 import org.rubychina.android.RCApplication;
 import org.rubychina.android.activity.TopicDetailActivity;
+import org.rubychina.android.activity.UserIndexActivity;
 import org.rubychina.android.activity.UserProfileActivity;
 import org.rubychina.android.api.request.TopicDetailRequest;
 import org.rubychina.android.api.response.TopicDetailResponse;
@@ -184,8 +185,10 @@ public class TopicDetailFragment extends SherlockFragment {
 	}
 	
 	public void visitUserProfile(User u) {
-		Intent i = new Intent(hostActivity, UserProfileActivity.class);
-		i.putExtra(UserProfileActivity.VIEW_PROFILE, JsonUtil.toJsonObject(u));
+		Intent i = new Intent(hostActivity, UserIndexActivity.class);
+		Bundle b = new Bundle();
+		b.putParcelable(UserIndexActivity.VIEW_PROFILE, u);
+		i.putExtras(b);
 		startActivity(i);
 	}
 	
