@@ -14,7 +14,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  -->
-<FrameLayout 
+<RelativeLayout 
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -23,17 +23,39 @@ limitations under the License.
 	    android:id="@+id/replies"
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent"
+	    android:layout_above="@+id/reply_to_this"
 	    android:fastScrollEnabled="true"
 	    android:cacheColorHint="#00000000" 
 	    android:divider="@drawable/list_divider" 
 	    android:dividerHeight="1.0px"
 	    />
+	<RelativeLayout
+	    android:id="@+id/reply_to_this"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentBottom="true"
+	    >
+	    <EditText 
+	        android:id="@+id/reply_edit"
+	        android:layout_width="match_parent"
+	    	android:layout_height="wrap_content"
+	    	android:layout_toRightOf="@+id/ic_reply"
+	        />
+	    <ImageView 
+	        android:id="@+id/ic_reply"
+	        android:layout_width="wrap_content"
+	    	android:layout_height="wrap_content"
+	    	android:src="@drawable/ic_action_send"
+	    	android:layout_alignParentRight="true"
+	    	android:layout_centerVertical="true"
+	        />
+	</RelativeLayout>
 	<ProgressBar 
 	    android:id="@+id/progress_bar"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:indeterminate="true"
-	    android:layout_gravity="center"
+	    android:layout_centerInParent="true"
 	    android:visibility="invisible"
 	    />
-</FrameLayout>
+</RelativeLayout>

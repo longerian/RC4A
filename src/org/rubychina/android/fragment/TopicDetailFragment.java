@@ -33,6 +33,7 @@ import yek.api.ApiCallback;
 import yek.api.ApiException;
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
@@ -41,6 +42,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -62,6 +64,8 @@ public class TopicDetailFragment extends SherlockFragment {
 	private ListView reply;
 	private ProgressBar bar;
 	private View body;
+	private EditText replyEdit;
+	private ImageView icReply;
 	
 	public static TopicDetailFragment newInstance(Topic topic) {
 		TopicDetailFragment f = new TopicDetailFragment();
@@ -90,9 +94,19 @@ public class TopicDetailFragment extends SherlockFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
     	LogUtil.d(TAG, "in onCreateView");
-    	FrameLayout frame = (FrameLayout) inflater.inflate(R.layout.topic_detail_layout, null); 
+    	View frame = inflater.inflate(R.layout.topic_detail_layout, null); 
     	reply = (ListView) frame.findViewById(R.id.replies);
     	bar = (ProgressBar) frame.findViewById(R.id.progress_bar);
+    	replyEdit = (EditText) frame.findViewById(R.id.reply_edit);
+    	icReply = (ImageView) frame.findViewById(R.id.ic_reply);
+    	icReply.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("http://ruby-china.org/topics/" + topic.getId()));
+				startActivity(i);
+			}
+		});
     	return frame;
 	}
 
