@@ -17,12 +17,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.rubychina.android.api.RCAPIContext;
-import org.rubychina.android.api.response.UsersResponse;
+import org.rubychina.android.api.response.SitesResponse;
 
-public class UsersRequest extends RCAPIGet<UsersResponse> {
-
-	private static final String TAG = "UsersRequest";
-	private static final String url = "api/users.json";
+public class SitesRequest extends RCAPIGet<SitesResponse> {
+	
+	private static final String TAG = "SitesRequest";
+	private static final String url = "api/sites.json";
 	
 	@Override
 	public String getRequestURL(RCAPIContext context) {
@@ -30,12 +30,12 @@ public class UsersRequest extends RCAPIGet<UsersResponse> {
 	}
 
 	@Override
-	public Class<UsersResponse> getResponseClass() {
-		return UsersResponse.class;
+	public Class<SitesResponse> getResponseClass() {
+		return SitesResponse.class;
 	}
 
 	@Override
-	public Map<String, String> getTextParams(RCAPIContext context) {
+	public Map<String, String> getTextParams(RCAPIContext arg0) {
 		//NOTE because request for hot users doesn't need any particular parameters, so just return a empty hashmap.
 		HashMap<String, String> params = new HashMap<String, String>();
 		return params;
@@ -44,15 +44,15 @@ public class UsersRequest extends RCAPIGet<UsersResponse> {
 	@Override
 	public String getCacheRelativePathOrURL() {
 		//NOTE always ensure providing a unique cache for a request
-		return makeCachePath("api", "users", "list");
+		return makeCachePath("api", "sites", "list");
 	}
 
 	/**
-	 * cache lasts for 60 * 10 seconds
+	 * cache lasts for 60 * 60 seconds
 	 */
 	@Override
 	public long getCacheTime() {
-		return 60 * 10;
+		return 60 * 60;
 	}
 
 }

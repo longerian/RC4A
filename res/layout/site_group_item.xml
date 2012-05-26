@@ -16,15 +16,22 @@ limitations under the License.
  -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
-	<GridView
-	    android:id="@+id/users" 
-	    android:layout_width="match_parent"
-    	android:layout_height="match_parent"
-    	android:horizontalSpacing="1dip"
-    	android:verticalSpacing="1dip"
-    	android:cacheColorHint="@color/transparent"
-    	android:numColumns="3"
-	    />
+    android:layout_height="wrap_content"
+    android:padding="5dip"
+    android:orientation="vertical"
+    android:background="@drawable/list_bg_selector">
+    <TextView 
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        />
+    <TextView 
+        android:id="@+id/desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/gray"
+        android:textSize="14sp"
+        />
 </LinearLayout>

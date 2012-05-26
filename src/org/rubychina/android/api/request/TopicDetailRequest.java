@@ -19,8 +19,6 @@ import java.util.Map;
 import org.rubychina.android.api.RCAPIContext;
 import org.rubychina.android.api.response.TopicDetailResponse;
 
-import yek.cache.Cache;
-
 public class TopicDetailRequest extends RCAPIGet<TopicDetailResponse> {
 
 	private static final String TAG = "TopicDetailRequest";

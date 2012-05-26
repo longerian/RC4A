@@ -21,14 +21,17 @@ import org.rubychina.android.RCApplication;
 import org.rubychina.android.RCService;
 import org.rubychina.android.RCService.LocalBinder;
 import org.rubychina.android.api.RCAPIClient;
+import org.rubychina.android.fragment.ContentDialogFragment;
 import org.rubychina.android.fragment.NodeListFragment;
 import org.rubychina.android.fragment.NodeListFragment.OnNodeSelectedListener;
 import org.rubychina.android.fragment.SiteListFragment;
+import org.rubychina.android.fragment.SiteListFragment.OnSiteSelectedListener;
 import org.rubychina.android.fragment.TopicListFragment;
 import org.rubychina.android.fragment.TopicListFragment.OnTopicSelectedListener;
-import org.rubychina.android.fragment.UserListFragment.OnUserSelectedListener;
 import org.rubychina.android.fragment.UserListFragment;
+import org.rubychina.android.fragment.UserListFragment.OnUserSelectedListener;
 import org.rubychina.android.type.Node;
+import org.rubychina.android.type.Site;
 import org.rubychina.android.type.Topic;
 import org.rubychina.android.type.User;
 
@@ -36,6 +39,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Parcelable;
@@ -52,7 +56,7 @@ import com.actionbarsherlock.view.Window;
 
 
 public class TopicsActivity extends SherlockFragmentActivity implements OnTopicSelectedListener, OnUserSelectedListener,
-	OnNodeSelectedListener, ActionBar.TabListener, RubyChinaActor {
+	OnNodeSelectedListener,OnSiteSelectedListener, ActionBar.TabListener, RubyChinaActor {
 
 	private static final String TAG = "TopicsActivity";
 	
@@ -234,6 +238,18 @@ public class TopicsActivity extends SherlockFragmentActivity implements OnTopicS
 		startActivity(i);
 	}
 
+	@Override
+	public void onSiteSelected(Site site) {
+		Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(site.getUrl()));
+		startActivity(i);
+	}
+
+	@Override
+	public void onSiteDescSelected(Site site) {
+		ContentDialogFragment cdf = ContentDialogFragment.newInstance(site.getDesc());
+		cdf.show(getSupportFragmentManager(), null);
+	}
+	
 	@Override
 	public void onTabSelected(Tab tab, FragmentTransaction ft) {
 		switch(tab.getPosition()) {

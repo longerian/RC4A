@@ -16,7 +16,6 @@ package org.rubychina.android.widget;
 import java.util.List;
 
 import org.rubychina.android.R;
-import org.rubychina.android.activity.TopicDetailActivity;
 import org.rubychina.android.fragment.TopicDetailFragment;
 import org.rubychina.android.type.Reply;
 import org.rubychina.android.util.HtmlUtil;

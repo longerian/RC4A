@@ -50,6 +50,7 @@ limitations under the License.
 	    android:layout_alignParentRight="true"
 	    android:src="@drawable/social_forward"
 	    android:contentDescription="@string/alt_forward"
+	    android:visibility="invisible"
         />
 	<TextView 
 	    android:id="@+id/body"

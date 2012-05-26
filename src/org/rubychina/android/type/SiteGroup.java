@@ -13,43 +13,28 @@ See the License for the specific language governing permissions and
 limitations under the License.*/
 package org.rubychina.android.type;
 
+import java.util.List;
+
 import com.google.gson.annotations.SerializedName;
 
-public class Site {
-
-	@SerializedName("created_at")  
-	private String createdAt;
+public class SiteGroup {
 	
-	private String desc;
-	
-	private String favicon;
+	@SerializedName("_id")
+	private int id;
 	
 	private String name;
 	
-	private String url;
+	@SerializedName("sites_count")
+	private String sitesCount;
+	
+	private List<Site> sites;
 
-	public String getCreatedAt() {
-		return createdAt;
+	public int getId() {
+		return id;
 	}
 
-	public void setCreatedAt(String createdAt) {
-		this.createdAt = createdAt;
-	}
-
-	public String getDesc() {
-		return desc;
-	}
-
-	public void setDesc(String desc) {
-		this.desc = desc;
-	}
-
-	public String getFavicon() {
-		return favicon;
-	}
-
-	public void setFavicon(String favicon) {
-		this.favicon = favicon;
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public String getName() {
@@ -60,12 +45,20 @@ public class Site {
 		this.name = name;
 	}
 
-	public String getUrl() {
-		return url;
+	public String getSitesCount() {
+		return sitesCount;
 	}
 
-	public void setUrl(String url) {
-		this.url = url;
+	public void setSitesCount(String sitesCount) {
+		this.sitesCount = sitesCount;
+	}
+
+	public List<Site> getSites() {
+		return sites;
+	}
+
+	public void setSites(List<Site> sites) {
+		this.sites = sites;
 	}
 	
 }

@@ -16,7 +16,6 @@ package org.rubychina.android.fragment;
 import java.util.List;
 
 import org.rubychina.android.R;
-import org.rubychina.android.RCApplication;
 import org.rubychina.android.activity.RubyChinaActor;
 import org.rubychina.android.activity.UserProfileActivity;
 import org.rubychina.android.api.request.TopicsRequest;

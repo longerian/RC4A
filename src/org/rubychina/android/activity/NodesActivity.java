@@ -21,7 +21,6 @@ import org.rubychina.android.RCService.LocalBinder;
 import org.rubychina.android.fragment.NodeListFragment;
 import org.rubychina.android.fragment.NodeListFragment.OnNodeSelectedListener;
 import org.rubychina.android.type.Node;
-import org.rubychina.android.type.Topic;
 
 import android.content.ComponentName;
 import android.content.Context;

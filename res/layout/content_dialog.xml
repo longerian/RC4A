@@ -14,17 +14,10 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<TextView xmlns:android="http://schemas.android.com/apk/res/android" 
+    android:id="@+id/content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
-	<GridView
-	    android:id="@+id/users" 
-	    android:layout_width="match_parent"
-    	android:layout_height="match_parent"
-    	android:horizontalSpacing="1dip"
-    	android:verticalSpacing="1dip"
-    	android:cacheColorHint="@color/transparent"
-    	android:numColumns="3"
-	    />
-</LinearLayout>
+    android:gravity="center_vertical|center_horizontal"
+    android:textAppearance="?android:attr/textAppearanceMedium"
+    />

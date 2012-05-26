@@ -113,6 +113,13 @@ public class RCService extends Service {
 		}
 	}
 	
+	public void requestImage(String url, ImageView view) {
+		Bitmap ava = ((RCApplication) getApplication()).getImgLoader().load(url, view);
+		if(ava != null) {
+			view.setImageBitmap(ava);
+		}
+	}
+	
 	public List<Node> fetchNodes() {
 		List<Node> nodes = GlobalResource.INSTANCE.getNodes();
 		if(nodes.isEmpty()) {
