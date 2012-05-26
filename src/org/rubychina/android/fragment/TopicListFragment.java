@@ -41,7 +41,7 @@ import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockListFragment;
 
-public class TopicListFragment extends SherlockListFragment {
+public class TopicListFragment extends SherlockListFragment implements TopicActor {
 
 	public static final String NODE = "node";
 	
@@ -126,7 +126,7 @@ public class TopicListFragment extends SherlockListFragment {
 	
 	private void refreshPage(List<Topic> topics, Node node) {
 		initializeNode(node);
-		TopicAdapter adapter = new TopicAdapter(this, 
+		TopicAdapter adapter = new TopicAdapter(this, getActivity(),
 				R.layout.topic_item,
 				R.id.title, 
 				topics);
@@ -196,6 +196,7 @@ public class TopicListFragment extends SherlockListFragment {
 		
 	}
 
+	@Override
 	public void visitUserProfile(User u) {
 		Intent i = new Intent(getActivity(), UserIndexActivity.class);
 		Bundle b = new Bundle();
@@ -204,6 +205,7 @@ public class TopicListFragment extends SherlockListFragment {
 		startActivity(i);
 	}
 	
+	@Override
 	public void requestUserAvatar(User u, ImageView v, int size) {
 		rubyChina.getService().requestUserAvatar(u, v, size);
 	}

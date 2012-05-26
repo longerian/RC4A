@@ -48,7 +48,7 @@ limitations under the License.
             </intent-filter>
         </activity>
         <activity 
-            android:name=".activity.TopicsActivity" 
+            android:name=".activity.RubyChinaIndexActivity" 
             android:screenOrientation="portrait"
             />
         <activity 

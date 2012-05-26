@@ -264,7 +264,7 @@ public class TopicEditingActivity extends SherlockFragmentActivity implements On
 		@Override
 		public void onSuccess(PostTopicResponse r) {
 			dismissProgress();
-			Intent homeIntent = new Intent(TopicEditingActivity.this, TopicsActivity.class);
+			Intent homeIntent = new Intent(TopicEditingActivity.this, RubyChinaIndexActivity.class);
             homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(homeIntent);
 		}

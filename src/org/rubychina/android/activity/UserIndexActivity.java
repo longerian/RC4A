@@ -14,13 +14,18 @@ limitations under the License.*/
 package org.rubychina.android.activity;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.rubychina.android.R;
 import org.rubychina.android.RCApplication;
 import org.rubychina.android.RCService;
 import org.rubychina.android.RCService.LocalBinder;
 import org.rubychina.android.api.RCAPIClient;
+import org.rubychina.android.fragment.UserFavoriteTopicListFragment;
 import org.rubychina.android.fragment.UserProfileFragment;
+import org.rubychina.android.fragment.UserRecentlyCreatedTopicListFragment;
+import org.rubychina.android.fragment.UserRelativeTopicListFragment.OnTopicSelectedListener;
+import org.rubychina.android.type.Topic;
 import org.rubychina.android.type.User;
 import org.rubychina.android.util.JsonUtil;
 
@@ -30,6 +35,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -43,7 +49,7 @@ import android.widget.TabWidget;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Window;
 
-public class UserIndexActivity extends SherlockFragmentActivity implements RubyChinaActor {
+public class UserIndexActivity extends SherlockFragmentActivity implements RubyChinaActor, OnTopicSelectedListener {
 
 	public static final String VIEW_PROFILE = "org.rubychina.android.activity.UserProfileActivity.VIEW_PROFILE";
 	
@@ -65,16 +71,16 @@ public class UserIndexActivity extends SherlockFragmentActivity implements RubyC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-        setTitle(R.string.title_profile);
         metrics = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(metrics);
         setContentView(R.layout.user_index_tabs_pager_layout);
         this.savedInstanceState = savedInstanceState;
-        if(getIntent().getStringExtra(VIEW_PROFILE) != null) {
-			user = JsonUtil.fromJsonObject(getIntent().getStringExtra(VIEW_PROFILE), User.class);
-		} else {
+//        if(getIntent().getStringExtra(VIEW_PROFILE) != null) {
+//			user = JsonUtil.fromJsonObject(getIntent().getStringExtra(VIEW_PROFILE), User.class);
+//		} else {
 			user = getIntent().getExtras().getParcelable(VIEW_PROFILE);
-		}
+//		}
+        setTitle(user.getLogin());
         Intent intent = new Intent(this, RCService.class);
 		bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 		hideIndeterminateProgressBar();
@@ -122,10 +128,10 @@ public class UserIndexActivity extends SherlockFragmentActivity implements RubyC
         bundle.putFloat(UserProfileFragment.DENSITY, metrics.density);
         mTabsAdapter.addTab(mTabHost.newTabSpec(getString(R.string.tab_profile)).setIndicator(getString(R.string.tab_profile)),
                 UserProfileFragment.class, bundle);
-//        mTabsAdapter.addTab(mTabHost.newTabSpec(getString(R.string.tab_topic)).setIndicator(getString(R.string.tab_topic)),
-//                LoaderCursorSupport.CursorLoaderListFragment.class, null);
-//        mTabsAdapter.addTab(mTabHost.newTabSpec(getString(R.string.tab_favorite)).setIndicator(getString(R.string.tab_favorite)),
-//                LoaderCustomSupport.AppListFragment.class, null);
+        mTabsAdapter.addTab(mTabHost.newTabSpec(getString(R.string.tab_topic)).setIndicator(getString(R.string.tab_topic)),
+                UserRecentlyCreatedTopicListFragment.class, bundle);
+        mTabsAdapter.addTab(mTabHost.newTabSpec(getString(R.string.tab_favorite)).setIndicator(getString(R.string.tab_favorite)),
+                UserFavoriteTopicListFragment.class, bundle);
         if (savedInstanceState != null) {
             mTabHost.setCurrentTabByTag(savedInstanceState.getString("tab"));
         }
@@ -249,6 +255,17 @@ public class UserIndexActivity extends SherlockFragmentActivity implements RubyC
 	@Override
 	public void hideIndeterminateProgressBar() {
 		setSupportProgressBarIndeterminate(false);
+	}
+
+	@Override
+	public void onTopicSelected(List<Topic> topics, int position) {
+		Intent i = new Intent(this, TopicDetailActivity.class);
+		Bundle bundle = new Bundle();
+		bundle.putInt(TopicDetailActivity.POS, position);
+		bundle.putParcelableArrayList(TopicDetailActivity.TOPICS,
+				(ArrayList<? extends Parcelable>) topics);
+		i.putExtras(bundle);
+		startActivity(i);
 	}
     
 }

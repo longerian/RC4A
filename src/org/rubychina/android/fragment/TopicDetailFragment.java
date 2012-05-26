@@ -21,13 +21,11 @@ import org.rubychina.android.R;
 import org.rubychina.android.RCApplication;
 import org.rubychina.android.activity.TopicDetailActivity;
 import org.rubychina.android.activity.UserIndexActivity;
-import org.rubychina.android.activity.UserProfileActivity;
 import org.rubychina.android.api.request.TopicDetailRequest;
 import org.rubychina.android.api.response.TopicDetailResponse;
 import org.rubychina.android.type.Reply;
 import org.rubychina.android.type.Topic;
 import org.rubychina.android.type.User;
-import org.rubychina.android.util.JsonUtil;
 import org.rubychina.android.util.LogUtil;
 import org.rubychina.android.widget.ReplyAdapter;
 

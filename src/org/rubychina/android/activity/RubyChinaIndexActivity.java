@@ -55,7 +55,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 
 
-public class TopicsActivity extends SherlockFragmentActivity implements OnTopicSelectedListener, OnUserSelectedListener,
+public class RubyChinaIndexActivity extends SherlockFragmentActivity implements OnTopicSelectedListener, OnUserSelectedListener,
 	OnNodeSelectedListener,OnSiteSelectedListener, ActionBar.TabListener, RubyChinaActor {
 
 	private static final String TAG = "TopicsActivity";
@@ -158,8 +158,6 @@ public class TopicsActivity extends SherlockFragmentActivity implements OnTopicS
 	
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
-//        menu.add(0, R.id.action_bar_nodes, 0, R.string.actionbar_nodes)
-//            .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
         menu.add(0, R.id.action_bar_compose, 1, R.string.actionbar_compose)
             .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
         menu.add(0, R.id.action_bar_refresh, 2, R.string.actionbar_refresh)
@@ -173,10 +171,6 @@ public class TopicsActivity extends SherlockFragmentActivity implements OnTopicS
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Intent i = new Intent();
 		switch(item.getItemId()) {
-//		case R.id.action_bar_nodes:
-//			i.setClass(getApplicationContext(), NodesActivity.class);
-//			startActivityForResult(i, NodesActivity.PICK_NODE);
-//			break;
         case R.id.action_bar_refresh:
         	topicListFragment.startTopicsRequest(topicListFragment.getNode());
         	break;
@@ -193,17 +187,6 @@ public class TopicsActivity extends SherlockFragmentActivity implements OnTopicS
 		return true;
 	}
 	
-//	@Override
-//	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//		if(requestCode == NodesActivity.PICK_NODE) {
-//			if(resultCode == RESULT_OK) {
-//				Node n = data.getParcelableExtra(NodesActivity.PICKED_NODE);
-//				topicListFragment.setNode(n);
-//				topicListFragment.startTopicsRequest(n);
-//			}
-//		}
-//	}
-
 	private void onCompose() {
 		Intent i = new Intent();
 		if(((RCApplication) getApplication()).isLogin()) {

@@ -118,7 +118,7 @@ public class RCActivity extends SherlockActivity {
 	
 	private void go2Topics() {
 		Intent i = new Intent();
-		i.setClass(getApplicationContext(), TopicsActivity.class);
+		i.setClass(getApplicationContext(), RubyChinaIndexActivity.class);
 		startActivity(i);
 		finish();
 	}
