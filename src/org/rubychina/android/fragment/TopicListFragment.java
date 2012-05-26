@@ -33,15 +33,18 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.HeaderViewListAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockListFragment;
+import com.actionbarsherlock.app.SherlockFragment;
 
-public class TopicListFragment extends SherlockListFragment implements TopicActor {
+public class TopicListFragment extends SherlockFragment implements TopicActor {
 
 	public static final String NODE = "node";
 	
@@ -50,6 +53,7 @@ public class TopicListFragment extends SherlockListFragment implements TopicActo
 	private TopicsRequest request;
 	
 	private TextView nodeSection;
+	private ListView topicList;
 	
 	private Node node;
 	
@@ -93,6 +97,14 @@ public class TopicListFragment extends SherlockListFragment implements TopicActo
 	}
 
 	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+    	View view = inflater.inflate(R.layout.topics_layout, null);
+    	topicList = (ListView) view.findViewById(R.id.topics);
+		return view;
+	}
+	
+	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		List<Topic> cachedTopics = fetchTopics();
@@ -110,17 +122,11 @@ public class TopicListFragment extends SherlockListFragment implements TopicActo
 		cancelTopicsRequest();
 	}
 
-	@Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-		listener.onTopicSelected(((TopicAdapter) ((HeaderViewListAdapter) l.getAdapter()).getWrappedAdapter()).getItems(), 
-				position - 1);
-    }
-	
 	private void initializeNode(Node node) {
 		if(nodeSection == null) {
 			nodeSection = (TextView) LayoutInflater.from(getActivity()).inflate(R.layout.node_section_header, null);
-			getListView().addHeaderView(nodeSection, null, false);
 		}
+		topicList.addHeaderView(nodeSection, null, false);
 		nodeSection.setText(node.getName());
 	}
 	
@@ -130,9 +136,15 @@ public class TopicListFragment extends SherlockListFragment implements TopicActo
 				R.layout.topic_item,
 				R.id.title, 
 				topics);
-		setListAdapter(adapter);
-		getListView().setDivider(getResources().getDrawable(R.drawable.list_divider));
-		getListView().setDividerHeight(1);
+		topicList.setAdapter(adapter);
+		topicList.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+		        listener.onTopicSelected(((TopicAdapter) ((HeaderViewListAdapter) parent.getAdapter()).getWrappedAdapter()).getItems(), 
+						position - 1);
+			}
+		});
 	}
 	
 	public void startTopicsRequest(Node node) {

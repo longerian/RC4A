@@ -68,6 +68,7 @@ public class RubyChinaIndexActivity extends SherlockFragmentActivity implements 
 	private final int TAB_SITE = 2;
 	private final int TAB_USER = 3;
 	
+	private Fragment lastFragment;
 	private TopicListFragment topicListFragment;
 	private NodeListFragment nodeListFragment;
 	private SiteListFragment siteListFragment;
@@ -171,7 +172,7 @@ public class RubyChinaIndexActivity extends SherlockFragmentActivity implements 
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Intent i = new Intent();
 		switch(item.getItemId()) {
-        case R.id.action_bar_refresh:
+        case R.id.action_bar_refresh://TODO
         	topicListFragment.startTopicsRequest(topicListFragment.getNode());
         	break;
         case R.id.action_bar_compose:

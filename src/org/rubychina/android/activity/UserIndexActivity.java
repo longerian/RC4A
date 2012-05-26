@@ -27,7 +27,6 @@ import org.rubychina.android.fragment.UserRecentlyCreatedTopicListFragment;
 import org.rubychina.android.fragment.UserRelativeTopicListFragment.OnTopicSelectedListener;
 import org.rubychina.android.type.Topic;
 import org.rubychina.android.type.User;
-import org.rubychina.android.util.JsonUtil;
 
 import android.content.ComponentName;
 import android.content.Context;
