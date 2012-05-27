@@ -16,7 +16,6 @@ package org.rubychina.android.fragment;
 import java.util.List;
 
 import org.rubychina.android.R;
-import org.rubychina.android.activity.RCPreferenceActivity;
 import org.rubychina.android.activity.RubyChinaActor;
 import org.rubychina.android.activity.UserIndexActivity;
 import org.rubychina.android.api.request.TopicsRequest;
@@ -38,10 +37,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.HeaderViewListAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
@@ -58,7 +55,7 @@ public class TopicListFragment extends SherlockFragment implements TopicActor {
 	private RubyChinaActor rubyChina;
 	private TopicsRequest request;
 	
-	private TextView nodeSection;
+//	private TextView nodeSection;
 	private ListView topicList;
 	
 	private Node node;
@@ -183,7 +180,7 @@ public class TopicListFragment extends SherlockFragment implements TopicActor {
 //	}
 	
 	private void refreshPage(List<Topic> topics, Node node) {
-//		initializeHead(node);//TODO
+//		initializeHead(node);
 		TopicAdapter adapter = new TopicAdapter(this, getActivity(),
 				R.layout.topic_item,
 				R.id.title, 

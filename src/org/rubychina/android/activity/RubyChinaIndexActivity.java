@@ -51,8 +51,6 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 
 
@@ -63,9 +61,6 @@ public class RubyChinaIndexActivity extends SherlockFragmentActivity implements 
 	
 	private RCService mService;
 	private boolean isBound = false; 
-	
-//	private final int MENU_GROUP_FIXED = 0;
-//	private final int MENU_GROUP_OPTION = 1;
 	
 	private final int TAB_TOPIC = 0;
 	private final int TAB_NODE = 1;
@@ -82,7 +77,6 @@ public class RubyChinaIndexActivity extends SherlockFragmentActivity implements 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-		hideIndeterminateProgressBar();
 		Intent intent = new Intent(this, RCService.class);
 		bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 	}
@@ -290,12 +284,12 @@ public class RubyChinaIndexActivity extends SherlockFragmentActivity implements 
 
 	@Override
 	public void showIndeterminateProgressBar() {
-		setSupportProgressBarIndeterminate(true);
+		setSupportProgressBarIndeterminateVisibility(true);
 	}
 
 	@Override
 	public void hideIndeterminateProgressBar() {
-		setSupportProgressBarIndeterminate(false);
+		setSupportProgressBarIndeterminateVisibility(false);
 	}
 
 }

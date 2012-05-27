@@ -36,20 +36,21 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.DisplayMetrics;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TabHost;
-import android.widget.TabWidget;
 import android.widget.Toast;
 
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Window;
 
-public class UserIndexActivity extends SherlockFragmentActivity implements RubyChinaActor, OnTopicSelectedListener {
+public class UserIndexActivity extends SherlockFragmentActivity implements ActionBar.TabListener, 
+		RubyChinaActor, OnTopicSelectedListener, OnPageChangeListener {
 
 	public static final String VIEW_PROFILE = "org.rubychina.android.activity.UserProfileActivity.VIEW_PROFILE";
 	
@@ -59,31 +60,28 @@ public class UserIndexActivity extends SherlockFragmentActivity implements RubyC
 	private boolean isBound = false; 
 	private DisplayMetrics metrics;
 	
-	private Bundle savedInstanceState;
-	
-	private TabHost mTabHost;
 	private ViewPager  mViewPager;
-	private TabsAdapter mTabsAdapter;
+	private ProfilePagerAdapter mAdapter;
 	
 	private User user;
-
+	
+	private final int TAB_PROFILE = 0;
+	private final int TAB_TOPIC_CREATED = 1;
+	private final int TAB_TOPIC_FAVORITE = 2;
+	
+	private ArrayList<Fragment> mPages = new ArrayList<Fragment>();
+	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        setContentView(R.layout.user_index_tabs_pager_layout);
         metrics = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        setContentView(R.layout.user_index_tabs_pager_layout);
-        this.savedInstanceState = savedInstanceState;
-//        if(getIntent().getStringExtra(VIEW_PROFILE) != null) {
-//			user = JsonUtil.fromJsonObject(getIntent().getStringExtra(VIEW_PROFILE), User.class);
-//		} else {
-			user = getIntent().getExtras().getParcelable(VIEW_PROFILE);
-//		}
+		user = getIntent().getExtras().getParcelable(VIEW_PROFILE);
         setTitle(user.getLogin());
         Intent intent = new Intent(this, RCService.class);
 		bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-		hideIndeterminateProgressBar();
     }
     
 	private ServiceConnection mConnection = new ServiceConnection() {
@@ -112,126 +110,43 @@ public class UserIndexActivity extends SherlockFragmentActivity implements RubyC
 		}
 	}
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putString("tab", mTabHost.getCurrentTabTag());
-    }
-    
     private void initialize() {
-    	mTabHost = (TabHost)findViewById(android.R.id.tabhost);
-        mTabHost.setup();
-        mViewPager = (ViewPager)findViewById(R.id.pager);
-        mTabsAdapter = new TabsAdapter(this, mTabHost, mViewPager);
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(UserProfileFragment.USER, user);
-        bundle.putFloat(UserProfileFragment.DENSITY, metrics.density);
-        mTabsAdapter.addTab(mTabHost.newTabSpec(getString(R.string.tab_profile)).setIndicator(getString(R.string.tab_profile)),
-                UserProfileFragment.class, bundle);
-        mTabsAdapter.addTab(mTabHost.newTabSpec(getString(R.string.tab_topic)).setIndicator(getString(R.string.tab_topic)),
-                UserRecentlyCreatedTopicListFragment.class, bundle);
-        mTabsAdapter.addTab(mTabHost.newTabSpec(getString(R.string.tab_favorite)).setIndicator(getString(R.string.tab_favorite)),
-                UserFavoriteTopicListFragment.class, bundle);
-        if (savedInstanceState != null) {
-            mTabHost.setCurrentTabByTag(savedInstanceState.getString("tab"));
-        }
+    	mViewPager = (ViewPager) findViewById(R.id.pager);
+    	mAdapter = new ProfilePagerAdapter(getSupportFragmentManager());
+    	mViewPager.setAdapter(mAdapter);
+    	mViewPager.setCurrentItem(TAB_PROFILE);
+    	mViewPager.setOnPageChangeListener(this);
+		getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        getSupportActionBar().addTab(getProfileTab());
+        getSupportActionBar().addTab(getRecentlyCreatedTopicTab());
+        getSupportActionBar().addTab(getFavoriteTopicTab());
+        getSupportActionBar().setSelectedNavigationItem(TAB_PROFILE);
 	}
-    
-    public static class TabsAdapter extends FragmentPagerAdapter
-		    implements TabHost.OnTabChangeListener, ViewPager.OnPageChangeListener {
-		private final Context mContext;
-		private final TabHost mTabHost;
-		private final ViewPager mViewPager;
-		private final ArrayList<TabInfo> mTabs = new ArrayList<TabInfo>();
-		
-		static final class TabInfo {
-		    private final String tag;
-		    private final Class<?> clss;
-		    private final Bundle args;
-		
-		    TabInfo(String _tag, Class<?> _class, Bundle _args) {
-		        tag = _tag;
-		        clss = _class;
-		        args = _args;
-		    }
-		}
-		
-		static class DummyTabFactory implements TabHost.TabContentFactory {
-		    private final Context mContext;
-		
-		    public DummyTabFactory(Context context) {
-		        mContext = context;
-		    }
-		
-		    @Override
-		    public View createTabContent(String tag) {
-		        View v = new View(mContext);
-		        v.setMinimumWidth(0);
-		        v.setMinimumHeight(0);
-		        return v;
-		    }
-		}
-		
-		public TabsAdapter(FragmentActivity activity, TabHost tabHost, ViewPager pager) {
-		    super(activity.getSupportFragmentManager());
-		    mContext = activity;
-		    mTabHost = tabHost;
-		    mViewPager = pager;
-		    mTabHost.setOnTabChangedListener(this);
-		    mViewPager.setAdapter(this);
-		    mViewPager.setOnPageChangeListener(this);
-		}
-		
-		public void addTab(TabHost.TabSpec tabSpec, Class<?> clss, Bundle args) {
-		    tabSpec.setContent(new DummyTabFactory(mContext));
-		    String tag = tabSpec.getTag();
-		
-		    TabInfo info = new TabInfo(tag, clss, args);
-		    mTabs.add(info);
-		    mTabHost.addTab(tabSpec);
-		    notifyDataSetChanged();
-		}
-		
-		@Override
-		public int getCount() {
-		    return mTabs.size();
-		}
-		
-		@Override
-		public Fragment getItem(int position) {
-		    TabInfo info = mTabs.get(position);
-		    return Fragment.instantiate(mContext, info.clss.getName(), info.args);
-		}
-		
-		@Override
-		public void onTabChanged(String tabId) {
-		    int position = mTabHost.getCurrentTab();
-		    mViewPager.setCurrentItem(position);
-		}
-		
-		@Override
-		public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-		}
-		
-		@Override
-		public void onPageSelected(int position) {
-		    // Unfortunately when TabHost changes the current tab, it kindly
-		    // also takes care of putting focus on it when not in touch mode.
-		    // The jerk.
-		    // This hack tries to prevent this from pulling focus out of our
-		    // ViewPager.
-		    TabWidget widget = mTabHost.getTabWidget();
-		    int oldFocusability = widget.getDescendantFocusability();
-		    widget.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
-		    mTabHost.setCurrentTab(position);
-		    widget.setDescendantFocusability(oldFocusability);
-		}
-		
-		@Override
-		public void onPageScrollStateChanged(int state) {
-		}
+	
+	private ActionBar.Tab getProfileTab() {
+		ActionBar.Tab tab = getSupportActionBar().newTab();
+        tab.setText(R.string.tab_profile);
+        tab.setTag(getString(R.string.tab_profile));
+        tab.setTabListener(this);
+        return tab;
 	}
-    
+	
+	private ActionBar.Tab getRecentlyCreatedTopicTab() {
+		ActionBar.Tab tab = getSupportActionBar().newTab();
+        tab.setText(R.string.tab_topic);
+        tab.setTag(getString(R.string.tab_topic));
+        tab.setTabListener(this);
+        return tab;
+	}
+	
+	private ActionBar.Tab getFavoriteTopicTab() {
+		ActionBar.Tab tab = getSupportActionBar().newTab();
+		tab.setText(R.string.tab_favorite);
+		tab.setTag(getString(R.string.tab_favorite));
+		tab.setTabListener(this);
+		return tab;
+	}
+	
     @Override
 	public RCApplication getApp() {
 		return (RCApplication) getApplication();
@@ -249,12 +164,12 @@ public class UserIndexActivity extends SherlockFragmentActivity implements RubyC
 
 	@Override
 	public void showIndeterminateProgressBar() {
-		setSupportProgressBarIndeterminate(true);
+		setSupportProgressBarIndeterminateVisibility(true);
 	}
 
 	@Override
 	public void hideIndeterminateProgressBar() {
-		setSupportProgressBarIndeterminate(false);
+		setSupportProgressBarIndeterminateVisibility(false);
 	}
 
 	@Override
@@ -286,5 +201,68 @@ public class UserIndexActivity extends SherlockFragmentActivity implements RubyC
 		i.putExtras(bundle);
 		startActivity(i);
 	}
+
+	@Override
+	public void onTabSelected(Tab tab, FragmentTransaction ft) {
+		switch(tab.getPosition()) {
+		case TAB_PROFILE:
+			mViewPager.setCurrentItem(TAB_PROFILE, true);
+			break;
+		case TAB_TOPIC_CREATED:
+			mViewPager.setCurrentItem(TAB_TOPIC_CREATED, true);
+			break;
+		case TAB_TOPIC_FAVORITE:
+			mViewPager.setCurrentItem(TAB_TOPIC_FAVORITE, true);
+			break;
+		default:
+			break;
+		}
+	}
+
+	@Override
+	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+		
+	}
+
+	@Override
+	public void onTabReselected(Tab tab, FragmentTransaction ft) {
+		
+	}
     
+	public class ProfilePagerAdapter extends FragmentPagerAdapter {
+
+		public ProfilePagerAdapter(FragmentManager fm) {
+			super(fm);
+			mPages.add(UserProfileFragment.newInstance(user, metrics.density));
+			mPages.add(UserRecentlyCreatedTopicListFragment.newInstance(user));
+			mPages.add(UserFavoriteTopicListFragment.newInstance(user));
+		}
+
+		@Override
+		public Fragment getItem(int position) {
+			return mPages.get(position);
+		}
+
+		@Override
+		public int getCount() {
+			return mPages.size();
+		}
+
+    }
+
+	@Override
+	public void onPageScrollStateChanged(int state) {
+		
+	}
+
+	@Override
+	public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+		
+	}
+
+	@Override
+	public void onPageSelected(int position) {
+		getSupportActionBar().setSelectedNavigationItem(position);
+	}
+	
 }
