@@ -25,6 +25,7 @@ import org.rubychina.android.widget.UserAdapter;
 import yek.api.ApiCallback;
 import yek.api.ApiException;
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -75,7 +76,13 @@ public class UserListFragment extends SherlockFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		setHasOptionsMenu(true);
+		List<User> cachedUsers = fetchUsers();
+		refreshPage(cachedUsers);
 		startUsersRequest();
+	}
+
+	private List<User> fetchUsers() {
+		return rubyChina.getService().fetchUsers();
 	}
 
 	@Override
@@ -140,10 +147,12 @@ public class UserListFragment extends SherlockFragment {
 			Toast.makeText(getActivity(), R.string.hint_loading_data_failed, Toast.LENGTH_SHORT).show();
 		}
 
+		@SuppressWarnings("unchecked")
 		@Override
 		public void onSuccess(UsersResponse r) {
 			rubyChina.hideIndeterminateProgressBar();
 			refreshPage(r.getUsers());
+			new CacheUsersTask().execute(r.getUsers());
 		}
 		
 	}
@@ -158,6 +167,27 @@ public class UserListFragment extends SherlockFragment {
 		        listener.onUserSelected(user);
 			}
 		});
+	}
+	
+	private class CacheUsersTask extends AsyncTask<List<User>, Void, Void> {
+
+		@Override
+		protected void onPreExecute() {
+			rubyChina.showIndeterminateProgressBar();
+		}
+
+		@Override
+		protected Void doInBackground(List<User>... params) {
+			rubyChina.getService().clearUsers();
+			rubyChina.getService().insertUsers(params[0]);
+			return null;
+		}
+		
+		@Override
+		protected void onPostExecute(Void result) {
+			rubyChina.hideIndeterminateProgressBar();
+		}
+		
 	}
 
 	public void requestUserAvatar(User u, ImageView gravatar) {

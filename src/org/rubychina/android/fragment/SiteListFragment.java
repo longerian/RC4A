@@ -21,19 +21,16 @@ import org.rubychina.android.api.request.SitesRequest;
 import org.rubychina.android.api.response.SitesResponse;
 import org.rubychina.android.type.Site;
 import org.rubychina.android.type.SiteGroup;
-import org.rubychina.android.type.User;
 import org.rubychina.android.widget.SiteAdapter;
-import org.rubychina.android.widget.UserAdapter;
 
 import yek.api.ApiCallback;
 import yek.api.ApiException;
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.ImageView;
@@ -79,7 +76,13 @@ public class SiteListFragment extends SherlockFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		setHasOptionsMenu(true);
+		List<SiteGroup> cachedSites = fetchSites();
+		refreshPage(cachedSites);
 		startSitesRequest();
+	}
+
+	private List<SiteGroup> fetchSites() {
+		return rubyChina.getService().fetchSites();
 	}
 
 	@Override
@@ -140,10 +143,12 @@ public class SiteListFragment extends SherlockFragment {
 			Toast.makeText(getActivity(), R.string.hint_loading_data_failed, Toast.LENGTH_SHORT).show();
 		}
 
+		@SuppressWarnings("unchecked")
 		@Override
 		public void onSuccess(SitesResponse r) {
 			rubyChina.hideIndeterminateProgressBar();
 			refreshPage(r.getSiteGroups());
+			new CacheSitesTask().execute(r.getSiteGroups());
 		}
 		
 	}
@@ -160,6 +165,27 @@ public class SiteListFragment extends SherlockFragment {
 				return true;
 			}
 		});
+	}
+	
+	private class CacheSitesTask extends AsyncTask<List<SiteGroup>, Void, Void> {
+
+		@Override
+		protected void onPreExecute() {
+			rubyChina.showIndeterminateProgressBar();
+		}
+
+		@Override
+		protected Void doInBackground(List<SiteGroup>... params) {
+			rubyChina.getService().clearSites();
+			rubyChina.getService().insertSites(params[0]);
+			return null;
+		}
+		
+		@Override
+		protected void onPostExecute(Void result) {
+			rubyChina.hideIndeterminateProgressBar();
+		}
+		
 	}
 	
 	public OnSiteSelectedListener getListener() {

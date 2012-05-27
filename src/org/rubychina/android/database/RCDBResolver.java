@@ -18,7 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.rubychina.android.type.Node;
+import org.rubychina.android.type.SiteGroup;
 import org.rubychina.android.type.Topic;
+import org.rubychina.android.type.User;
 import org.rubychina.android.util.JsonUtil;
 
 import android.content.ContentValues;
@@ -158,17 +160,139 @@ public enum RCDBResolver {
 		}
 		return ns;
 	}
+	
+	public synchronized boolean clearUsers(Context context) {
+		SQLiteHelper sHelper = sHelperFromUs(context);
+		SQLiteDatabase db = sHelper.getWritableDatabase();
+		try {
+			db.delete(SQLiteHelper.TBL_USER, null, null);
+		} catch(Exception e) {
+			e.printStackTrace();
+			return false;
+		} finally {
+			db.close();
+		}
+		return true;
+	}
+	
+	public synchronized boolean insertUsers(Context context, List<User> users) {
+		SQLiteHelper sHelper = sHelperFromUs(context);
+		ContentValues values = new ContentValues();
+		SQLiteDatabase db = sHelper.getWritableDatabase();
+		try {
+			Type type = new TypeToken<List<User>>(){}.getType();
+			String s = JsonUtil.toJsonArray(users, type);
+			values.put(SQLiteHelper.CLM_USER, s);
+			db.insert(SQLiteHelper.TBL_USER, null, values);
+		} catch(Exception e) {
+			e.printStackTrace();
+			return false;
+		} finally {
+			db.close();
+		}
+		return true;
+	}
+	
+	public synchronized List<User> fetchUsers(Context context) {
+		SQLiteHelper sHelper = sHelperFromUs(context);
+		SQLiteDatabase db = sHelper.getWritableDatabase();
+		Cursor cursor = null;
+		List<User> us = new ArrayList<User>();
+		try {
+			cursor = db.query(SQLiteHelper.TBL_USER, null, null, null, null, null, null);
+			if(cursor != null) {
+				cursor.moveToFirst();
+				Type type = new TypeToken<List<User>>(){}.getType();
+				while(!cursor.isAfterLast()) {
+					 us = JsonUtil.fromJsonArray(
+							cursor.getString(cursor.getColumnIndexOrThrow(SQLiteHelper.CLM_USER)), 
+							type);
+					cursor.moveToNext();
+				}
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			cursor.close();
+			db.close();
+		}
+		return us;
+	}
+	
+	public synchronized boolean clearSites(Context context) {
+		SQLiteHelper sHelper = sHelperFromUs(context);
+		SQLiteDatabase db = sHelper.getWritableDatabase();
+		try {
+			db.delete(SQLiteHelper.TBL_SITE, null, null);
+		} catch(Exception e) {
+			e.printStackTrace();
+			return false;
+		} finally {
+			db.close();
+		}
+		return true;
+	}
+	
+	public synchronized boolean insertSites(Context context, List<SiteGroup> siteGroup) {
+		SQLiteHelper sHelper = sHelperFromUs(context);
+		ContentValues values = new ContentValues();
+		SQLiteDatabase db = sHelper.getWritableDatabase();
+		try {
+			Type type = new TypeToken<List<SiteGroup>>(){}.getType();
+			String s = JsonUtil.toJsonArray(siteGroup, type);
+			values.put(SQLiteHelper.CLM_SITE, s);
+			db.insert(SQLiteHelper.TBL_SITE, null, values);
+		} catch(Exception e) {
+			e.printStackTrace();
+			return false;
+		} finally {
+			db.close();
+		}
+		return true;
+	}
 
+	public synchronized List<SiteGroup> fetchSites(Context context) {
+		SQLiteHelper sHelper = sHelperFromUs(context);
+		SQLiteDatabase db = sHelper.getWritableDatabase();
+		Cursor cursor = null;
+		List<SiteGroup> sgs = new ArrayList<SiteGroup>();
+		try {
+			cursor = db.query(SQLiteHelper.TBL_SITE, null, null, null, null, null, null);
+			if(cursor != null) {
+				cursor.moveToFirst();
+				Type type = new TypeToken<List<SiteGroup>>(){}.getType();
+				while(!cursor.isAfterLast()) {
+					 sgs = JsonUtil.fromJsonArray(
+							cursor.getString(cursor.getColumnIndexOrThrow(SQLiteHelper.CLM_SITE)), 
+							type);
+					cursor.moveToNext();
+				}
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			cursor.close();
+			db.close();
+		}
+		return sgs;
+	}
+	
 	public class SQLiteHelper extends SQLiteOpenHelper {
 
 		private static final String DATABASE_NAME = "RubyChina.db";
-		private static final int DATABASE_VERSION = 6;
+		private static final int DATABASE_VERSION = 7;
 		
 		public static final String TBL_TOPIC = "topics";
 		public static final String CLM_TOPIC = "topic";
 		
 		public static final String TBL_NODE = "nodes";
 		public static final String CLM_NODE = "node";
+		
+		public static final String TBL_SITE = "sites";
+		public static final String CLM_SITE = "site";
+		
+		public static final String TBL_USER = "users";
+		public static final String CLM_USER = "user";
 		
 		public SQLiteHelper(Context context, String name,
 				CursorFactory factory, int version) {
@@ -185,12 +309,22 @@ public enum RCDBResolver {
 					+ " (" + BaseColumns._ID + " INTEGER NOT NULL PRIMARY KEY,"
 					+ CLM_NODE + " TEXT NOT NULL"
 					+ ");");
+			db.execSQL("create table if not exists " + TBL_SITE
+					+ " (" + BaseColumns._ID + " INTEGER NOT NULL PRIMARY KEY,"
+					+ CLM_SITE + " TEXT NOT NULL"
+					+ ");");
+			db.execSQL("create table if not exists " + TBL_USER
+					+ " (" + BaseColumns._ID + " INTEGER NOT NULL PRIMARY KEY,"
+					+ CLM_USER + " TEXT NOT NULL"
+					+ ");");
 		}
 
 		@Override
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 			db.execSQL("drop table if exists " + TBL_TOPIC);
 			db.execSQL("drop table if exists " + TBL_NODE);
+			db.execSQL("drop table if exists " + TBL_SITE);
+			db.execSQL("drop table if exists " + TBL_USER);
 		    onCreate(db);
 		}
 		

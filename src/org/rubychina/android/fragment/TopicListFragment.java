@@ -229,6 +229,7 @@ public class TopicListFragment extends SherlockFragment implements TopicActor {
 			Toast.makeText(getActivity(), R.string.hint_loading_data_failed, Toast.LENGTH_SHORT).show();
 		}
 
+		@SuppressWarnings("unchecked")
 		@Override
 		public void onSuccess(TopicsResponse r) {
 			rubyChina.hideIndeterminateProgressBar();
