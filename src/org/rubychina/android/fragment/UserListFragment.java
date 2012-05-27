@@ -36,6 +36,9 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 
 public class UserListFragment extends SherlockFragment {
 
@@ -71,6 +74,7 @@ public class UserListFragment extends SherlockFragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		setHasOptionsMenu(true);
 		startUsersRequest();
 	}
 
@@ -80,6 +84,29 @@ public class UserListFragment extends SherlockFragment {
 		cancelUsersRequest();
 	}
 
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.add(0, R.id.action_bar_compose, 1, R.string.actionbar_compose)
+            .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        menu.add(0, R.id.action_bar_setting, 2, R.string.actionbar_setting)
+        	.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+    }
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch(item.getItemId()) {
+        case R.id.action_bar_compose:
+        	rubyChina.onCompose();
+        	break;
+        case R.id.action_bar_setting:
+        	rubyChina.onSetting();
+			break;
+		default: 
+			break;
+		}
+		return true;
+	}
+	
 	public void startUsersRequest() {
 		if(request == null) {
 			request = new UsersRequest();

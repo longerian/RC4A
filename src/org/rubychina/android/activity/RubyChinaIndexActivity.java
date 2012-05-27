@@ -64,6 +64,9 @@ public class RubyChinaIndexActivity extends SherlockFragmentActivity implements 
 	private RCService mService;
 	private boolean isBound = false; 
 	
+//	private final int MENU_GROUP_FIXED = 0;
+//	private final int MENU_GROUP_OPTION = 1;
+	
 	private final int TAB_TOPIC = 0;
 	private final int TAB_NODE = 1;
 	private final int TAB_SITE = 2;
@@ -172,37 +175,7 @@ public class RubyChinaIndexActivity extends SherlockFragmentActivity implements 
 	}
 	
 	@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        menu.add(0, R.id.action_bar_compose, 1, R.string.actionbar_compose)
-            .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-        menu.add(0, R.id.action_bar_refresh, 2, R.string.actionbar_refresh)
-            .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-        menu.add(0, R.id.action_bar_setting, 2, R.string.actionbar_setting)
-        	.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-        return true;
-    }
-	
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		Intent i = new Intent();
-		switch(item.getItemId()) {
-        case R.id.action_bar_refresh://TODO
-//        	topicListFragment.startTopicsRequest(topicListFragment.getNode());
-        	break;
-        case R.id.action_bar_compose:
-        	onCompose();
-        	break;
-        case R.id.action_bar_setting:
-			i.setClass(getApplicationContext(), RCPreferenceActivity.class);
-			startActivity(i);
-			break;
-		default: 
-			break;
-		}
-		return true;
-	}
-	
-	private void onCompose() {
+	public void onCompose() {
 		Intent i = new Intent();
 		if(((RCApplication) getApplication()).isLogin()) {
     		i.setClass(getApplicationContext(), TopicEditingActivity.class);
@@ -211,6 +184,13 @@ public class RubyChinaIndexActivity extends SherlockFragmentActivity implements 
     		Toast.makeText(getApplicationContext(), R.string.hint_no_token, Toast.LENGTH_SHORT).show();
     	}
     	startActivity(i);
+	}
+	
+	@Override
+	public void onSetting() {
+		Intent i = new Intent();
+		i.setClass(getApplicationContext(), RCPreferenceActivity.class);
+		startActivity(i);
 	}
 	
 	@Override
@@ -247,7 +227,7 @@ public class RubyChinaIndexActivity extends SherlockFragmentActivity implements 
 
 	@Override
 	public void onSiteDescSelected(Site site) {
-		ContentDialogFragment cdf = ContentDialogFragment.newInstance(site.getDesc());
+		ContentDialogFragment cdf = ContentDialogFragment.newInstance(getString(R.string.title_site_desc), site.getDesc());
 		cdf.show(getSupportFragmentManager(), null);
 	}
 	

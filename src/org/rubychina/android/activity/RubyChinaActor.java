@@ -19,6 +19,10 @@ import org.rubychina.android.api.RCAPIClient;
 
 public interface RubyChinaActor {
 
+	public void onCompose();
+	
+	public void onSetting();
+	
 	public RCApplication getApp();
 	
 	public RCService getService();

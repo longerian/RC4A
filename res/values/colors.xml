@@ -10,6 +10,7 @@
     <color name="red">#FFFF0000</color>
     <color name="transparent">#00000000</color>
     <color name="half_transparent">#88ffffff</color>
+    <color name="half_gray_transparent">#88888888</color>
     <color name="pink">#EDB4BC</color>
 	<color name="reserve_order">#4290CE</color>
 </resources>

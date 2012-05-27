@@ -15,7 +15,9 @@ package org.rubychina.android.util;
 
 import org.rubychina.android.RCApplication;
 
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 public class ImageUtil {
 

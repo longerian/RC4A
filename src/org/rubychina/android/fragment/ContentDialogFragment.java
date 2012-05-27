@@ -25,25 +25,28 @@ import com.actionbarsherlock.app.SherlockDialogFragment;
 
 public class ContentDialogFragment extends SherlockDialogFragment {
 
+	private final static String TITLE = "title";
 	private final static String CONTENT = "content";
 	private final static String STYLE = "style";
 	private final static String THEME = "theme";
 	
+	private String title;
 	private String content;
 	private int style;
 	private int theme;
 	
-	public static ContentDialogFragment newInstance(String content) {
-        return newInstance(content, SherlockDialogFragment.STYLE_NO_TITLE);
+	public static ContentDialogFragment newInstance(String title, String content) {
+        return newInstance(title, content, SherlockDialogFragment.STYLE_NORMAL);
     }
 	
-	public static ContentDialogFragment newInstance(String content, int style) {
-        return newInstance(content, style, 0);
+	public static ContentDialogFragment newInstance(String title, String content, int style) {
+        return newInstance(title, content, style, 0);
     }
 	
-	public static ContentDialogFragment newInstance(String content, int style, int theme) {
+	public static ContentDialogFragment newInstance(String title, String content, int style, int theme) {
 		ContentDialogFragment f = new ContentDialogFragment();
 		Bundle bundle = new Bundle();
+		bundle.putString(TITLE, title);
 		bundle.putString(CONTENT, content);
 		bundle.putInt(STYLE, style);
 		bundle.putInt(THEME, theme);
@@ -55,6 +58,7 @@ public class ContentDialogFragment extends SherlockDialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null) {
+        	title = getArguments().getString(TITLE);
         	content = getArguments().getString(CONTENT);
         	style = getArguments().getInt(STYLE);
         	theme = getArguments().getInt(THEME);
@@ -65,6 +69,9 @@ public class ContentDialogFragment extends SherlockDialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
+    	if(style == SherlockDialogFragment.STYLE_NORMAL) {
+    		getDialog().setTitle(title);
+    	}
         View v = inflater.inflate(R.layout.content_dialog, container, false);
         View tv = v.findViewById(R.id.content);
         ((TextView)tv).setText(content);

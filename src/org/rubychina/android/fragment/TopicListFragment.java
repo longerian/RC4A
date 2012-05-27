@@ -16,6 +16,7 @@ package org.rubychina.android.fragment;
 import java.util.List;
 
 import org.rubychina.android.R;
+import org.rubychina.android.activity.RCPreferenceActivity;
 import org.rubychina.android.activity.RubyChinaActor;
 import org.rubychina.android.activity.UserIndexActivity;
 import org.rubychina.android.api.request.TopicsRequest;
@@ -44,6 +45,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 
 public class TopicListFragment extends SherlockFragment implements TopicActor {
 
@@ -113,8 +117,9 @@ public class TopicListFragment extends SherlockFragment implements TopicActor {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		LogUtil.d(TAG, "onActivityCreated");
+		setHasOptionsMenu(true);
 		List<Topic> cachedTopics = fetchTopics();
-		refreshPage(cachedTopics, node);//TODO node info must also be persisted
+		refreshPage(cachedTopics, node);
 		startTopicsRequest(node);
 	}
 
@@ -141,13 +146,41 @@ public class TopicListFragment extends SherlockFragment implements TopicActor {
 		LogUtil.d(TAG, "onDetach");
 	}
 
-	private void initializeHead(Node node) {
-		if(nodeSection == null) {
-			nodeSection = (TextView) LayoutInflater.from(getActivity()).inflate(R.layout.node_section_header, null);
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.add(0, R.id.action_bar_compose, 1, R.string.actionbar_compose)
+            .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+    	menu.add(0, R.id.action_bar_refresh, 2, R.string.actionbar_refresh)
+        	.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        menu.add(0, R.id.action_bar_setting, 3, R.string.actionbar_setting)
+        	.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+    }
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch(item.getItemId()) {
+        case R.id.action_bar_compose:
+        	rubyChina.onCompose();
+        	break;
+        case R.id.action_bar_refresh:
+        	startTopicsRequest(node);
+        	break;
+        case R.id.action_bar_setting:
+        	rubyChina.onSetting();
+			break;
+		default: 
+			break;
 		}
-		topicList.addHeaderView(nodeSection, null, false);
-		nodeSection.setText(node.getName());
+		return true;
 	}
+
+//	private void initializeHead(Node node) {
+//		if(nodeSection == null) {
+//			nodeSection = (TextView) LayoutInflater.from(getActivity()).inflate(R.layout.node_section_header, null);
+//		}
+//		topicList.addHeaderView(nodeSection, null, false);
+//		nodeSection.setText(node.getName());
+//	}
 	
 	private void refreshPage(List<Topic> topics, Node node) {
 //		initializeHead(node);//TODO

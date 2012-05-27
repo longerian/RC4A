@@ -23,13 +23,14 @@ limitations under the License.
         android:id="@+id/gravatar"
         android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
+	    android:background="@drawable/default_gravatar"
         />
 	<TextView 
 	    android:id="@+id/login"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_gravity="bottom"
-	    android:background="@color/half_transparent"
+	    android:background="@color/half_gray_transparent"
 	    android:textSize="18sp"
 	    android:textColor="@color/white"
 	    android:padding="5dip"

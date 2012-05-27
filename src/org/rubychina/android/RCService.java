@@ -100,7 +100,7 @@ public class RCService extends Service {
 	public void requestUserAvatar(User user, ImageView view, int size) {
 		String avatar = user.getAvatarUrl();
 		String hash = user.getGravatarHash();
-		if(TextUtils.isEmpty(avatar)) {
+		if(!TextUtils.isEmpty(hash)) {
 			Bitmap ava = ((RCApplication) getApplication()).getImgLoader().load(GravatarUtil.getURLWithSize(hash, size), view);
 			if(ava != null) {
 				view.setImageBitmap(ava);

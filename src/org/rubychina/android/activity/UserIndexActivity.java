@@ -44,6 +44,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TabHost;
 import android.widget.TabWidget;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Window;
@@ -256,6 +257,25 @@ public class UserIndexActivity extends SherlockFragmentActivity implements RubyC
 		setSupportProgressBarIndeterminate(false);
 	}
 
+	@Override
+	public void onCompose() {
+		Intent i = new Intent();
+		if(((RCApplication) getApplication()).isLogin()) {
+    		i.setClass(getApplicationContext(), TopicEditingActivity.class);
+    	} else {
+    		i.setClass(getApplicationContext(), RCPreferenceActivity.class);
+    		Toast.makeText(getApplicationContext(), R.string.hint_no_token, Toast.LENGTH_SHORT).show();
+    	}
+    	startActivity(i);
+	}
+	
+	@Override
+	public void onSetting() {
+		Intent i = new Intent();
+		i.setClass(getApplicationContext(), RCPreferenceActivity.class);
+		startActivity(i);
+	}
+	
 	@Override
 	public void onTopicSelected(List<Topic> topics, int position) {
 		Intent i = new Intent(this, TopicDetailActivity.class);
