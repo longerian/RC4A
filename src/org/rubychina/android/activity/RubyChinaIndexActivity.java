@@ -44,6 +44,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.widget.Toast;
 
@@ -58,7 +59,7 @@ import com.actionbarsherlock.view.Window;
 public class RubyChinaIndexActivity extends SherlockFragmentActivity implements OnTopicSelectedListener, OnUserSelectedListener,
 	OnNodeSelectedListener,OnSiteSelectedListener, ActionBar.TabListener, RubyChinaActor {
 
-	private static final String TAG = "TopicsActivity";
+	private static final String TAG = "RubyChinaIndexActivity";
 	
 	private RCService mService;
 	private boolean isBound = false; 
@@ -78,6 +79,7 @@ public class RubyChinaIndexActivity extends SherlockFragmentActivity implements 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+		hideIndeterminateProgressBar();
 		Intent intent = new Intent(this, RCService.class);
 		bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 	}
@@ -120,6 +122,7 @@ public class RubyChinaIndexActivity extends SherlockFragmentActivity implements 
 	private ActionBar.Tab getTopicTab() {
 		ActionBar.Tab tab = getSupportActionBar().newTab();
         tab.setText(R.string.tab_topic);
+        tab.setTag(getString(R.string.tab_topic));
         tab.setTabListener(this);
         return tab;
 	}
@@ -127,6 +130,7 @@ public class RubyChinaIndexActivity extends SherlockFragmentActivity implements 
 	private ActionBar.Tab getNodeTab() {
 		ActionBar.Tab tab = getSupportActionBar().newTab();
         tab.setText(R.string.tab_node);
+        tab.setTag(getString(R.string.tab_node));
         tab.setTabListener(this);
         return tab;
 	}
@@ -134,6 +138,7 @@ public class RubyChinaIndexActivity extends SherlockFragmentActivity implements 
 	private ActionBar.Tab getSiteTab() {
 		ActionBar.Tab tab = getSupportActionBar().newTab();
 		tab.setText(R.string.tab_site);
+		tab.setTag(getString(R.string.tab_site));
 		tab.setTabListener(this);
 		return tab;
 	}
@@ -141,20 +146,29 @@ public class RubyChinaIndexActivity extends SherlockFragmentActivity implements 
 	private ActionBar.Tab getUserTab() {
 		ActionBar.Tab tab = getSupportActionBar().newTab();
 		tab.setText(R.string.tab_user);
+		tab.setTag(getString(R.string.tab_user));
 		tab.setTabListener(this);
 		return tab;
 	}
 	
-	private void displayContent(Fragment fragment) {
-		if (getSupportFragmentManager().findFragmentById(android.R.id.content) == null) {
-	        getSupportFragmentManager().beginTransaction().add(android.R.id.content, fragment).commit();
-		} else {
-			getSupportFragmentManager()
-				.beginTransaction()
-				.replace(android.R.id.content, fragment)
-				.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-				.commit();
+	private void displayContent(Fragment fragment, String tag) {
+		FragmentManager fm = getSupportFragmentManager();
+		FragmentTransaction ft = fm.beginTransaction();
+		if(lastFragment != null) {
+			ft.hide(lastFragment);
 		}
+		Fragment existedFragment = fm.findFragmentByTag(tag);
+		if(existedFragment == null) {
+	        ft.add(android.R.id.content, fragment, tag);
+		} else {
+			if(existedFragment != fragment) {
+				ft.remove(existedFragment);
+				ft.add(android.R.id.content, fragment, tag);
+			}
+		}
+		ft.show(fragment);
+		lastFragment = fragment;
+		ft.commit();
 	}
 	
 	@Override
@@ -173,7 +187,7 @@ public class RubyChinaIndexActivity extends SherlockFragmentActivity implements 
 		Intent i = new Intent();
 		switch(item.getItemId()) {
         case R.id.action_bar_refresh://TODO
-        	topicListFragment.startTopicsRequest(topicListFragment.getNode());
+//        	topicListFragment.startTopicsRequest(topicListFragment.getNode());
         	break;
         case R.id.action_bar_compose:
         	onCompose();
@@ -244,25 +258,25 @@ public class RubyChinaIndexActivity extends SherlockFragmentActivity implements 
 			if(topicListFragment == null) {
 				topicListFragment = TopicListFragment.newInstance(Node.MOCK_ACTIVE_NODE);
 			}
-			displayContent(topicListFragment);
+			displayContent(topicListFragment, (String) tab.getTag());
 			break;
 		case TAB_NODE:
 			if(nodeListFragment == null) {
 				nodeListFragment = new NodeListFragment();
 			}
-			displayContent(nodeListFragment);
+			displayContent(nodeListFragment, (String) tab.getTag());
 			break;
 		case TAB_SITE:
 			if(siteListFragment == null) {
 				siteListFragment = new SiteListFragment();
 			}
-			displayContent(siteListFragment);
+			displayContent(siteListFragment, (String) tab.getTag());
 			break;
 		case TAB_USER:
 			if(userListFragment == null) {
 				userListFragment = new UserListFragment();
 			}
-			displayContent(userListFragment);
+			displayContent(userListFragment, (String) tab.getTag());
 			break;
 		default:
 			break;

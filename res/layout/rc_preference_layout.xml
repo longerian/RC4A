@@ -18,32 +18,21 @@ limitations under the License.
     xmlns:tools="http://schemas.android.com/tools" 
     android:layout_width="match_parent" 
     android:layout_height="wrap_content"
-    android:padding="10.0dip" 
     tools:ignore="UselessParent">
-
 	<RelativeLayout
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-	    android:background="@drawable/content_bg" >
-
-	    <TextView 
-		   	android:id="@+id/label1" 
-		   	android:layout_width="match_parent" 
-		   	android:layout_height="wrap_content" 
-		   	android:paddingLeft="8.0dip" 
-			android:paddingTop="4.0dip" 
-		   	android:background="@drawable/content_bg_header" 
-		   	android:text="@string/setting_app" 
-		   	style="\@style/RCSectionHeader"
-		   />
+	    android:background="@color/white"
+	    android:paddingTop="10.0dip"
+        android:paddingBottom="10.0dip"
+        >
 	    <TextView 
 	    	android:id="@+id/lb_token"
 	    	android:layout_width="match_parent"
 	    	android:layout_height="wrap_content"
-	       	android:layout_below="@+id/label1"
 	    	android:layout_marginLeft="8.0dip" 
 	    	android:layout_marginTop="4.0dip" 
-	    	android:textColor="#ff444444"
+	    	android:textColor="@color/dark_gray"
 	    	android:text="@string/app_user_token"
 	    	/>
 	    <EditText 
@@ -64,7 +53,7 @@ limitations under the License.
 		    android:layout_below="@+id/token"
 		    android:layout_marginLeft="8.0dip" 
 		    android:layout_marginTop="4.0dip" 
-		    android:textColor="#ff444444"
+		    android:textColor="@color/dark_gray"
 		    android:text="@string/app_page_size"
 		    />
 		<EditText 
@@ -86,6 +75,7 @@ limitations under the License.
 	        android:background="@drawable/rc_button"
 	        android:text="@string/action_save"
 	        android:textSize="18sp"
+	        android:textColor="@color/dark_gray"
 	      />
 	</RelativeLayout>
 </RelativeLayout>

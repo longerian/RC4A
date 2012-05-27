@@ -17,30 +17,19 @@ limitations under the License.
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dip"
     android:scrollbars="none"
     >
     <RelativeLayout 
         android:layout_width="match_parent" 
         android:layout_height="wrap_content"
-        android:background="@drawable/content_bg" 
+        android:background="@color/white" 
+        android:paddingTop="10.0dip"
         android:paddingBottom="10.0dip" 
         >
-        <TextView 
-            android:id="@+id/label1" 
-            android:layout_width="match_parent" 
-            android:layout_height="wrap_content" 
-            android:paddingLeft="8.0dip" 
-		    android:paddingTop="4.0dip" 
-            android:background="@drawable/content_bg_header" 
-            android:text="@string/user_account_label" 
-            style="\@style/RCSectionHeader"
-            />
 	    <ImageView 
 	        android:id="@+id/gravatar"
 	        android:layout_width="96dip"
 	        android:layout_height="96dip"
-	        android:layout_below="@+id/label1"
 	        android:layout_alignParentRight="true"
 	        android:layout_marginTop="4dip"
 	        android:layout_marginRight="4dip"
@@ -50,7 +39,6 @@ limitations under the License.
 		    android:id="@+id/lb_login"
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
-	        android:layout_below="@+id/label1"
 	        android:layout_toLeftOf="@+id/gravatar"
 		    android:layout_marginLeft="8.0dip" 
 		    android:layout_marginTop="4.0dip" 

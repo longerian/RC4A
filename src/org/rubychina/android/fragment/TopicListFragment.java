@@ -23,6 +23,7 @@ import org.rubychina.android.api.response.TopicsResponse;
 import org.rubychina.android.type.Node;
 import org.rubychina.android.type.Topic;
 import org.rubychina.android.type.User;
+import org.rubychina.android.util.LogUtil;
 import org.rubychina.android.widget.TopicAdapter;
 
 import yek.api.ApiCallback;
@@ -46,6 +47,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 
 public class TopicListFragment extends SherlockFragment implements TopicActor {
 
+	private static final String TAG = "TopicListFragment";
 	public static final String NODE = "node";
 	
 	private OnTopicSelectedListener listener;
@@ -76,6 +78,7 @@ public class TopicListFragment extends SherlockFragment implements TopicActor {
 	@Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        LogUtil.d(TAG, "onAttach");
         try {
             listener = (OnTopicSelectedListener) activity;
         } catch (ClassCastException e) {
@@ -91,6 +94,7 @@ public class TopicListFragment extends SherlockFragment implements TopicActor {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		LogUtil.d(TAG, "onCreate");
 		if(getArguments() != null) {
 			node = getArguments().getParcelable(NODE);
 		}
@@ -99,6 +103,7 @@ public class TopicListFragment extends SherlockFragment implements TopicActor {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		LogUtil.d(TAG, "onCreateView");
     	View view = inflater.inflate(R.layout.topics_layout, null);
     	topicList = (ListView) view.findViewById(R.id.topics);
 		return view;
@@ -107,6 +112,7 @@ public class TopicListFragment extends SherlockFragment implements TopicActor {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		LogUtil.d(TAG, "onActivityCreated");
 		List<Topic> cachedTopics = fetchTopics();
 		refreshPage(cachedTopics, node);//TODO node info must also be persisted
 		startTopicsRequest(node);
@@ -117,12 +123,25 @@ public class TopicListFragment extends SherlockFragment implements TopicActor {
 	}
 
     @Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		LogUtil.d(TAG, "onDestroyView");
+	}
+
+	@Override
 	public void onDestroy() {
 		super.onDestroy();
+		LogUtil.d(TAG, "onDestroy");
 		cancelTopicsRequest();
 	}
 
-	private void initializeNode(Node node) {
+	@Override
+	public void onDetach() {
+		super.onDetach();
+		LogUtil.d(TAG, "onDetach");
+	}
+
+	private void initializeHead(Node node) {
 		if(nodeSection == null) {
 			nodeSection = (TextView) LayoutInflater.from(getActivity()).inflate(R.layout.node_section_header, null);
 		}
@@ -131,7 +150,7 @@ public class TopicListFragment extends SherlockFragment implements TopicActor {
 	}
 	
 	private void refreshPage(List<Topic> topics, Node node) {
-		initializeNode(node);
+//		initializeHead(node);//TODO
 		TopicAdapter adapter = new TopicAdapter(this, getActivity(),
 				R.layout.topic_item,
 				R.id.title, 
@@ -141,8 +160,10 @@ public class TopicListFragment extends SherlockFragment implements TopicActor {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-		        listener.onTopicSelected(((TopicAdapter) ((HeaderViewListAdapter) parent.getAdapter()).getWrappedAdapter()).getItems(), 
-						position - 1);
+//		        listener.onTopicSelected(((TopicAdapter) ((HeaderViewListAdapter) parent.getAdapter()).getWrappedAdapter()).getItems(), 
+//						position - 1);
+		        listener.onTopicSelected(((TopicAdapter) (parent.getAdapter())).getItems(), 
+		        		position);
 			}
 		});
 	}
