@@ -13,8 +13,11 @@ See the License for the specific language governing permissions and
 limitations under the License.*/
 package org.rubychina.android.fragment;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import org.rubychina.android.R;
@@ -26,6 +29,7 @@ import org.rubychina.android.api.response.TopicDetailResponse;
 import org.rubychina.android.type.Reply;
 import org.rubychina.android.type.Topic;
 import org.rubychina.android.type.User;
+import org.rubychina.android.util.DateUtil;
 import org.rubychina.android.util.LogUtil;
 import org.rubychina.android.widget.ReplyAdapter;
 
@@ -254,9 +258,35 @@ public class TopicDetailFragment extends SherlockFragment {
 	}
 	
 	private String getTopicDesc(Topic t) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 		StringBuilder sb = new StringBuilder();
 		sb.append(t.getUser().getLogin()).append(" ");
-		
+		try {
+			sdf.parse(t.getCreatedAt());
+			long createAtInMillis = sdf.getCalendar().getTimeInMillis();
+			long now = System.currentTimeMillis();
+			if(DateUtil.compareYear(now, createAtInMillis) != 0) {
+				sb.append(DateUtil.compareYear(now, createAtInMillis) + "年以前");
+				return sb.toString();
+			} else if(DateUtil.compareMonth(now, createAtInMillis) != 0) {
+				sb.append(DateUtil.compareMonth(now, createAtInMillis) + "月以前");
+				return sb.toString();
+			} else if(DateUtil.compareDay(now, createAtInMillis) != 0) {
+				sb.append(DateUtil.compareDay(now, createAtInMillis) + "天以前");
+				return sb.toString();
+			} else if(DateUtil.compareHour(now, createAtInMillis) != 0) {
+				sb.append(DateUtil.compareHour(now, createAtInMillis) + "小时以前");
+				return sb.toString();
+			} else if(DateUtil.compareMinute(now, createAtInMillis) != 0) {
+				sb.append(DateUtil.compareMinute(now, createAtInMillis) + "分钟以前");
+				return sb.toString();
+			} else if(DateUtil.compareSecond(now, createAtInMillis) != 0) {
+				sb.append(DateUtil.compareSecond(now, createAtInMillis) + "秒以前");
+				return sb.toString();
+			} 
+		} catch (ParseException e) {
+			e.printStackTrace();
+		} 
 		return sb.toString();
 	}
 	
