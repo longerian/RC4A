@@ -64,12 +64,13 @@ public class RCService extends Service {
 					Drawable drawable;
 					try {
 						URL url = new URL(source);
-						LogUtil.d(TAG, source);
 						InputStream is = url.openStream();
 						drawable = Drawable.createFromStream(is, "");
 						drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
 					} catch (IOException e) {
 						e.printStackTrace();
+						return new BitmapDrawable();
+					} catch (NullPointerException e) {
 						return new BitmapDrawable();
 					}
 					 Bitmap sb = ImageUtil.getScaledBitmap((RCApplication) getApplication(), 
