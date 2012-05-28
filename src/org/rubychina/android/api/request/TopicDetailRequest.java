@@ -58,6 +58,9 @@ public class TopicDetailRequest extends RCAPIGet<TopicDetailResponse> {
 		return makeCachePath("api", "topics", id + "");
 	}
 
+	/**
+	 * cache for 60 seconds
+	 */
 	@Override
 	public long getCacheTime() {
 		return 60;

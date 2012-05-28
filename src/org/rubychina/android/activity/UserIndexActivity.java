@@ -42,6 +42,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -84,6 +85,12 @@ public class UserIndexActivity extends SherlockFragmentActivity implements Actio
 		bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
     }
     
+	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		Log.d(TAG, "on new intent");
+	}
+
 	private ServiceConnection mConnection = new ServiceConnection() {
 	
 	    @Override

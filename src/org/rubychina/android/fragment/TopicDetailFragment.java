@@ -13,8 +13,6 @@ See the License for the specific language governing permissions and
 limitations under the License.*/
 package org.rubychina.android.fragment;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -28,7 +26,6 @@ import org.rubychina.android.api.response.TopicDetailResponse;
 import org.rubychina.android.type.Reply;
 import org.rubychina.android.type.Topic;
 import org.rubychina.android.type.User;
-import org.rubychina.android.util.DateUtil;
 import org.rubychina.android.util.LogUtil;
 import org.rubychina.android.widget.ReplyAdapter;
 
@@ -182,32 +179,10 @@ public class TopicDetailFragment extends SherlockFragment {
 	}
 	
 	private void refreshView(List<Reply> rs) {
-		initializeTopicBody();
 		Collections.sort(rs);
-		reply.setAdapter(new ReplyAdapter(this, R.layout.reply_item,
+		rs.add(0, new MockReply(topic));
+		reply.setAdapter(new ReplyAdapter(this, R.layout.topic_body_layout, R.layout.reply_item,
 				R.id.body, rs));
-	}
-	
-	private void initializeTopicBody() {
-		if(body == null) {
-			body = LayoutInflater.from(hostActivity).inflate(R.layout.topic_body_layout, null);
-		}
-		reply.addHeaderView(body, null, false);
-		ImageView gravatar = (ImageView) body.findViewById(R.id.gravatar);
-		gravatar.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				visitUserProfile(topic.getUser());
-			}
-		});
-		requestUserAvatar(topic.getUser(), gravatar, 0);
-		TextView title = (TextView) body.findViewById(R.id.title);
-		title.setText(topic.getTitle());
-		TextView desc = (TextView) body.findViewById(R.id.desc);
-		desc.setText(getTopicDesc(topic));
-		TextView bodyText = (TextView) body.findViewById(R.id.body);
-		executeRetrieveSpannedTask(bodyText, topic.getBodyHTML());
 	}
 	
 	public void visitUserProfile(User u) {
@@ -256,37 +231,22 @@ public class TopicDetailFragment extends SherlockFragment {
 		bar.setIndeterminate(false);
 	}
 	
-	private String getTopicDesc(Topic t) {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-		StringBuilder sb = new StringBuilder();
-		sb.append(t.getUser().getLogin()).append(" ");
-		try {
-			sdf.parse(t.getCreatedAt());
-			long createAtInMillis = sdf.getCalendar().getTimeInMillis();
-			long now = System.currentTimeMillis();
-			if(DateUtil.compareYear(now, createAtInMillis) != 0) {
-				sb.append(DateUtil.compareYear(now, createAtInMillis) + "年以前");
-				return sb.toString();
-			} else if(DateUtil.compareMonth(now, createAtInMillis) != 0) {
-				sb.append(DateUtil.compareMonth(now, createAtInMillis) + "月以前");
-				return sb.toString();
-			} else if(DateUtil.compareDay(now, createAtInMillis) != 0) {
-				sb.append(DateUtil.compareDay(now, createAtInMillis) + "天以前");
-				return sb.toString();
-			} else if(DateUtil.compareHour(now, createAtInMillis) != 0) {
-				sb.append(DateUtil.compareHour(now, createAtInMillis) + "小时以前");
-				return sb.toString();
-			} else if(DateUtil.compareMinute(now, createAtInMillis) != 0) {
-				sb.append(DateUtil.compareMinute(now, createAtInMillis) + "分钟以前");
-				return sb.toString();
-			} else if(DateUtil.compareSecond(now, createAtInMillis) != 0) {
-				sb.append(DateUtil.compareSecond(now, createAtInMillis) + "秒以前");
-				return sb.toString();
-			} 
-		} catch (ParseException e) {
-			e.printStackTrace();
-		} 
-		return sb.toString();
+	public static class MockReply extends Reply {
+		
+		private Topic topic;
+
+		public MockReply(Topic topic) {
+			this.topic = topic;
+		}
+
+		public Topic getTopic() {
+			return topic;
+		}
+
+		public void setTopic(Topic topic) {
+			this.topic = topic;
+		}
+		
 	}
 	
 }
