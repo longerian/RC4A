@@ -17,7 +17,9 @@ limitations under the License.
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="5dip"
+    android:paddingTop="5dip"
+    android:paddingBottom="5dip"
+    android:paddingLeft="40dip"
     android:orientation="vertical"
     android:background="@drawable/list_bg_selector">
     <TextView 

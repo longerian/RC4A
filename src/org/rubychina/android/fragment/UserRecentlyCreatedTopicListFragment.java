@@ -35,11 +35,13 @@ public class UserRecentlyCreatedTopicListFragment extends
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		startTopicsRequest(user);
+		isActive = true;
 	}
 
     @Override
-	public void onDestroy() {
-		super.onDestroy();
+	public void onDestroyView() {
+		super.onDestroyView();
+		isActive = false;
 		cancelTopicsRequest();
 	}
 

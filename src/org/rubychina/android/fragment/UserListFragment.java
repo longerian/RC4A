@@ -49,6 +49,8 @@ public class UserListFragment extends SherlockFragment {
 	
 	private GridView usersGrid;
 	
+	private boolean isActive = false;
+	
 	@Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -79,6 +81,7 @@ public class UserListFragment extends SherlockFragment {
 		List<User> cachedUsers = fetchUsers();
 		refreshPage(cachedUsers);
 		startUsersRequest();
+		isActive = true;
 	}
 
 	private List<User> fetchUsers() {
@@ -86,8 +89,9 @@ public class UserListFragment extends SherlockFragment {
 	}
 
 	@Override
-	public void onDestroy() {
-		super.onDestroy();
+	public void onDestroyView() {
+		super.onDestroyView();
+		isActive = false;
 		cancelUsersRequest();
 	}
 
@@ -138,20 +142,26 @@ public class UserListFragment extends SherlockFragment {
 		@Override
 		public void onException(ApiException e) {
 			rubyChina.hideIndeterminateProgressBar();
-			Toast.makeText(getActivity(), R.string.hint_network_error, Toast.LENGTH_SHORT).show();
+			if(isActive) {
+				Toast.makeText(getActivity(), R.string.hint_network_error, Toast.LENGTH_SHORT).show();
+			}
 		}
 
 		@Override
 		public void onFail(UsersResponse r) {
 			rubyChina.hideIndeterminateProgressBar();
-			Toast.makeText(getActivity(), R.string.hint_loading_data_failed, Toast.LENGTH_SHORT).show();
+			if(isActive) {
+				Toast.makeText(getActivity(), R.string.hint_loading_data_failed, Toast.LENGTH_SHORT).show();
+			}
 		}
 
 		@SuppressWarnings("unchecked")
 		@Override
 		public void onSuccess(UsersResponse r) {
 			rubyChina.hideIndeterminateProgressBar();
-			refreshPage(r.getUsers());
+			if(isActive) {
+				refreshPage(r.getUsers());
+			}
 			new CacheUsersTask().execute(r.getUsers());
 		}
 		

@@ -14,11 +14,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  -->
-<selector
-  xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@color/ruby_china_half_blue" android:state_active="true" />
-    <item android:state_selected="false" android:state_pressed="true" android:drawable="@color/ruby_china_half_blue" />
-    <item android:state_selected="false" android:drawable="@drawable/list_bg" />
-    <item android:state_selected="true" android:drawable="@color/ruby_china_half_blue" />
-    <item android:state_checked="true" android:drawable="@color/ruby_china_half_blue" />
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+ <item android:state_expanded="true" android:drawable="@drawable/group_expand" />
+ <item android:state_expanded="false" android:drawable="@drawable/group_collapse" />
 </selector>

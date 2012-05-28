@@ -26,6 +26,7 @@ import org.rubychina.android.api.response.PostTopicResponse;
 import org.rubychina.android.fragment.RCAlertDialogFragment;
 import org.rubychina.android.fragment.RCAlertDialogFragment.OnRCDialogFragmentClickListener;
 import org.rubychina.android.type.Node;
+import org.rubychina.android.widget.SimpleNodeAdapter;
 
 import yek.api.ApiCallback;
 import yek.api.ApiException;
@@ -130,10 +131,10 @@ public class TopicEditingActivity extends SherlockFragmentActivity implements On
 		if(nodes.contains(Node.MOCK_ACTIVE_NODE)) {
 			nodes.remove(Node.MOCK_ACTIVE_NODE);
 		}
-		ArrayAdapter<Node> adapter = new ArrayAdapter<Node>(getApplicationContext(), 
-				android.R.layout.simple_spinner_item, 
+		SimpleNodeAdapter adapter = new SimpleNodeAdapter(getApplicationContext(), 
+				R.layout.simple_node_item,
 				nodes);
-		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		adapter.setDropDownViewResource(R.layout.simple_node_item);
 		nodeSelector.setAdapter(adapter);
 		body = (EditText) findViewById(R.id.body);
 		

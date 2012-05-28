@@ -49,6 +49,8 @@ public class SiteListFragment extends SherlockFragment {
 	
 	private ExpandableListView sitesList;
 	
+	private boolean isActive = false;
+	
 	@Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -79,6 +81,7 @@ public class SiteListFragment extends SherlockFragment {
 		List<SiteGroup> cachedSites = fetchSites();
 		refreshPage(cachedSites);
 		startSitesRequest();
+		isActive = true;
 	}
 
 	private List<SiteGroup> fetchSites() {
@@ -86,8 +89,9 @@ public class SiteListFragment extends SherlockFragment {
 	}
 
 	@Override
-	public void onDestroy() {
-		super.onDestroy();
+	public void onDestroyView() {
+		super.onDestroyView();
+		isActive = false;
 		cancelSitesRequest();
 	}
 
@@ -134,20 +138,26 @@ public class SiteListFragment extends SherlockFragment {
 		@Override
 		public void onException(ApiException e) {
 			rubyChina.hideIndeterminateProgressBar();
-			Toast.makeText(getActivity(), R.string.hint_network_error, Toast.LENGTH_SHORT).show();
+			if(isActive) {
+				Toast.makeText(getActivity(), R.string.hint_network_error, Toast.LENGTH_SHORT).show();
+			}
 		}
 
 		@Override
 		public void onFail(SitesResponse r) {
 			rubyChina.hideIndeterminateProgressBar();
-			Toast.makeText(getActivity(), R.string.hint_loading_data_failed, Toast.LENGTH_SHORT).show();
+			if(isActive) {
+				Toast.makeText(getActivity(), R.string.hint_loading_data_failed, Toast.LENGTH_SHORT).show();
+			}
 		}
 
 		@SuppressWarnings("unchecked")
 		@Override
 		public void onSuccess(SitesResponse r) {
 			rubyChina.hideIndeterminateProgressBar();
-			refreshPage(r.getSiteGroups());
+			if(isActive) {
+				refreshPage(r.getSiteGroups());
+			}
 			new CacheSitesTask().execute(r.getSiteGroups());
 		}
 		

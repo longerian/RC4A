@@ -39,6 +39,7 @@ limitations under the License.
     <string name="hint_no_replies">该帖子还未有人回复......</string>
     <string name="hint_please_input_title">在这儿输入帖子标题</string>
     <string name="hint_please_input_body">在这儿输入帖子内容</string>
+    <string name="hint_reply_via_web">通过网页发表评论</string>
     <string name="actionbar_preference">设置</string>
     <string name="p_no">否</string>
     <string name="p_yes">是</string>

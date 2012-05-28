@@ -29,21 +29,29 @@ import yek.api.ApiException;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockListFragment;
+import com.actionbarsherlock.app.SherlockFragment;
 
-public class UserRelativeTopicListFragment extends SherlockListFragment implements TopicActor {
+public class UserRelativeTopicListFragment extends SherlockFragment implements TopicActor {
 
 	protected static final String USER = "user";
 	
 	protected OnTopicSelectedListener listener;
 	protected RubyChinaActor rubyChina;
 	
+	protected ListView topic;
+	
 	protected User user;
+	
+	protected boolean isActive = false;
 	
 	@Override
     public void onAttach(Activity activity) {
@@ -67,43 +75,62 @@ public class UserRelativeTopicListFragment extends SherlockListFragment implemen
 			user = getArguments().getParcelable(USER);
 		}
 	}
-
-	@Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-		listener.onTopicSelected(((TopicAdapter) l.getAdapter()).getItems(), 
-				position);
-    }
 	
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+    	View view = inflater.inflate(R.layout.user_relative_topic_layout, null); 
+    	topic = (ListView) view.findViewById(R.id.topics);
+    	return view;
+	}
+
 	protected class UserRelativeTopicsCallback implements ApiCallback<TopicsResponse> {
 		
 		@Override
 		public void onException(ApiException e) {
 			rubyChina.hideIndeterminateProgressBar();
-			Toast.makeText(getActivity(), R.string.hint_network_error, Toast.LENGTH_SHORT).show();
+			if(isActive) {
+				Toast.makeText(getActivity(), R.string.hint_network_error, Toast.LENGTH_SHORT).show();
+			}
 		}
 	
 		@Override
 		public void onFail(TopicsResponse r) {
 			rubyChina.hideIndeterminateProgressBar();
-			Toast.makeText(getActivity(), R.string.hint_loading_data_failed, Toast.LENGTH_SHORT).show();
+			if(isActive) {
+				Toast.makeText(getActivity(), R.string.hint_loading_data_failed, Toast.LENGTH_SHORT).show();
+			}
 		}
 	
 		@Override
 		public void onSuccess(TopicsResponse r) {
 			rubyChina.hideIndeterminateProgressBar();
-			refreshPage(r.getTopics());
+			if(isActive) {
+				refreshPage(r.getTopics());
+			}
 		}
 		
 	}
 	
 	protected void refreshPage(List<Topic> topics) {
+		for (Topic topic : topics) {
+			if(topic.getUser() == null) {
+				topic.setUser(user);
+			}
+		}
 		UserTopicAdapter adapter = new UserTopicAdapter(this, getActivity(),
 				R.layout.user_topic_item,
 				R.id.title, 
 				topics);
-		setListAdapter(adapter);
-		getListView().setDivider(getResources().getDrawable(R.drawable.list_divider));
-		getListView().setDividerHeight(1);
+		topic.setAdapter(adapter);
+		topic.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+		        listener.onTopicSelected(((TopicAdapter) (parent.getAdapter())).getItems(), 
+		        		position);
+			}
+		});
 	}
 	
 	@Override

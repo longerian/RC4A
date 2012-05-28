@@ -66,6 +66,8 @@ public class TopicDetailFragment extends SherlockFragment {
 	private EditText replyEdit;
 	private ImageView icReply;
 	
+	private boolean isActive;
+	
 	public static TopicDetailFragment newInstance(Topic topic) {
 		TopicDetailFragment f = new TopicDetailFragment();
         Bundle bundle = new Bundle();
@@ -113,6 +115,7 @@ public class TopicDetailFragment extends SherlockFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         startTopicDetailRequest(topic);
+        isActive = true;
         LogUtil.d(TAG, "in onActivityCreated");
     }
 
@@ -120,6 +123,7 @@ public class TopicDetailFragment extends SherlockFragment {
 	public void onDestroyView() {
 		super.onDestroyView();
 		LogUtil.d(TAG, "in onDestroyView");
+		isActive = false;
 		cancelTopicDetailRequest();
 	}
 	
@@ -149,21 +153,27 @@ public class TopicDetailFragment extends SherlockFragment {
 		@Override
 		public void onException(ApiException e) {
 			dismissProgress();
-			Toast.makeText(hostActivity, R.string.hint_network_error, Toast.LENGTH_SHORT).show();
-			refreshView(new ArrayList<Reply>());
+			if(isActive) {
+				Toast.makeText(hostActivity, R.string.hint_network_error, Toast.LENGTH_SHORT).show();
+				refreshView(new ArrayList<Reply>());
+			}
 		}
 
 		@Override
 		public void onFail(TopicDetailResponse r) {
 			dismissProgress();
-			Toast.makeText(hostActivity, R.string.hint_loading_data_failed, Toast.LENGTH_SHORT).show();
-			refreshView(new ArrayList<Reply>());
+			if(isActive) {
+				Toast.makeText(hostActivity, R.string.hint_loading_data_failed, Toast.LENGTH_SHORT).show();
+				refreshView(new ArrayList<Reply>());
+			}
 		}
 
 		@Override
 		public void onSuccess(TopicDetailResponse r) {
 			dismissProgress();
-			refreshView(r.getReplies());
+			if(isActive) {
+				refreshView(r.getReplies());
+			}
 		}
 		
 	}
@@ -191,6 +201,8 @@ public class TopicDetailFragment extends SherlockFragment {
 		requestUserAvatar(topic.getUser(), gravatar, 0);
 		TextView title = (TextView) body.findViewById(R.id.title);
 		title.setText(topic.getTitle());
+		TextView desc = (TextView) body.findViewById(R.id.desc);
+		desc.setText(getTopicDesc(topic));
 		TextView bodyText = (TextView) body.findViewById(R.id.body);
 		executeRetrieveSpannedTask(bodyText, topic.getBodyHTML());
 	}
@@ -239,6 +251,13 @@ public class TopicDetailFragment extends SherlockFragment {
 	private void dismissProgress() {
 		bar.setVisibility(View.INVISIBLE);
 		bar.setIndeterminate(false);
+	}
+	
+	private String getTopicDesc(Topic t) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(t.getUser().getLogin()).append(" ");
+		
+		return sb.toString();
 	}
 	
 }

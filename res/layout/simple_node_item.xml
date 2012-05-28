@@ -14,14 +14,15 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  -->
-<TextView
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:id="@+id/node_section_header_title"
-	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
-	android:paddingTop="2dip"
-	android:paddingBottom="2dip"
-	android:paddingLeft="5dip"
-	android:textColor="@color/black"
-	android:background="@color/ruby_china_blue"
-	/>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/name"
+    android:layout_width="match_parent"
+ 	android:layout_height="wrap_content"
+ 	android:padding="8dip"
+	android:background="@drawable/image_button_bg_selector"
+ 	android:gravity="center_vertical"
+ 	android:singleLine="true"
+ 	android:ellipsize="end"
+ 	android:textSize="16sp"
+ 	android:textColor="@color/black"
+    />

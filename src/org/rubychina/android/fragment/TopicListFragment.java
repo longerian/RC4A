@@ -55,10 +55,11 @@ public class TopicListFragment extends SherlockFragment implements TopicActor {
 	private RubyChinaActor rubyChina;
 	private TopicsRequest request;
 	
-//	private TextView nodeSection;
 	private ListView topicList;
 	
 	private Node node;
+	
+	private boolean isActive = false;
 	
 	public static TopicListFragment newInstance(Node node) {
 		TopicListFragment f = new TopicListFragment();
@@ -118,6 +119,7 @@ public class TopicListFragment extends SherlockFragment implements TopicActor {
 		List<Topic> cachedTopics = fetchTopics();
 		refreshPage(cachedTopics, node);
 		startTopicsRequest(node);
+		isActive = true;
 	}
 
 	private List<Topic> fetchTopics() {
@@ -128,13 +130,14 @@ public class TopicListFragment extends SherlockFragment implements TopicActor {
 	public void onDestroyView() {
 		super.onDestroyView();
 		LogUtil.d(TAG, "onDestroyView");
+		isActive = false;
+		cancelTopicsRequest();
 	}
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
 		LogUtil.d(TAG, "onDestroy");
-		cancelTopicsRequest();
 	}
 
 	@Override
@@ -171,16 +174,7 @@ public class TopicListFragment extends SherlockFragment implements TopicActor {
 		return true;
 	}
 
-//	private void initializeHead(Node node) {
-//		if(nodeSection == null) {
-//			nodeSection = (TextView) LayoutInflater.from(getActivity()).inflate(R.layout.node_section_header, null);
-//		}
-//		topicList.addHeaderView(nodeSection, null, false);
-//		nodeSection.setText(node.getName());
-//	}
-	
 	private void refreshPage(List<Topic> topics, Node node) {
-//		initializeHead(node);
 		TopicAdapter adapter = new TopicAdapter(this, getActivity(),
 				R.layout.topic_item,
 				R.id.title, 
@@ -190,8 +184,6 @@ public class TopicListFragment extends SherlockFragment implements TopicActor {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-//		        listener.onTopicSelected(((TopicAdapter) ((HeaderViewListAdapter) parent.getAdapter()).getWrappedAdapter()).getItems(), 
-//						position - 1);
 		        listener.onTopicSelected(((TopicAdapter) (parent.getAdapter())).getItems(), 
 		        		position);
 			}
@@ -220,20 +212,26 @@ public class TopicListFragment extends SherlockFragment implements TopicActor {
 		@Override
 		public void onException(ApiException e) {
 			rubyChina.hideIndeterminateProgressBar();
-			Toast.makeText(getActivity(), R.string.hint_network_error, Toast.LENGTH_SHORT).show();
+			if(isActive) {
+				Toast.makeText(getActivity(), R.string.hint_network_error, Toast.LENGTH_SHORT).show();
+			}
 		}
 
 		@Override
 		public void onFail(TopicsResponse r) {
 			rubyChina.hideIndeterminateProgressBar();
-			Toast.makeText(getActivity(), R.string.hint_loading_data_failed, Toast.LENGTH_SHORT).show();
+			if(isActive) {
+				Toast.makeText(getActivity(), R.string.hint_loading_data_failed, Toast.LENGTH_SHORT).show();
+			}
 		}
 
 		@SuppressWarnings("unchecked")
 		@Override
 		public void onSuccess(TopicsResponse r) {
 			rubyChina.hideIndeterminateProgressBar();
-			refreshPage(r.getTopics(), node);
+			if(isActive) {
+				refreshPage(r.getTopics(), node);
+			}
 			new CacheTopicsTask().execute(r.getTopics());
 		}
 		

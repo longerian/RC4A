@@ -17,13 +17,18 @@ limitations under the License.
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/app_bg_repeat"
     android:orientation="vertical">
     <ExpandableListView
-	    android:id="@+id/sites" 
+	    android:id="@+id/sites"
 	    android:layout_width="match_parent"
     	android:layout_height="match_parent"
     	android:cacheColorHint="@color/transparent"
     	android:childDivider="@drawable/list_divider"
     	android:divider="@drawable/list_divider"
+    	android:fastScrollEnabled="true"
+    	android:listSelector="@color/transparent"
+    	android:background="@color/white"
+    	android:groupIndicator="@drawable/group_indicator"
 	    />
 </LinearLayout>

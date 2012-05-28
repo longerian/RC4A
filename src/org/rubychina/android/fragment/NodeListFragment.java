@@ -21,20 +21,28 @@ import yek.api.ApiException;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockListFragment;
+import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
-public class NodeListFragment extends SherlockListFragment {
+public class NodeListFragment extends SherlockFragment {
 
 	private OnNodeSelectedListener listener;
 	private RubyChinaActor rubyChina;
 	private NodesRequest request;
+	
+	private ListView node;
+	
+	private boolean isActive = false;
 	
 	@Override
     public void onAttach(Activity activity) {
@@ -51,30 +59,35 @@ public class NodeListFragment extends SherlockListFragment {
         }
     }
 	 
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+    	View view = inflater.inflate(R.layout.node_layout, null); 
+    	node = (ListView) view.findViewById(R.id.nodes);
+    	return view;
+	}
+	
     @Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		setHasOptionsMenu(true);
+		getView().setBackgroundResource(R.drawable.app_bg_repeat);
 		List<Node> nodes = fetchNodes();
 		if(nodes.isEmpty()) {
 			startNodesRequest();
 		} else {
 			refreshPage(nodes);
 		}
+		isActive = true;
 	}
 
 	@Override
-	public void onDestroy() {
-		super.onDestroy();
+	public void onDestroyView() {
+		super.onDestroyView();
+		isActive = false;
 		cancelNodesRequest();
 	}
 
-	@Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        Node n = (Node) l.getItemAtPosition(position);
-        listener.onNodeSelected(n);
-	}
-	
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.add(0, R.id.action_bar_compose, 1, R.string.actionbar_compose)
@@ -139,9 +152,15 @@ public class NodeListFragment extends SherlockListFragment {
 			adapter.addSection(entry.getKey(), 
 					new NodeAdapter(getActivity(), R.layout.node_item, entry.getValue()));
 		}
-		setListAdapter(adapter);
-		getListView().setDivider(getResources().getDrawable(R.drawable.list_divider));
-		getListView().setDividerHeight(1);
+		node.setAdapter(adapter);
+		node.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+		        Node n = (Node) parent.getItemAtPosition(position);
+		        listener.onNodeSelected(n);
+			}
+		});
 	}
 	
 	private class NodesCallback implements ApiCallback<NodesResponse> {
@@ -149,19 +168,25 @@ public class NodeListFragment extends SherlockListFragment {
 		@Override
 		public void onException(ApiException e) {
 			rubyChina.hideIndeterminateProgressBar();
-			Toast.makeText(getActivity(), R.string.hint_network_error, Toast.LENGTH_SHORT).show();
+			if(isActive) {
+				Toast.makeText(getActivity(), R.string.hint_network_error, Toast.LENGTH_SHORT).show();
+			}
 		}
 
 		@Override
 		public void onFail(NodesResponse r) {
 			rubyChina.hideIndeterminateProgressBar();
-			Toast.makeText(getActivity(), R.string.hint_loading_data_failed, Toast.LENGTH_SHORT).show();
+			if(isActive) {
+				Toast.makeText(getActivity(), R.string.hint_loading_data_failed, Toast.LENGTH_SHORT).show();
+			}
 		}
 
 		@Override
 		public void onSuccess(NodesResponse r) {
 			rubyChina.hideIndeterminateProgressBar();
-			refreshPage(r.getNodes());
+			if(isActive) {
+				refreshPage(r.getNodes());
+			}
 			new CacheNodesTask().execute(r.getNodes());
 		}
 		

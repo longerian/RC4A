@@ -52,11 +52,11 @@ private static final String TAG = "UserFavoriteTopicsRequest";
 	}
 
 	/**
-	 * cache for 30 seconds
+	 * cache for 60 * 3 seconds
 	 */
 	@Override
 	public long getCacheTime() {
-		return 30;
+		return 60 * 3;
 	}
 	
 }
