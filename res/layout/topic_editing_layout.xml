@@ -17,6 +17,7 @@ limitations under the License.
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     android:padding="10.0dip"
     >
     <TextView 
@@ -40,7 +41,7 @@ limitations under the License.
         android:hint="@string/hint_please_input_title"
         android:imeOptions="actionNext"
         />
-    <Spinner 
+    <Spinner
         android:id="@+id/node"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

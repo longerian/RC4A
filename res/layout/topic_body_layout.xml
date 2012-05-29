@@ -28,10 +28,12 @@ limitations under the License.
         >
         <ImageView 
 		    android:id="@+id/gravatar"
-		    android:layout_width="48dip"
-		    android:layout_height="48dip"
+		    android:layout_width="52dip"
+		    android:layout_height="52dip"
+		    android:padding="4dip"
 		    android:src="@drawable/default_gravatar"
 		    android:contentDescription="@string/alt_avatar"
+		    android:background="@drawable/image_button_bg_selector"
 		    />
 	    <TextView 
 	        android:id="@+id/title"
@@ -41,6 +43,21 @@ limitations under the License.
 	        android:paddingLeft="4dip"
 	        android:textSize="20sp"
 	        android:textColor="#ff000000"
+	        android:gravity="center_vertical"
+	        android:shadowColor="#ffffffff" 
+	        android:shadowDx="0.0" 
+	        android:shadowDy="1.0" 
+	        android:shadowRadius="1.0"
+	        />
+	    <TextView 
+	        android:id="@+id/desc"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_toRightOf="@+id/gravatar"
+	        android:layout_below="@+id/title"
+	        android:paddingLeft="4dip"
+	        android:textSize="14sp"
+	        android:textColor="@color/light_gray"
 	        android:gravity="center_vertical"
 	        android:shadowColor="#ffffffff" 
 	        android:shadowDx="0.0" 
@@ -57,12 +74,5 @@ limitations under the License.
 	    android:padding="10.0dip"
 	    android:textSize="18.0sp"
 	    android:textAppearance="@style/RCTextAppearance"
-        />
-    <ImageView 
-        android:layout_width="match_parent"
-        android:layout_height="1dip"
-        android:layout_below="@+id/body"
-        android:src="@drawable/list_divider"
-        android:contentDescription="@string/alt_divider"
         />
 </RelativeLayout>

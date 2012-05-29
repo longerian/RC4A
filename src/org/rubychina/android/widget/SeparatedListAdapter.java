@@ -9,7 +9,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.rubychina.android.R;
-import org.rubychina.android.type.Section;
+import org.rubychina.android.type.NodeSection;
 
 import android.content.Context;
 import android.view.View;
@@ -20,15 +20,15 @@ import android.widget.BaseAdapter;
 
 public class SeparatedListAdapter extends BaseAdapter {
 
-	public final Map<Section, Adapter> sections = new LinkedHashMap<Section, Adapter>();
-	public final ArrayAdapter<Section> headers;
+	public final Map<NodeSection, Adapter> sections = new LinkedHashMap<NodeSection, Adapter>();
+	public final ArrayAdapter<NodeSection> headers;
 	public final static int TYPE_SECTION_HEADER = 0;
 
 	public SeparatedListAdapter(Context context) {
 		headers = new NodeSectionHeaderAdapter(context, R.layout.node_section_header, R.id.node_section_header_title);
 	}
 
-	public void addSection(Section section, Adapter adapter) {
+	public void addSection(NodeSection section, Adapter adapter) {
 		this.headers.add(section);
 		this.sections.put(section, adapter);
 	}

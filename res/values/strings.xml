@@ -39,9 +39,10 @@ limitations under the License.
     <string name="hint_no_replies">该帖子还未有人回复......</string>
     <string name="hint_please_input_title">在这儿输入帖子标题</string>
     <string name="hint_please_input_body">在这儿输入帖子内容</string>
+    <string name="hint_reply_via_web">通过网页发表评论</string>
     <string name="actionbar_preference">设置</string>
     <string name="p_no">否</string>
-    <string name="p_yek">是</string>
+    <string name="p_yes">是</string>
     <string name="reply_list_unit">楼</string>
     <string name="setting_app">设置</string>
     <string name="topic_title">标题</string>
@@ -63,4 +64,12 @@ limitations under the License.
     <string name="actionbar_compose">发帖</string>
     <string name="actionbar_refresh">刷新</string>
     <string name="actionbar_setting">设置</string>
+    <string name="tab_topic">帖子</string>
+    <string name="tab_node">节点</string>
+    <string name="tab_site">酷站</string>
+    <string name="tab_user">会员</string>
+    <string name="tab_profile">简介</string>
+    <string name="tab_favorite">收藏</string>
+    <string name="title_site_desc">网站介绍</string>
+    <string name="recent_topic_created">最近发布帖子</string>
 </resources>

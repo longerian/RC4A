@@ -51,4 +51,28 @@ limitations under the License.
         <item name="android:shadowDy">2.0</item>
         <item name="android:shadowRadius">1.0</item>
     </style>
+    
+    <style name="Theme.RubyChina" parent="Theme.Sherlock.Light.ForceOverflow">
+		<item name="android:actionBarItemBackground">@drawable/rc_selectable_background</item>
+        <item name="actionBarItemBackground">@drawable/rc_selectable_background</item>
+        
+        <item name="android:actionBarStyle">@style/RubyChinaActionBarStyle</item>
+        <item name="actionBarStyle">@style/RubyChinaActionBarStyle</item>
+        
+        <item name="android:actionBarTabStyle">@style/RubyChinaActionBarTabStyle</item>
+        <item name="actionBarTabStyle">@style/RubyChinaActionBarTabStyle</item>
+        
+    </style>
+    
+    <!-- style for the action -->
+    <style name="RubyChinaActionBarStyle" parent="Widget.Sherlock.Light.ActionBar">
+        <item name="android:background">@color/white</item>
+    </style>
+    
+    <!-- style for the tabs -->
+    <style name="RubyChinaActionBarTabStyle" parent="Widget.Sherlock.Light.ActionBar.TabBar">
+        <item name="android:background">@drawable/actionbar_tab_bg</item>
+        <item name="android:gravity">center</item>
+    </style>
+    
 </resources>

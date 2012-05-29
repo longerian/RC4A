@@ -14,26 +14,60 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  -->
-<FrameLayout 
+<RelativeLayout 
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     >
 	<ListView
 	    android:id="@+id/replies"
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent"
+	    android:layout_above="@+id/reply_to_this"
 	    android:fastScrollEnabled="true"
 	    android:cacheColorHint="#00000000" 
 	    android:divider="@drawable/list_divider" 
 	    android:dividerHeight="1.0px"
+	    android:listSelector="@color/transparent"
+    	android:background="@color/white"
 	    />
+	<RelativeLayout
+	    android:id="@+id/reply_to_this"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentBottom="true"
+	    android:padding="4dip"
+	    android:background="@color/super_light_gray"
+	    android:focusable="true"
+	    android:focusableInTouchMode="true"
+	    >
+	    <EditText 
+	        android:id="@+id/reply_edit"
+	        android:layout_width="match_parent"
+	    	android:layout_height="wrap_content"
+	    	android:layout_toLeftOf="@+id/ic_reply"
+	    	android:hint="@string/hint_reply_via_web"
+	    	android:layout_centerVertical="true"
+	        />
+	    <ImageView 
+	        android:id="@+id/ic_reply"
+	        android:layout_width="wrap_content"
+	    	android:layout_height="wrap_content"
+	    	android:padding="4dip"
+	    	android:layout_marginLeft="4dip"
+	    	android:src="@drawable/ic_action_send"
+	    	android:layout_alignParentRight="true"
+	    	android:layout_centerVertical="true"
+	    	android:background="@drawable/image_button_bg_selector"
+	        />
+	</RelativeLayout>
 	<ProgressBar 
 	    android:id="@+id/progress_bar"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:indeterminate="true"
-	    android:layout_gravity="center"
+	    android:layout_centerInParent="true"
 	    android:visibility="invisible"
 	    />
-</FrameLayout>
+</RelativeLayout>

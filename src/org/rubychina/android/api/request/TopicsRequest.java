@@ -24,7 +24,7 @@ import yek.cache.Cache;
 
 public class TopicsRequest extends RCAPIGet<TopicsResponse> {
 
-	private static final String TAG = "HotTopicsRequest";
+	private static final String TAG = "TopicRequest";
 	
 	private static final int DEFAULT_SIZE = 30;
 	

@@ -20,13 +20,12 @@ import java.util.List;
 import org.rubychina.android.R;
 import org.rubychina.android.RCApplication;
 import org.rubychina.android.activity.TopicDetailActivity;
-import org.rubychina.android.activity.UserProfileActivity;
+import org.rubychina.android.activity.UserIndexActivity;
 import org.rubychina.android.api.request.TopicDetailRequest;
 import org.rubychina.android.api.response.TopicDetailResponse;
 import org.rubychina.android.type.Reply;
 import org.rubychina.android.type.Topic;
 import org.rubychina.android.type.User;
-import org.rubychina.android.util.JsonUtil;
 import org.rubychina.android.util.LogUtil;
 import org.rubychina.android.widget.ReplyAdapter;
 
@@ -34,6 +33,7 @@ import yek.api.ApiCallback;
 import yek.api.ApiException;
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
@@ -42,7 +42,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -63,6 +63,10 @@ public class TopicDetailFragment extends SherlockFragment {
 	private ListView reply;
 	private ProgressBar bar;
 	private View body;
+	private EditText replyEdit;
+	private ImageView icReply;
+	
+	private boolean isActive;
 	
 	public static TopicDetailFragment newInstance(Topic topic) {
 		TopicDetailFragment f = new TopicDetailFragment();
@@ -91,9 +95,19 @@ public class TopicDetailFragment extends SherlockFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
     	LogUtil.d(TAG, "in onCreateView");
-    	FrameLayout frame = (FrameLayout) inflater.inflate(R.layout.topic_detail_layout, null); 
+    	View frame = inflater.inflate(R.layout.topic_detail_layout, null); 
     	reply = (ListView) frame.findViewById(R.id.replies);
     	bar = (ProgressBar) frame.findViewById(R.id.progress_bar);
+    	replyEdit = (EditText) frame.findViewById(R.id.reply_edit);
+    	icReply = (ImageView) frame.findViewById(R.id.ic_reply);
+    	icReply.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("http://ruby-china.org/topics/" + topic.getId()));
+				startActivity(i);
+			}
+		});
     	return frame;
 	}
 
@@ -101,6 +115,7 @@ public class TopicDetailFragment extends SherlockFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         startTopicDetailRequest(topic);
+        isActive = true;
         LogUtil.d(TAG, "in onActivityCreated");
     }
 
@@ -108,6 +123,7 @@ public class TopicDetailFragment extends SherlockFragment {
 	public void onDestroyView() {
 		super.onDestroyView();
 		LogUtil.d(TAG, "in onDestroyView");
+		isActive = false;
 		cancelTopicDetailRequest();
 	}
 	
@@ -137,55 +153,43 @@ public class TopicDetailFragment extends SherlockFragment {
 		@Override
 		public void onException(ApiException e) {
 			dismissProgress();
-			Toast.makeText(hostActivity, R.string.hint_network_error, Toast.LENGTH_SHORT).show();
-			refreshView(new ArrayList<Reply>());
+			if(isActive) {
+				Toast.makeText(hostActivity, R.string.hint_network_error, Toast.LENGTH_SHORT).show();
+				refreshView(new ArrayList<Reply>());
+			}
 		}
 
 		@Override
 		public void onFail(TopicDetailResponse r) {
 			dismissProgress();
-			Toast.makeText(hostActivity, R.string.hint_loading_data_failed, Toast.LENGTH_SHORT).show();
-			refreshView(new ArrayList<Reply>());
+			if(isActive) {
+				Toast.makeText(hostActivity, R.string.hint_loading_data_failed, Toast.LENGTH_SHORT).show();
+				refreshView(new ArrayList<Reply>());
+			}
 		}
 
 		@Override
 		public void onSuccess(TopicDetailResponse r) {
 			dismissProgress();
-			refreshView(r.getReplies());
+			if(isActive) {
+				refreshView(r.getReplies());
+			}
 		}
 		
 	}
 	
 	private void refreshView(List<Reply> rs) {
-		initializeTopicBody();
 		Collections.sort(rs);
-		reply.setAdapter(new ReplyAdapter(this, R.layout.reply_item,
+		rs.add(0, new MockReply(topic));
+		reply.setAdapter(new ReplyAdapter(this, R.layout.topic_body_layout, R.layout.reply_item,
 				R.id.body, rs));
 	}
 	
-	private void initializeTopicBody() {
-		if(body == null) {
-			body = LayoutInflater.from(hostActivity).inflate(R.layout.topic_body_layout, null);
-		}
-		reply.addHeaderView(body, null, false);
-		ImageView gravatar = (ImageView) body.findViewById(R.id.gravatar);
-		gravatar.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				visitUserProfile(topic.getUser());
-			}
-		});
-		requestUserAvatar(topic.getUser(), gravatar, 0);
-		TextView title = (TextView) body.findViewById(R.id.title);
-		title.setText(topic.getTitle());
-		TextView bodyText = (TextView) body.findViewById(R.id.body);
-		executeRetrieveSpannedTask(bodyText, topic.getBodyHTML());
-	}
-	
 	public void visitUserProfile(User u) {
-		Intent i = new Intent(hostActivity, UserProfileActivity.class);
-		i.putExtra(UserProfileActivity.VIEW_PROFILE, JsonUtil.toJsonObject(u));
+		Intent i = new Intent(hostActivity, UserIndexActivity.class);
+		Bundle b = new Bundle();
+		b.putParcelable(UserIndexActivity.VIEW_PROFILE, u);
+		i.putExtras(b);
 		startActivity(i);
 	}
 	
@@ -225,6 +229,24 @@ public class TopicDetailFragment extends SherlockFragment {
 	private void dismissProgress() {
 		bar.setVisibility(View.INVISIBLE);
 		bar.setIndeterminate(false);
+	}
+	
+	public static class MockReply extends Reply {
+		
+		private Topic topic;
+
+		public MockReply(Topic topic) {
+			this.topic = topic;
+		}
+
+		public Topic getTopic() {
+			return topic;
+		}
+
+		public void setTopic(Topic topic) {
+			this.topic = topic;
+		}
+		
 	}
 	
 }

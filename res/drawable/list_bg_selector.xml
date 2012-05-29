@@ -16,9 +16,9 @@ limitations under the License.
  -->
 <selector
   xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@android:color/transparent" android:state_active="true" />
-    <item android:state_selected="false" android:state_pressed="true" android:drawable="@android:color/transparent" />
+    <item android:drawable="@color/ruby_china_half_blue" android:state_active="true" />
+    <item android:state_selected="false" android:state_pressed="true" android:drawable="@color/ruby_china_half_blue" />
     <item android:state_selected="false" android:drawable="@drawable/list_bg" />
-    <item android:state_selected="true" android:drawable="@android:color/transparent" />
-    <item android:state_checked="true" android:drawable="@android:color/transparent" />
+    <item android:state_selected="true" android:drawable="@color/ruby_china_half_blue" />
+    <item android:state_checked="true" android:drawable="@color/ruby_china_half_blue" />
 </selector>

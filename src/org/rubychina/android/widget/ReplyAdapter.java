@@ -13,15 +13,20 @@ See the License for the specific language governing permissions and
 limitations under the License.*/
 package org.rubychina.android.widget;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import org.rubychina.android.R;
-import org.rubychina.android.activity.TopicDetailActivity;
 import org.rubychina.android.fragment.TopicDetailFragment;
+import org.rubychina.android.fragment.TopicDetailFragment.MockReply;
 import org.rubychina.android.type.Reply;
+import org.rubychina.android.type.Topic;
+import org.rubychina.android.util.DateUtil;
 import org.rubychina.android.util.HtmlUtil;
 
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -34,22 +39,28 @@ public class ReplyAdapter extends ArrayAdapter<Reply> {
 
 	private List<Reply> items;
 	private TopicDetailFragment fragment;
-	private int resource;
+	private int replyResource;
 	
-	public ReplyAdapter(TopicDetailFragment fragment, int resource,
+	public ReplyAdapter(TopicDetailFragment fragment, int topicBodyResource, int replyResource,
 			int textViewResourceId, List<Reply> items) {
-		super(fragment.getActivity(), resource, textViewResourceId, items);
+		super(fragment.getActivity(), replyResource, textViewResourceId, items);
 		this.fragment = fragment;
-		this.resource = resource;
+		this.topicBodyResouce = topicBodyResource;
+		this.replyResource = replyResource;
 		this.items = items;
 	}
 	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
+		if(position == 0) {
+			topic = ((MockReply) items.get(position)).getTopic();
+			initializeTopicBody(topic);
+			return body;
+		}
 		final ViewHolder viewHolder;
-		if(convertView == null) {
+		if(convertView == null || convertView.getTag() == null) {
 			viewHolder = new ViewHolder();
-			convertView = LayoutInflater.from(fragment.getActivity()).inflate(resource, null);
+			convertView = LayoutInflater.from(getContext()).inflate(replyResource, null);
 			viewHolder.gravatar = (ImageView) convertView.findViewById(R.id.gravatar);
 			viewHolder.userName = (TextView) convertView.findViewById(R.id.user_name);
 			viewHolder.floor = (TextView) convertView.findViewById(R.id.floor);
@@ -86,6 +97,64 @@ public class ReplyAdapter extends ArrayAdapter<Reply> {
 		public TextView body;
 		public ImageView forward;
 		
+	}
+	
+	private int topicBodyResouce;
+	private View body;
+	private Topic topic;
+	
+	private void initializeTopicBody(final Topic topic) {
+		if(body == null) {
+			body = LayoutInflater.from(getContext()).inflate(topicBodyResouce, null);
+		}
+		ImageView gravatar = (ImageView) body.findViewById(R.id.gravatar);
+		gravatar.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				fragment.visitUserProfile(topic.getUser());
+			}
+		});
+		fragment.requestUserAvatar(topic.getUser(), gravatar, 0);
+		TextView title = (TextView) body.findViewById(R.id.title);
+		title.setText(topic.getTitle());
+		TextView desc = (TextView) body.findViewById(R.id.desc);
+		desc.setText(getTopicDesc(topic));
+		TextView bodyText = (TextView) body.findViewById(R.id.body);
+		fragment.executeRetrieveSpannedTask(bodyText, topic.getBodyHTML());
+	}
+	
+	private String getTopicDesc(Topic t) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+		StringBuilder sb = new StringBuilder();
+		sb.append(t.getUser().getLogin()).append(" ");
+		try {
+			sdf.parse(t.getCreatedAt());
+			long createAtInMillis = sdf.getCalendar().getTimeInMillis();
+			long now = System.currentTimeMillis();
+			if(DateUtil.compareYear(now, createAtInMillis) != 0) {
+				sb.append(DateUtil.compareYear(now, createAtInMillis) + "年以前");
+				return sb.toString();
+			} else if(DateUtil.compareMonth(now, createAtInMillis) != 0) {
+				sb.append(DateUtil.compareMonth(now, createAtInMillis) + "月以前");
+				return sb.toString();
+			} else if(DateUtil.compareDay(now, createAtInMillis) != 0) {
+				sb.append(DateUtil.compareDay(now, createAtInMillis) + "天以前");
+				return sb.toString();
+			} else if(DateUtil.compareHour(now, createAtInMillis) != 0) {
+				sb.append(DateUtil.compareHour(now, createAtInMillis) + "小时以前");
+				return sb.toString();
+			} else if(DateUtil.compareMinute(now, createAtInMillis) != 0) {
+				sb.append(DateUtil.compareMinute(now, createAtInMillis) + "分钟以前");
+				return sb.toString();
+			} else if(DateUtil.compareSecond(now, createAtInMillis) != 0) {
+				sb.append(DateUtil.compareSecond(now, createAtInMillis) + "秒以前");
+				return sb.toString();
+			} 
+		} catch (ParseException e) {
+			e.printStackTrace();
+		} 
+		return sb.toString();
 	}
 	
 }

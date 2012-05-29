@@ -17,33 +17,23 @@ limitations under the License.
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" 
     android:layout_width="match_parent" 
-    android:layout_height="wrap_content"
-    android:padding="10.0dip" 
+    android:layout_height="match_parent"
+    android:background="@color/white"
     tools:ignore="UselessParent">
-
 	<RelativeLayout
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-	    android:background="@drawable/content_bg" >
-
-	    <TextView 
-		   	android:id="@+id/label1" 
-		   	android:layout_width="match_parent" 
-		   	android:layout_height="wrap_content" 
-		   	android:paddingLeft="8.0dip" 
-			android:paddingTop="4.0dip" 
-		   	android:background="@drawable/content_bg_header" 
-		   	android:text="@string/setting_app" 
-		   	style="\@style/RCSectionHeader"
-		   />
+	    android:background="@color/white"
+	    android:paddingTop="10.0dip"
+        android:paddingBottom="10.0dip"
+        >
 	    <TextView 
 	    	android:id="@+id/lb_token"
 	    	android:layout_width="match_parent"
 	    	android:layout_height="wrap_content"
-	       	android:layout_below="@+id/label1"
 	    	android:layout_marginLeft="8.0dip" 
 	    	android:layout_marginTop="4.0dip" 
-	    	android:textColor="#ff444444"
+	    	android:textColor="@color/dark_gray"
 	    	android:text="@string/app_user_token"
 	    	/>
 	    <EditText 
@@ -53,7 +43,6 @@ limitations under the License.
 			android:layout_marginLeft="4.0dip" 
 		    android:layout_marginRight="4.0dip"
 		    android:layout_below="@+id/lb_token"
-		    android:background="@android:drawable/editbox_background"
 			android:hint="@string/hint_no_token"
 			android:singleLine="true"
 			/>
@@ -64,7 +53,7 @@ limitations under the License.
 		    android:layout_below="@+id/token"
 		    android:layout_marginLeft="8.0dip" 
 		    android:layout_marginTop="4.0dip" 
-		    android:textColor="#ff444444"
+		    android:textColor="@color/dark_gray"
 		    android:text="@string/app_page_size"
 		    />
 		<EditText 
@@ -74,18 +63,19 @@ limitations under the License.
 			android:layout_marginLeft="4.0dip" 
 		    android:layout_marginRight="4.0dip"
 		    android:layout_below="@+id/lb_page_size"
-		    android:background="@android:drawable/editbox_background"
 			android:hint="@string/hint_page_size"
-			android:inputType="number"
+			android:inputType="number|phone"
 			/>
 	    <Button
 	        android:id="@+id/save"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
 	        android:layout_below="@+id/page_size"
+	        android:layout_margin="4.0dip"
 	        android:background="@drawable/rc_button"
 	        android:text="@string/action_save"
 	        android:textSize="18sp"
+	        android:textColor="@color/dark_gray"
 	      />
 	</RelativeLayout>
 </RelativeLayout>

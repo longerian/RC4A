@@ -13,12 +13,12 @@ See the License for the specific language governing permissions and
 limitations under the License.*/
 package org.rubychina.android.widget;
 
-import org.rubychina.android.type.Section;
+import org.rubychina.android.type.NodeSection;
 
 import android.content.Context;
 import android.widget.ArrayAdapter;
 
-public class NodeSectionHeaderAdapter extends ArrayAdapter<Section> {
+public class NodeSectionHeaderAdapter extends ArrayAdapter<NodeSection> {
 
 	public NodeSectionHeaderAdapter(Context context, int resource,
 			int textViewResourceId) {

@@ -111,8 +111,8 @@ public class Node implements Parcelable, Comparable<Node> {
 		return name;
 	}
 	
-	public Section whichSection() {
-		Section s = new Section();
+	public NodeSection whichSection() {
+		NodeSection s = new NodeSection();
 		s.setSectionId(sectionId);
 		s.setSort(sort);
 		s.setSectionName(sectionName);

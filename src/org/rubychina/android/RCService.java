@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.rubychina.android.database.RCDBResolver;
 import org.rubychina.android.type.Node;
+import org.rubychina.android.type.SiteGroup;
 import org.rubychina.android.type.Topic;
 import org.rubychina.android.type.User;
 import org.rubychina.android.util.GravatarUtil;
@@ -60,29 +61,16 @@ public class RCService extends Service {
 			imgGetter = new Html.ImageGetter() {
 				
 				public Drawable getDrawable(String source) {
-//					Bitmap img = ((RCApplication) getApplication()).getImgLoader().load(source, null);
-//					if(img != null) {
-//						LogUtil.d(TAG, "img loaded");
-//						Bitmap sb = ImageUtil.getScaledBitmap((RCApplication) getApplication(), img);
-//						BitmapDrawable bd = new BitmapDrawable(sb);
-//						bd.setBounds(0, 0, bd.getIntrinsicWidth(), bd.getIntrinsicHeight());
-//						return bd;
-//					} else {
-//						LogUtil.d(TAG, "img null");
-////						BitmapDrawable bd = new BitmapDrawable();
-////						bd.setBounds(0, 0, bd.getIntrinsicWidth(), bd.getIntrinsicHeight());
-////						return bd;
-//						return getDrawable(source);
-//					}
 					Drawable drawable;
 					try {
 						URL url = new URL(source);
-						LogUtil.d(TAG, source);
 						InputStream is = url.openStream();
 						drawable = Drawable.createFromStream(is, "");
 						drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
 					} catch (IOException e) {
 						e.printStackTrace();
+						return new BitmapDrawable();
+					} catch (NullPointerException e) {
 						return new BitmapDrawable();
 					}
 					 Bitmap sb = ImageUtil.getScaledBitmap((RCApplication) getApplication(), 
@@ -100,7 +88,7 @@ public class RCService extends Service {
 	public void requestUserAvatar(User user, ImageView view, int size) {
 		String avatar = user.getAvatarUrl();
 		String hash = user.getGravatarHash();
-		if(TextUtils.isEmpty(avatar)) {
+		if(!TextUtils.isEmpty(hash)) {
 			Bitmap ava = ((RCApplication) getApplication()).getImgLoader().load(GravatarUtil.getURLWithSize(hash, size), view);
 			if(ava != null) {
 				view.setImageBitmap(ava);
@@ -110,6 +98,13 @@ public class RCService extends Service {
 			if(ava != null) {
 				view.setImageBitmap(ava);
 			}
+		}
+	}
+	
+	public void requestImage(String url, ImageView view) {
+		Bitmap ava = ((RCApplication) getApplication()).getImgLoader().load(url, view);
+		if(ava != null) {
+			view.setImageBitmap(ava);
 		}
 	}
 	
@@ -149,6 +144,44 @@ public class RCService extends Service {
 	public boolean clearTopics() {
 		GlobalResource.INSTANCE.getCurTopics().clear();
 		return RCDBResolver.INSTANCE.clearTopics(getApplicationContext());
+	}
+	
+	public List<User> fetchUsers() {
+		List<User> users = GlobalResource.INSTANCE.getUsers();
+		if(users.isEmpty()) {
+			users = RCDBResolver.INSTANCE.fetchUsers(getApplicationContext());
+			GlobalResource.INSTANCE.setUsers(users);
+		}
+		return users;
+	}
+	
+	public boolean insertUsers(List<User> users) {
+		GlobalResource.INSTANCE.setUsers(users);
+		return RCDBResolver.INSTANCE.insertUsers(getApplicationContext(), users);
+	}
+	
+	public boolean clearUsers() {
+		GlobalResource.INSTANCE.getUsers().clear();
+		return RCDBResolver.INSTANCE.clearUsers(getApplicationContext());
+	}
+	
+	public List<SiteGroup> fetchSites() {
+		List<SiteGroup> siteGroups = GlobalResource.INSTANCE.getSites();
+		if(siteGroups.isEmpty()) {
+			siteGroups = RCDBResolver.INSTANCE.fetchSites(getApplicationContext());
+			GlobalResource.INSTANCE.setSites(siteGroups);
+		}
+		return siteGroups;
+	}
+	
+	public boolean insertSites(List<SiteGroup> sites) {
+		GlobalResource.INSTANCE.setSites(sites);
+		return RCDBResolver.INSTANCE.insertSites(getApplicationContext(), sites);
+	}
+	
+	public boolean clearSites() {
+		GlobalResource.INSTANCE.getSites().clear();
+		return RCDBResolver.INSTANCE.clearSites(getApplicationContext());
 	}
 	
 }

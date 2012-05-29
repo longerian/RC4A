@@ -17,18 +17,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.rubychina.android.type.Node;
+import org.rubychina.android.type.SiteGroup;
 import org.rubychina.android.type.Topic;
+import org.rubychina.android.type.User;
 
 public enum GlobalResource {
 
 	INSTANCE;
 	
-	/**
-	 * current topic list
-	 */
 	private List<Topic> curTopics = new ArrayList<Topic>();
 	
 	private List<Node> nodes = new ArrayList<Node>();
+	
+	private List<User> users = new ArrayList<User>();
+	
+	private List<SiteGroup> sites = new ArrayList<SiteGroup>();
 	
 	public synchronized List<Topic> getCurTopics() {
 		return curTopics;
@@ -44,6 +47,22 @@ public enum GlobalResource {
 
 	public synchronized void setNodes(List<Node> nodes) {
 		this.nodes = nodes;
+	}
+
+	public synchronized List<User> getUsers() {
+		return users;
+	}
+
+	public synchronized void setUsers(List<User> users) {
+		this.users = users;
+	}
+
+	public synchronized List<SiteGroup> getSites() {
+		return sites;
+	}
+
+	public synchronized void setSites(List<SiteGroup> sites) {
+		this.sites = sites;
 	}
 	
 }

@@ -16,15 +16,14 @@ package org.rubychina.android.fragment;
 import java.util.List;
 
 import org.rubychina.android.R;
-import org.rubychina.android.RCApplication;
-import org.rubychina.android.activity.TopicsActivity;
-import org.rubychina.android.activity.UserProfileActivity;
+import org.rubychina.android.activity.RubyChinaActor;
+import org.rubychina.android.activity.UserIndexActivity;
 import org.rubychina.android.api.request.TopicsRequest;
 import org.rubychina.android.api.response.TopicsResponse;
 import org.rubychina.android.type.Node;
 import org.rubychina.android.type.Topic;
 import org.rubychina.android.type.User;
-import org.rubychina.android.util.JsonUtil;
+import org.rubychina.android.util.LogUtil;
 import org.rubychina.android.widget.TopicAdapter;
 
 import yek.api.ApiCallback;
@@ -35,24 +34,32 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.HeaderViewListAdapter;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockListFragment;
+import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 
-public class TopicListFragment extends SherlockListFragment {
+public class TopicListFragment extends SherlockFragment implements TopicActor {
 
+	private static final String TAG = "TopicListFragment";
 	public static final String NODE = "node";
 	
 	private OnTopicSelectedListener listener;
-	private TopicsActivity hostActivity;
+	private RubyChinaActor rubyChina;
 	private TopicsRequest request;
-	private TextView nodeSection;
+	
+	private ListView topicList;
 	
 	private Node node;
+	
+	private boolean isActive = false;
 	
 	public static TopicListFragment newInstance(Node node) {
 		TopicListFragment f = new TopicListFragment();
@@ -73,63 +80,114 @@ public class TopicListFragment extends SherlockListFragment {
 	@Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        LogUtil.d(TAG, "onAttach");
         try {
             listener = (OnTopicSelectedListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement OnTopicSelectedListener");
         }
-        hostActivity = (TopicsActivity) activity;
+        try {
+        	rubyChina = (RubyChinaActor) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement RubyChinaActor");
+        }
     }
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		LogUtil.d(TAG, "onCreate");
 		if(getArguments() != null) {
 			node = getArguments().getParcelable(NODE);
 		}
 	}
 
 	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		LogUtil.d(TAG, "onCreateView");
+    	View view = inflater.inflate(R.layout.topics_layout, null);
+    	topicList = (ListView) view.findViewById(R.id.topics);
+		return view;
+	}
+	
+	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		LogUtil.d(TAG, "onActivityCreated");
+		setHasOptionsMenu(true);
 		List<Topic> cachedTopics = fetchTopics();
-		refreshPage(cachedTopics, node);//TODO node info must also be persisted
+		refreshPage(cachedTopics, node);
 		startTopicsRequest(node);
+		isActive = true;
 	}
 
 	private List<Topic> fetchTopics() {
-		return hostActivity.fetchTopics();
+		return rubyChina.getService().fetchTopics();
 	}
 
     @Override
-	public void onDestroy() {
-		super.onDestroy();
+	public void onDestroyView() {
+		super.onDestroyView();
+		LogUtil.d(TAG, "onDestroyView");
+		isActive = false;
 		cancelTopicsRequest();
 	}
 
 	@Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-		listener.onTopicSelected(((TopicAdapter) ((HeaderViewListAdapter) l.getAdapter()).getWrappedAdapter()).getItems(), 
-				position - 1);
+	public void onDestroy() {
+		super.onDestroy();
+		LogUtil.d(TAG, "onDestroy");
+	}
+
+	@Override
+	public void onDetach() {
+		super.onDetach();
+		LogUtil.d(TAG, "onDetach");
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.add(0, R.id.action_bar_compose, 1, R.string.actionbar_compose)
+            .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+    	menu.add(0, R.id.action_bar_refresh, 2, R.string.actionbar_refresh)
+        	.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        menu.add(0, R.id.action_bar_setting, 3, R.string.actionbar_setting)
+        	.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
     }
 	
-	private void initializeNode(Node node) {
-		if(nodeSection == null) {
-			nodeSection = (TextView) LayoutInflater.from(hostActivity).inflate(R.layout.node_section_header, null);
-			getListView().addHeaderView(nodeSection, null, false);
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch(item.getItemId()) {
+        case R.id.action_bar_compose:
+        	rubyChina.onCompose();
+        	break;
+        case R.id.action_bar_refresh:
+        	startTopicsRequest(node);
+        	break;
+        case R.id.action_bar_setting:
+        	rubyChina.onSetting();
+			break;
+		default: 
+			break;
 		}
-		nodeSection.setText(node.getName());
+		return true;
 	}
-	
+
 	private void refreshPage(List<Topic> topics, Node node) {
-		initializeNode(node);
-		TopicAdapter adapter = new TopicAdapter(this, 
+		TopicAdapter adapter = new TopicAdapter(this, getActivity(),
 				R.layout.topic_item,
 				R.id.title, 
 				topics);
-		setListAdapter(adapter);
-		getListView().setDivider(getResources().getDrawable(R.drawable.list_divider));
-		getListView().setDividerHeight(1);
+		topicList.setAdapter(adapter);
+		topicList.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+		        listener.onTopicSelected(((TopicAdapter) (parent.getAdapter())).getItems(), 
+		        		position);
+			}
+		});
 	}
 	
 	public void startTopicsRequest(Node node) {
@@ -137,15 +195,15 @@ public class TopicListFragment extends SherlockListFragment {
 			request = new TopicsRequest();
 		}
 		request.setNodeId(node.getId());
-		request.setSize(((RCApplication) hostActivity.getApplication()).getPageSize());
-		((RCApplication) hostActivity.getApplication()).getAPIClient().request(request, new ActiveTopicsCallback());
-		hostActivity.setSupportProgressBarIndeterminateVisibility(true);
+		request.setSize(rubyChina.getApp().getPageSize());
+		rubyChina.getClient().request(request, new ActiveTopicsCallback());
+		rubyChina.showIndeterminateProgressBar();
 	}
 	
 	private void cancelTopicsRequest() {
 		if(request != null) {
-			((RCApplication) hostActivity.getApplication()).getAPIClient().cancel(request);
-			hostActivity.setSupportProgressBarIndeterminateVisibility(false);
+			rubyChina.getClient().cancel(request);
+			rubyChina.hideIndeterminateProgressBar();
 		}
 	}
 	
@@ -153,20 +211,27 @@ public class TopicListFragment extends SherlockListFragment {
 
 		@Override
 		public void onException(ApiException e) {
-			hostActivity.setSupportProgressBarIndeterminateVisibility(false);
-			Toast.makeText(hostActivity, R.string.hint_network_error, Toast.LENGTH_SHORT).show();
+			rubyChina.hideIndeterminateProgressBar();
+			if(isActive) {
+				Toast.makeText(getActivity(), R.string.hint_network_error, Toast.LENGTH_SHORT).show();
+			}
 		}
 
 		@Override
 		public void onFail(TopicsResponse r) {
-			hostActivity.setSupportProgressBarIndeterminateVisibility(false);
-			Toast.makeText(hostActivity, R.string.hint_loading_data_failed, Toast.LENGTH_SHORT).show();
+			rubyChina.hideIndeterminateProgressBar();
+			if(isActive) {
+				Toast.makeText(getActivity(), R.string.hint_loading_data_failed, Toast.LENGTH_SHORT).show();
+			}
 		}
 
+		@SuppressWarnings("unchecked")
 		@Override
 		public void onSuccess(TopicsResponse r) {
-			hostActivity.setSupportProgressBarIndeterminateVisibility(false);
-			refreshPage(r.getTopics(), node);
+			rubyChina.hideIndeterminateProgressBar();
+			if(isActive) {
+				refreshPage(r.getTopics(), node);
+			}
 			new CacheTopicsTask().execute(r.getTopics());
 		}
 		
@@ -176,31 +241,35 @@ public class TopicListFragment extends SherlockListFragment {
 
 		@Override
 		protected void onPreExecute() {
-			hostActivity.setSupportProgressBarIndeterminateVisibility(true);
+			rubyChina.showIndeterminateProgressBar();
 		}
 
 		@Override
 		protected Void doInBackground(List<Topic>... params) {
-			hostActivity.clearTopics();
-			hostActivity.insertTopics(params[0]);
+			rubyChina.getService().clearTopics();
+			rubyChina.getService().insertTopics(params[0]);
 			return null;
 		}
 		
 		@Override
 		protected void onPostExecute(Void result) {
-			hostActivity.setSupportProgressBarIndeterminateVisibility(false);
+			rubyChina.hideIndeterminateProgressBar();
 		}
 		
 	}
 
+	@Override
 	public void visitUserProfile(User u) {
-		Intent i = new Intent(hostActivity, UserProfileActivity.class);
-		i.putExtra(UserProfileActivity.VIEW_PROFILE, JsonUtil.toJsonObject(u));
+		Intent i = new Intent(getActivity(), UserIndexActivity.class);
+		Bundle b = new Bundle();
+		b.putParcelable(UserIndexActivity.VIEW_PROFILE, u);
+		i.putExtras(b);
 		startActivity(i);
 	}
 	
+	@Override
 	public void requestUserAvatar(User u, ImageView v, int size) {
-		hostActivity.requestUserAvatar(u, v, size);
+		rubyChina.getService().requestUserAvatar(u, v, size);
 	}
 	
 	public interface OnTopicSelectedListener {

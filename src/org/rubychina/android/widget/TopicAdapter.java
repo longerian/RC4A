@@ -16,9 +16,10 @@ package org.rubychina.android.widget;
 import java.util.List;
 
 import org.rubychina.android.R;
-import org.rubychina.android.fragment.TopicListFragment;
+import org.rubychina.android.fragment.TopicActor;
 import org.rubychina.android.type.Topic;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,14 +30,16 @@ import android.widget.TextView;
 
 public class TopicAdapter extends ArrayAdapter<Topic> {
 
-	private List<Topic> items;
-	private TopicListFragment fragment;
-	private int resource;
+	protected List<Topic> items;
+	protected TopicActor fragment;
+	protected Context context;
+	protected int resource;
 	
-	public TopicAdapter(TopicListFragment topicListFragment, int resource,
+	public TopicAdapter(TopicActor topicListFragment, Context context, int resource,
 			int textViewResourceId, List<Topic> items) {
-		super(topicListFragment.getActivity(), resource, textViewResourceId, items);
+		super(context, resource, textViewResourceId, items);
 		this.fragment = topicListFragment;
+		this.context = context;
 		this.resource = resource;
 		this.items = items;
 	}
@@ -50,7 +53,7 @@ public class TopicAdapter extends ArrayAdapter<Topic> {
 		ViewHolder viewHolder;
 		if(convertView == null) {
 			viewHolder = new ViewHolder();
-			convertView = LayoutInflater.from(fragment.getActivity()).inflate(resource, null);
+			convertView = LayoutInflater.from(context).inflate(resource, null);
 			viewHolder.gravatar = (ImageView) convertView.findViewById(R.id.gravatar);
 			viewHolder.title = (TextView) convertView.findViewById(R.id.title);
 			viewHolder.author = (TextView) convertView.findViewById(R.id.author);

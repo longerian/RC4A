@@ -19,8 +19,6 @@ import java.util.Map;
 import org.rubychina.android.api.RCAPIContext;
 import org.rubychina.android.api.response.TopicDetailResponse;
 
-import yek.cache.Cache;
-
 public class TopicDetailRequest extends RCAPIGet<TopicDetailResponse> {
 
 	private static final String TAG = "TopicDetailRequest";
@@ -60,9 +58,12 @@ public class TopicDetailRequest extends RCAPIGet<TopicDetailResponse> {
 		return makeCachePath("api", "topics", id + "");
 	}
 
+	/**
+	 * cache for 60 seconds
+	 */
 	@Override
 	public long getCacheTime() {
-		return 30;
+		return 60;
 	}
 
 }

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+Copyright (C) 2012 Longerian (http://www.longerian.me)
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+ -->
+<resources>
+    <color name="super_light_gray">#fff0f0f0</color>
+    <color name="light_gray">#ffC0C0C0</color>
+    <color name="gray">#FF888888</color>
+    <color name="dark_gray">#ff444444</color>
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="blue">#87CEFF</color>
+    <color name="title">#ff9600</color>
+    <color name="red">#FFFF0000</color>
+    <color name="transparent">#00000000</color>
+    <color name="half_transparent">#88ffffff</color>
+    <color name="half_gray_transparent">#88888888</color>
+    <color name="pink">#EDB4BC</color>
+	<color name="reserve_order">#4290CE</color>
+	<color name="ruby_china_blue">#ff33b5e5</color>
+	<color name="ruby_china_half_blue">#8833b5e5</color>
+	<color name="ruby_china_dark_blue">#ff0099cc</color>
+</resources>

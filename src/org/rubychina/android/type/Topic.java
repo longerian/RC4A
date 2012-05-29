@@ -20,7 +20,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class Topic implements Parcelable {
 	
-	@SerializedName("_id")  
+	@SerializedName("_id")
 	private int id;
 	
 	private String title;
@@ -99,6 +99,10 @@ public class Topic implements Parcelable {
 
 	public User getUser() {
 		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	@Override

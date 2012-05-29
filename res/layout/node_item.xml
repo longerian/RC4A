@@ -29,7 +29,7 @@ limitations under the License.
 	    android:singleLine="true"
 	    android:ellipsize="end"
 	    android:textSize="16sp"
-	    android:textColor="#ff000000"
+	    android:textColor="@color/black"
         />
     <TextView
         android:id="@+id/summary"

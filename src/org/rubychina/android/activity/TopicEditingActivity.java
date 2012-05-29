@@ -23,7 +23,10 @@ import org.rubychina.android.api.request.NodesRequest;
 import org.rubychina.android.api.request.PostTopicRequest;
 import org.rubychina.android.api.response.NodesResponse;
 import org.rubychina.android.api.response.PostTopicResponse;
+import org.rubychina.android.fragment.RCAlertDialogFragment;
+import org.rubychina.android.fragment.RCAlertDialogFragment.OnRCDialogFragmentClickListener;
 import org.rubychina.android.type.Node;
+import org.rubychina.android.widget.SimpleNodeAdapter;
 
 import yek.api.ApiCallback;
 import yek.api.ApiException;
@@ -48,10 +51,8 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
-public class TopicEditingActivity extends SherlockFragmentActivity {
+public class TopicEditingActivity extends SherlockFragmentActivity implements OnRCDialogFragmentClickListener {
 
-	private static final int DIALOG_EXIT = 1;
-	
 	private EditText title;
 	private Spinner nodeSelector;
 	private EditText body;
@@ -60,6 +61,8 @@ public class TopicEditingActivity extends SherlockFragmentActivity {
 	private NodesRequest nodeRequest;
 	private RCService mService;
 	private boolean isBound = false; 
+	
+	private RCAlertDialogFragment dialog;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -121,36 +124,6 @@ public class TopicEditingActivity extends SherlockFragmentActivity {
 		return true;
 	}
 	
-//	@Override
-//	protected Dialog onCreateDialog(int id) {
-//		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//    	switch(id) {
-//    	case DIALOG_EXIT:
-//    		builder.setMessage(R.string.hint_stoping_editing_topic_or_not)
-//    		.setCancelable(false)
-//    		.setPositiveButton(R.string.p_yek, new OnClickListener() {
-//    			
-//    			@Override
-//    			public void onClick(DialogInterface dialog, int which) {
-//    				TopicEditingActivity.this.finish();
-//    				
-//    			}
-//    		})
-//    		.setNegativeButton(R.string.p_no, new OnClickListener() {
-//    			
-//    			@Override
-//    			public void onClick(DialogInterface dialog, int which) {
-//    				dialog.cancel();
-//    			}
-//    		});
-//    		break;
-//    	default:
-//    		break;
-//    	}
-//    	AlertDialog alert = builder.create();
-//		return alert;
-//	}
-	
 	private void initialize() {
 		title = (EditText) findViewById(R.id.title);
 		nodeSelector = (Spinner) findViewById(R.id.node);
@@ -158,10 +131,10 @@ public class TopicEditingActivity extends SherlockFragmentActivity {
 		if(nodes.contains(Node.MOCK_ACTIVE_NODE)) {
 			nodes.remove(Node.MOCK_ACTIVE_NODE);
 		}
-		ArrayAdapter<Node> adapter = new ArrayAdapter<Node>(getApplicationContext(), 
-				android.R.layout.simple_spinner_item, 
+		SimpleNodeAdapter adapter = new SimpleNodeAdapter(getApplicationContext(), 
+				R.layout.simple_node_item,
 				nodes);
-		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		adapter.setDropDownViewResource(R.layout.simple_node_item);
 		nodeSelector.setAdapter(adapter);
 		body = (EditText) findViewById(R.id.body);
 		
@@ -292,7 +265,7 @@ public class TopicEditingActivity extends SherlockFragmentActivity {
 		@Override
 		public void onSuccess(PostTopicResponse r) {
 			dismissProgress();
-			Intent homeIntent = new Intent(TopicEditingActivity.this, TopicsActivity.class);
+			Intent homeIntent = new Intent(TopicEditingActivity.this, RubyChinaIndexActivity.class);
             homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(homeIntent);
 		}
@@ -301,14 +274,25 @@ public class TopicEditingActivity extends SherlockFragmentActivity {
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-//		if(keyCode == KeyEvent.KEYCODE_BACK) {
-//			if(!TextUtils.isEmpty(title.getText().toString())
-//					|| !TextUtils.isEmpty(body.getText().toString())) {
-//				showDialog(DIALOG_EXIT);
-//				return true;
-//			}
-//		}
+		if(keyCode == KeyEvent.KEYCODE_BACK) {
+			if(!TextUtils.isEmpty(title.getText().toString())
+					|| !TextUtils.isEmpty(body.getText().toString())) {
+				dialog = RCAlertDialogFragment.newInstance(R.string.hint_stoping_editing_topic_or_not);
+				dialog.show(getSupportFragmentManager(), "dialog");
+				return true;
+			}
+		}
 		return super.onKeyDown(keyCode, event);
+	}
+
+	@Override
+	public void doPositiveClick() {
+		finish();
+	}
+
+	@Override
+	public void doNegativeClick() {
+		dialog.dismiss();
 	}
 	
 }
