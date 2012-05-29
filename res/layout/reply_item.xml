@@ -48,7 +48,7 @@ limitations under the License.
         android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:layout_alignParentRight="true"
-	    android:src="@drawable/social_forward"
+	    android:src="@drawable/ic_social_forward"
 	    android:contentDescription="@string/alt_forward"
 	    android:visibility="invisible"
         />

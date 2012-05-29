@@ -85,11 +85,13 @@ public class UserIndexActivity extends SherlockFragmentActivity implements Actio
 		bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
     }
     
-	@Override
-	protected void onNewIntent(Intent intent) {
-		super.onNewIntent(intent);
-		Log.d(TAG, "on new intent");
-	}
+//	@Override
+//	protected void onNewIntent(Intent intent) {
+//		super.onNewIntent(intent);
+//		user = intent.getExtras().getParcelable(VIEW_PROFILE);
+//        setTitle(user.getLogin());
+//        updatePager();
+//	}
 
 	private ServiceConnection mConnection = new ServiceConnection() {
 	
@@ -129,6 +131,16 @@ public class UserIndexActivity extends SherlockFragmentActivity implements Actio
         getSupportActionBar().addTab(getFavoriteTopicTab());
         getSupportActionBar().setSelectedNavigationItem(TAB_PROFILE);
 	}
+    
+//    private void updatePager() {
+//    	mPages.clear();
+//    	mAdapter.notifyDataSetChanged();
+//    	mAdapter = new ProfilePagerAdapter(getSupportFragmentManager());
+//    	mViewPager.setAdapter(mAdapter);
+//    	mViewPager.setCurrentItem(TAB_PROFILE);
+//    	mViewPager.setOnPageChangeListener(this);
+//    	getSupportActionBar().setSelectedNavigationItem(TAB_PROFILE);
+//    }
 	
 	private ActionBar.Tab getProfileTab() {
 		ActionBar.Tab tab = getSupportActionBar().newTab();

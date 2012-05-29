@@ -53,7 +53,7 @@ limitations under the License.
 	    android:layout_height="wrap_content"
 	    android:layout_alignParentRight="true"
 	    android:layout_centerVertical="true"
-	    android:src="@drawable/social_forward"
+	    android:src="@drawable/ic_social_forward"
 	    android:contentDescription="@string/alt_forward"
         />
 </RelativeLayout>
