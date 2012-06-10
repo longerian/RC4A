@@ -34,7 +34,7 @@ limitations under the License.
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:name=".RCApplication"
-        android:theme="@style/Theme.Sherlock.Light.DarkActionBar"
+        android:theme="@style/Theme.RubyChina"
          >
         <activity
             android:label="@string/app_name"
@@ -50,22 +50,27 @@ limitations under the License.
         <activity 
             android:name=".activity.RubyChinaIndexActivity" 
             android:screenOrientation="portrait"
+            android:logo="@color/transparent"
             />
         <activity 
             android:name=".activity.TopicEditingActivity" 
             android:screenOrientation="portrait"
+            android:logo="@color/transparent"
             />
         <activity 
             android:name=".activity.TopicDetailActivity" 
             android:screenOrientation="portrait"
+            android:logo="@color/transparent"
             />
         <activity 
             android:name=".activity.RCPreferenceActivity" 
             android:screenOrientation="portrait"
+            android:logo="@color/transparent"
             />
         <activity 
             android:name=".activity.UserIndexActivity" 
             android:screenOrientation="portrait"
+            android:logo="@color/transparent"
             />
         <service 
             android:name=".RCService" 
