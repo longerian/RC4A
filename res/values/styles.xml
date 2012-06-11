@@ -15,44 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
  -->
 <resources>
-    <style name="Theme" parent="@android:style/Theme" />
-    <style name="Theme.PlainText" parent="@style/Theme">
-        <item name="android:textAppearance">@style/TextAppearance.Theme.PlainText</item>
-    </style>
-    <style name="TextAppearance.Theme.PlainText" parent="@android:style/TextAppearance.Theme">
-        <item name="android:textStyle">normal</item>
-    </style>
-    <style name="RCTextAppearance" parent="@android:style/TextAppearance">
-        <item name="android:textColor">#ff464646</item>
-    </style>
-    <style name="RCTitleAppearance" parent="@android:style/TextAppearance">
-        <item name="android:textSize">14.0sp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textColor">#fff6f6f6</item>
-        <item name="android:singleLine">true</item>
-        <item name="android:shadowColor">#bb000000</item>
-        <item name="android:shadowRadius">2.75</item>
-    </style>
-    <style name="RCButtonAppearance" parent="@android:style/Widget.Button">
-        <item name="android:textColor">#ff464646</item>
-    </style>
-    <style name="RCSectionHeader" parent="@android:style/Widget.TextView">
-        <item name="android:textSize">16.0dip</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:paddingLeft">6.0dip</item>
-        <item name="android:paddingTop">2.0dip</item>
-        <item name="android:paddingRight">4.0dip</item>
-        <item name="android:paddingBottom">5.0dip</item>
-        <item name="android:layout_marginLeft">1.0px</item>
-        <item name="android:layout_marginTop">1.0px</item>
-        <item name="android:layout_marginRight">1.0px</item>
-        <item name="android:shadowColor">#ffffffff</item>
-        <item name="android:shadowDx">0.0</item>
-        <item name="android:shadowDy">2.0</item>
-        <item name="android:shadowRadius">1.0</item>
-    </style>
-    
-    <style name="Theme.RubyChina" parent="Theme.Sherlock.Light.ForceOverflow">
+    <style name="Theme.RubyChina" parent="Theme.Sherlock.Light.DarkActionBar">
 		<item name="android:actionBarItemBackground">@drawable/rc_selectable_background</item>
         <item name="actionBarItemBackground">@drawable/rc_selectable_background</item>
         
@@ -65,12 +28,12 @@ limitations under the License.
     </style>
     
     <!-- style for the action -->
-    <style name="RubyChinaActionBarStyle" parent="Widget.Sherlock.Light.ActionBar">
-        <item name="android:background">@color/white</item>
+    <style name="RubyChinaActionBarStyle" parent="Widget.Sherlock.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">@color/ruby_china_action_bar_bg</item>
     </style>
     
     <!-- style for the tabs -->
-    <style name="RubyChinaActionBarTabStyle" parent="Widget.Sherlock.Light.ActionBar.TabBar">
+    <style name="RubyChinaActionBarTabStyle" parent="Widget.Sherlock.Light.ActionBar.TabBar.Inverse">
         <item name="android:background">@drawable/actionbar_tab_bg</item>
         <item name="android:gravity">center</item>
     </style>

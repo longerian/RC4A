@@ -33,7 +33,6 @@ limitations under the License.
 		    android:padding="4dip"
 		    android:src="@drawable/default_gravatar"
 		    android:contentDescription="@string/alt_avatar"
-		    android:background="@drawable/image_button_bg_selector"
 		    />
 	    <TextView 
 	        android:id="@+id/title"
@@ -73,6 +72,6 @@ limitations under the License.
 	    android:background="#ffffffff"
 	    android:padding="10.0dip"
 	    android:textSize="18.0sp"
-	    android:textAppearance="@style/RCTextAppearance"
+	    android:textColor="#ff464646"
         />
 </RelativeLayout>

@@ -32,4 +32,12 @@ limitations under the License.
 	<color name="ruby_china_blue">#ff33b5e5</color>
 	<color name="ruby_china_half_blue">#8833b5e5</color>
 	<color name="ruby_china_dark_blue">#ff0099cc</color>
+	
+	<color name="ruby_china_action_bar_bg">#ff292929</color>
+	<color name="ruby_china_yellow">#ffffbb33</color>
+	<color name="ruby_china_half_yellow">#88ffbb33</color>
+	<color name="ruby_china_dark_yellow">#ffff8800</color>
+	
+	<color name="ruby_china_section_text">#ff8ba5d2</color>
+	<color name="ruby_china_section_bg">#fff3f5f7</color>
 </resources>

@@ -18,7 +18,7 @@ limitations under the License.
   xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape>
-            <gradient android:height="1.0px" android:startColor="#ffcccccc" android:endColor="#ffcccccc" android:angle="0.0" android:centerColor="#ff999999" />
+            <gradient android:height="1.0px" android:startColor="#ffeaeaea" android:endColor="#ffeaeaea" android:angle="90.0" android:centerColor="#ff999999" />
         </shape>
     </item>
 </layer-list>

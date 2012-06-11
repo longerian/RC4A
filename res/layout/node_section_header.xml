@@ -22,6 +22,6 @@ limitations under the License.
 	android:paddingTop="2dip"
 	android:paddingBottom="2dip"
 	android:paddingLeft="5dip"
-	android:textColor="@color/black"
-	android:background="@color/ruby_china_blue"
+	android:textColor="#FF8BA5D2"
+	android:background="@color/ruby_china_section_bg"
 	/>

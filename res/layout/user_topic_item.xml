@@ -43,6 +43,6 @@ limitations under the License.
 	    android:layout_centerVertical="true"
 	    android:gravity="center"
 	    android:textSize="16sp"
-	    android:textColor="#FFFFFFFF"
+	    android:textColor="@color/ruby_china_section_text"
 	    />
 </RelativeLayout>

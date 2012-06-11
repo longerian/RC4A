@@ -43,34 +43,29 @@ limitations under the License.
             >
             <intent-filter >
                 <action android:name="android.intent.action.MAIN" />
-
+				<category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity 
             android:name=".activity.RubyChinaIndexActivity" 
             android:screenOrientation="portrait"
-            android:logo="@color/transparent"
             />
         <activity 
             android:name=".activity.TopicEditingActivity" 
             android:screenOrientation="portrait"
-            android:logo="@color/transparent"
             />
         <activity 
             android:name=".activity.TopicDetailActivity" 
             android:screenOrientation="portrait"
-            android:logo="@color/transparent"
             />
         <activity 
             android:name=".activity.RCPreferenceActivity" 
             android:screenOrientation="portrait"
-            android:logo="@color/transparent"
             />
         <activity 
             android:name=".activity.UserIndexActivity" 
             android:screenOrientation="portrait"
-            android:logo="@color/transparent"
             />
         <service 
             android:name=".RCService" 

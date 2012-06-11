@@ -49,6 +49,7 @@ limitations under the License.
 	    	android:layout_toLeftOf="@+id/ic_reply"
 	    	android:hint="@string/hint_reply_via_web"
 	    	android:layout_centerVertical="true"
+	    	android:enabled="false"
 	        />
 	    <ImageView 
 	        android:id="@+id/ic_reply"

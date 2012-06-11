@@ -20,8 +20,8 @@ limitations under the License.
 	    android:radius="12dip"
 	    />
 	<gradient
-	    android:startColor="#FF1C7FDB" 
-	    android:endColor="#FF1C7FDB" 
+	    android:startColor="@color/ruby_china_section_bg" 
+	    android:endColor="@color/ruby_china_section_bg" 
 	    android:angle="90.0"
 	    />
 </shape>

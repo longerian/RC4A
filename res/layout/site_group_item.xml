@@ -26,7 +26,7 @@ limitations under the License.
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/black"
+        android:textColor="@color/ruby_china_section_text"
         android:textSize="16sp"
         />
     <TextView 

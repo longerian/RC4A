@@ -26,6 +26,7 @@ limitations under the License.
     	android:cacheColorHint="@color/transparent"
     	android:childDivider="@drawable/list_divider"
     	android:divider="@drawable/list_divider"
+    	android:dividerHeight="1px"
     	android:fastScrollEnabled="true"
     	android:listSelector="@color/transparent"
     	android:background="@color/white"
