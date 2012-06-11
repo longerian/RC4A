@@ -72,4 +72,15 @@ limitations under the License.
     <string name="tab_favorite">收藏</string>
     <string name="title_site_desc">网站介绍</string>
     <string name="recent_topic_created">最近发布帖子</string>
+    
+    
+    <string name="fragment_at">在</string>
+    <string name="fragment_created">中发起</string>
+    <string name="fragment_x_sites">个站点</string>
+    <string name="fragment_x_years_ago">年以前</string>
+    <string name="fragment_x_months_ago">月以前</string>
+    <string name="fragment_x_days_ago">天以前</string>
+    <string name="fragment_x_hours_ago">小时以前</string>
+    <string name="fragment_x_minutes_ago">分钟以前</string>
+    <string name="fragment_x_seconds_ago">秒以前</string>
 </resources>

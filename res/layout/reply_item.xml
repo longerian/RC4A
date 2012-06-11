@@ -34,6 +34,7 @@ limitations under the License.
 	    android:layout_toRightOf="@+id/gravatar"
 	    android:layout_margin="8dip"
 	    android:textSize="16sp"
+	    android:textStyle="bold"
 	    />
 	<TextView 
 	    android:id="@+id/floor"

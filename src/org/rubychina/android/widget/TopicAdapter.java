@@ -65,7 +65,10 @@ public class TopicAdapter extends ArrayAdapter<Topic> {
 		final Topic t = items.get(position);
 		fragment.requestUserAvatar(t.getUser(), viewHolder.gravatar, 0);
 		viewHolder.title.setText(t.getTitle());
-		viewHolder.author.setText(" >> " + t.getUser().getLogin() + " 在  " + t.getNodeName() + " 中发起");
+		viewHolder.author.setText(" >> " + t.getUser().getLogin() + " " 
+				+ getContext().getString(R.string.fragment_at) + " " 
+				+ t.getNodeName() + " " 
+				+ getContext().getString(R.string.fragment_created));
 		if(t.getRepliesCount() > 99) {
 			viewHolder.replies.setText("99+");
 		} else {

@@ -133,27 +133,24 @@ public class ReplyAdapter extends ArrayAdapter<Reply> {
 			long createAtInMillis = sdf.getCalendar().getTimeInMillis();
 			long now = System.currentTimeMillis();
 			if(DateUtil.compareYear(now, createAtInMillis) != 0) {
-				sb.append(DateUtil.compareYear(now, createAtInMillis) + "年以前");
-				return sb.toString();
+				sb.append(DateUtil.compareYear(now, createAtInMillis) + getContext().getString(R.string.fragment_x_years_ago));
 			} else if(DateUtil.compareMonth(now, createAtInMillis) != 0) {
-				sb.append(DateUtil.compareMonth(now, createAtInMillis) + "月以前");
-				return sb.toString();
+				sb.append(DateUtil.compareMonth(now, createAtInMillis) + getContext().getString(R.string.fragment_x_months_ago));
 			} else if(DateUtil.compareDay(now, createAtInMillis) != 0) {
-				sb.append(DateUtil.compareDay(now, createAtInMillis) + "天以前");
-				return sb.toString();
+				sb.append(DateUtil.compareDay(now, createAtInMillis) + getContext().getString(R.string.fragment_x_days_ago));
 			} else if(DateUtil.compareHour(now, createAtInMillis) != 0) {
-				sb.append(DateUtil.compareHour(now, createAtInMillis) + "小时以前");
-				return sb.toString();
+				sb.append(DateUtil.compareHour(now, createAtInMillis) + getContext().getString(R.string.fragment_x_hours_ago));
 			} else if(DateUtil.compareMinute(now, createAtInMillis) != 0) {
-				sb.append(DateUtil.compareMinute(now, createAtInMillis) + "分钟以前");
-				return sb.toString();
+				sb.append(DateUtil.compareMinute(now, createAtInMillis) + getContext().getString(R.string.fragment_x_minutes_ago));
 			} else if(DateUtil.compareSecond(now, createAtInMillis) != 0) {
-				sb.append(DateUtil.compareSecond(now, createAtInMillis) + "秒以前");
-				return sb.toString();
+				sb.append(DateUtil.compareSecond(now, createAtInMillis) + getContext().getString(R.string.fragment_x_seconds_ago));
 			} 
 		} catch (ParseException e) {
 			e.printStackTrace();
 		} 
+		sb.append(getContext().getString(R.string.fragment_at))
+			.append(topic.getNodeName())
+			.append(getContext().getString(R.string.fragment_created));
 		return sb.toString();
 	}
 	

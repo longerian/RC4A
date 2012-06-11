@@ -125,7 +125,7 @@ public class SiteAdapter extends BaseExpandableListAdapter {
 		}
 		SiteGroup sg = (SiteGroup) getGroup(groupPosition);
 		viewHolder.name.setText(sg.getName());
-		viewHolder.desc.setText(sg.getSites().size() + "个站点");
+		viewHolder.desc.setText(sg.getSites().size() + fragment.getResources().getString(R.string.fragment_x_sites));
 		return convertView;
 	}
 
