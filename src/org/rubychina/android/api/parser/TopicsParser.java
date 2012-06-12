@@ -48,6 +48,9 @@ public class TopicsParser extends JSONParseHandler<TopicsResponse> {
 		} catch (JsonParseException e) {
 			resp.setSuccess(false);
 			e.printStackTrace();
+		} catch (NumberFormatException e) {
+			resp.setSuccess(false);
+			e.printStackTrace();
 		}
 	}
 

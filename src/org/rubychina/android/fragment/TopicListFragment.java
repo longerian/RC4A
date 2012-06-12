@@ -13,9 +13,11 @@ See the License for the specific language governing permissions and
 limitations under the License.*/
 package org.rubychina.android.fragment;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.rubychina.android.R;
+import org.rubychina.android.RCService;
 import org.rubychina.android.activity.RubyChinaActor;
 import org.rubychina.android.activity.UserIndexActivity;
 import org.rubychina.android.api.request.TopicsRequest;
@@ -123,7 +125,12 @@ public class TopicListFragment extends SherlockFragment implements TopicActor {
 	}
 
 	private List<Topic> fetchTopics() {
-		return rubyChina.getService().fetchTopics(); //TODO service null
+		RCService service = rubyChina.getService();
+		if(service != null) {
+			return service.fetchTopics();
+		} else {
+			return new ArrayList<Topic>();
+		}
 	}
 
     @Override

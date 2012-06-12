@@ -75,7 +75,7 @@ public class ReplyAdapter extends ArrayAdapter<Reply> {
 		fragment.requestUserAvatar(r.getUser(), viewHolder.gravatar, 0);
 		viewHolder.userName.setText(r.getUser().getLogin());
 		viewHolder.replyAt.setText(" " + howLongAgo(r.getCreatedAt()) + getContext().getString(R.string.fragment_reply));
-		viewHolder.floor.setText(position + 1 + "" + fragment.getString(R.string.reply_list_unit));
+		viewHolder.floor.setText(position + "" + fragment.getString(R.string.reply_list_unit));
 		if(HtmlUtil.existsImg(r.getBodyHTML())) {
 			fragment.executeRetrieveSpannedTask(viewHolder.body, r.getBodyHTML());
 		} else {

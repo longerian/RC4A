@@ -55,6 +55,9 @@ public class TopicDetailParser extends JSONParseHandler<TopicDetailResponse> {
 		} catch (JSONException e) {
 			resp.setSuccess(false);
 			e.printStackTrace();
+		} catch (NumberFormatException e) {
+			resp.setSuccess(false);
+			e.printStackTrace();
 		}
 	}
 
