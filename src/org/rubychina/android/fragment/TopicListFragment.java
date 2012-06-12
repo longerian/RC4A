@@ -123,7 +123,7 @@ public class TopicListFragment extends SherlockFragment implements TopicActor {
 	}
 
 	private List<Topic> fetchTopics() {
-		return rubyChina.getService().fetchTopics();
+		return rubyChina.getService().fetchTopics(); //TODO service null
 	}
 
     @Override

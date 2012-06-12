@@ -48,6 +48,7 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 
 public class UserIndexActivity extends SherlockFragmentActivity implements ActionBar.TabListener, 
@@ -77,6 +78,7 @@ public class UserIndexActivity extends SherlockFragmentActivity implements Actio
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.user_index_tabs_pager_layout);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         metrics = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(metrics);
 		user = getIntent().getExtras().getParcelable(VIEW_PROFILE);
@@ -130,6 +132,19 @@ public class UserIndexActivity extends SherlockFragmentActivity implements Actio
         getSupportActionBar().addTab(getRecentlyCreatedTopicTab());
         getSupportActionBar().addTab(getFavoriteTopicTab());
         getSupportActionBar().setSelectedNavigationItem(TAB_PROFILE);
+	}
+    
+    @Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    switch (item.getItemId()) {
+	        case android.R.id.home:
+	        	Intent intent = new Intent(this, RubyChinaIndexActivity.class);
+	            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+	            startActivity(intent);
+	            return true;
+	        default:
+	            return super.onOptionsItemSelected(item);
+	    }
 	}
     
 //    private void updatePager() {

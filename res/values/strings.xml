@@ -24,7 +24,6 @@ limitations under the License.
     <string name="app_name">Ruby China</string>
     <string name="app_page_size">帖子加载页数</string>
     <string name="action_view_profile">查看个人资料</string>
-    <string name="action_save">保存</string>
     <string name="hint_reply">请输入......</string>
     <string name="hint_login_to_reply">登录发表回复</string>
     <string name="hint_no_token">请输入你的个人私钥</string>
@@ -64,6 +63,7 @@ limitations under the License.
     <string name="actionbar_compose">发帖</string>
     <string name="actionbar_refresh">刷新</string>
     <string name="actionbar_setting">设置</string>
+    <string name="actionbar_save">保存</string>
     <string name="tab_topic">帖子</string>
     <string name="tab_node">节点</string>
     <string name="tab_site">酷站</string>
@@ -74,13 +74,14 @@ limitations under the License.
     <string name="recent_topic_created">最近发布帖子</string>
     
     
+    <string name="fragment_reply">回复</string>
     <string name="fragment_at">在</string>
     <string name="fragment_created">中发起</string>
     <string name="fragment_x_sites">个站点</string>
-    <string name="fragment_x_years_ago">年以前</string>
-    <string name="fragment_x_months_ago">月以前</string>
-    <string name="fragment_x_days_ago">天以前</string>
-    <string name="fragment_x_hours_ago">小时以前</string>
-    <string name="fragment_x_minutes_ago">分钟以前</string>
-    <string name="fragment_x_seconds_ago">秒以前</string>
+    <string name="fragment_x_years_ago">年前</string>
+    <string name="fragment_x_months_ago">月前</string>
+    <string name="fragment_x_days_ago">天前</string>
+    <string name="fragment_x_hours_ago">小时前</string>
+    <string name="fragment_x_minutes_ago">分钟前</string>
+    <string name="fragment_x_seconds_ago">秒前</string>
 </resources>

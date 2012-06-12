@@ -33,6 +33,7 @@ import android.text.Html.ImageGetter;
 import android.widget.ImageView;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.MenuItem;
 
 public class TopicDetailActivity extends SherlockFragmentActivity {
 
@@ -53,6 +54,7 @@ public class TopicDetailActivity extends SherlockFragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.topic_pager_layout);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		Intent intent = new Intent(this, RCService.class);
 		bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 	}
@@ -101,4 +103,18 @@ public class TopicDetailActivity extends SherlockFragmentActivity {
 	public ImageGetter getImageGetter() {
 		return mService.getImageGetter();
 	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    switch (item.getItemId()) {
+	        case android.R.id.home:
+	        	Intent intent = new Intent(this, RubyChinaIndexActivity.class);
+	            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+	            startActivity(intent);
+	            return true;
+	        default:
+	            return super.onOptionsItemSelected(item);
+	    }
+	}
+	
 }

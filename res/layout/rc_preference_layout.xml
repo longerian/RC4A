@@ -66,16 +66,5 @@ limitations under the License.
 			android:hint="@string/hint_page_size"
 			android:inputType="number|phone"
 			/>
-	    <Button
-	        android:id="@+id/save"
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:layout_below="@+id/page_size"
-	        android:layout_margin="4.0dip"
-	        android:background="@drawable/rc_button"
-	        android:text="@string/action_save"
-	        android:textSize="18sp"
-	        android:textColor="@color/dark_gray"
-	      />
 	</RelativeLayout>
 </RelativeLayout>

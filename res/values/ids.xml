@@ -26,5 +26,6 @@ limitations under the License.
 	<item name="action_bar_replies" type="id"/>
 	<item name="action_bar_nodes" type="id"/>
 	<item name="action_bar_setting" type="id"/>
+	<item name="action_bar_save" type="id"/>
 
 </resources>

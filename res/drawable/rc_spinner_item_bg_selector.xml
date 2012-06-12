@@ -16,8 +16,9 @@ limitations under the License.
  -->
 <selector
   xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:state_window_focused="false" android:state_enabled="true" android:drawable="@drawable/grey_rc_button" />
-    <item android:state_pressed="true" android:drawable="@drawable/grey_rc_button_down" />
-    <item android:state_focused="true" android:state_enabled="true" android:drawable="@drawable/grey_rc_button_active" />
-    <item android:state_enabled="true" android:drawable="@drawable/grey_rc_button" />
+    <item android:drawable="@color/ruby_china_blue" android:state_active="true" />
+    <item android:state_selected="false" android:state_pressed="true" android:drawable="@color/ruby_china_yellow" />
+    <item android:state_selected="false" android:drawable="@color/transparent" />
+    <item android:state_selected="true" android:drawable="@color/ruby_china_yellow" />
+    <item android:state_checked="true" android:drawable="@color/ruby_china_yellow" />
 </selector>

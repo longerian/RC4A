@@ -16,6 +16,7 @@ package org.rubychina.android.activity;
 import org.rubychina.android.R;
 import org.rubychina.android.RCApplication;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -26,6 +27,8 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 
 public class RCPreferenceActivity extends SherlockActivity {
 
@@ -38,29 +41,14 @@ public class RCPreferenceActivity extends SherlockActivity {
 		super.onCreate(savedInstanceState);
 		setTitle(R.string.title_preference);
 		setContentView(R.layout.rc_preference_layout);
-
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		
 		tokenEdit = (EditText) findViewById(R.id.token);
 		tokenEdit.setText(((RCApplication) getApplication()).getToken());
 		
 		pageSizeEdit = (EditText) findViewById(R.id.page_size);
 		pageSizeEdit.setText(((RCApplication) getApplication()).getPageSize() + "");
-		
-		Button saveBtn = (Button) findViewById(R.id.save);
-		saveBtn.setOnClickListener(mSaveListener);
 	}
-	
-	private OnClickListener mSaveListener = new OnClickListener() {
-		
-		@Override
-		public void onClick(View v) {
-			if(isInputValid()) {
-				((RCApplication) getApplication()).setToken(tokenEdit.getText().toString());
-				((RCApplication) getApplication()).setPageSize(Integer.valueOf(pageSizeEdit.getText().toString()));
-				finish();
-			}
-		}
-		
-	};
 	
 	private boolean isInputValid() {
 		Animation animation = AnimationUtils.loadAnimation(this, R.anim.shake);
@@ -79,6 +67,33 @@ public class RCPreferenceActivity extends SherlockActivity {
 			}
 		}
 		return true;
+	}
+	
+	@Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        menu.add(0, R.id.action_bar_save, 0, R.string.actionbar_save)
+            .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        return true;
+    }
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    switch (item.getItemId()) {
+	        case android.R.id.home:
+	        	Intent intent = new Intent(this, RubyChinaIndexActivity.class);
+	            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+	            startActivity(intent);
+	            return true;
+	        case R.id.action_bar_save:
+	        	if(isInputValid()) {
+					((RCApplication) getApplication()).setToken(tokenEdit.getText().toString());
+					((RCApplication) getApplication()).setPageSize(Integer.valueOf(pageSizeEdit.getText().toString()));
+					finish();
+				}
+	        	return true;
+	        default:
+	            return super.onOptionsItemSelected(item);
+	    }
 	}
 	
 }

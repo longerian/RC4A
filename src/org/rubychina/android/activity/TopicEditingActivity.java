@@ -69,6 +69,7 @@ public class TopicEditingActivity extends SherlockFragmentActivity implements On
 		super.onCreate(savedInstanceState);
 		setTitle(R.string.title_posting_new_topic);
 		setContentView(R.layout.topic_editing_layout);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		Intent intent = new Intent(this, RCService.class);
 		bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 	}
@@ -109,6 +110,11 @@ public class TopicEditingActivity extends SherlockFragmentActivity implements On
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()) {
+		case android.R.id.home:
+        	Intent intent = new Intent(this, RubyChinaIndexActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(intent);
+            break;
         case R.id.action_bar_compose:
         	if(isTopicValid()) {
         		startPostTopicRequest(
