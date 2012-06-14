@@ -13,9 +13,11 @@ See the License for the specific language governing permissions and
 limitations under the License.*/
 package org.rubychina.android.fragment;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.rubychina.android.R;
+import org.rubychina.android.RCService;
 import org.rubychina.android.activity.RubyChinaActor;
 import org.rubychina.android.api.request.SitesRequest;
 import org.rubychina.android.api.response.SitesResponse;
@@ -85,7 +87,12 @@ public class SiteListFragment extends SherlockFragment {
 	}
 
 	private List<SiteGroup> fetchSites() {
-		return rubyChina.getService().fetchSites();
+		RCService service = rubyChina.getService();
+		if(service != null) {
+			return service.fetchSites();
+		} else {
+			return new ArrayList<SiteGroup>();
+		}
 	}
 
 	@Override

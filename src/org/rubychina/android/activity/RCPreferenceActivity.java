@@ -15,15 +15,13 @@ package org.rubychina.android.activity;
 
 import org.rubychina.android.R;
 import org.rubychina.android.RCApplication;
+import org.rubychina.android.util.DebugUtil;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.EditText;
 
 import com.actionbarsherlock.app.SherlockActivity;
@@ -39,6 +37,7 @@ public class RCPreferenceActivity extends SherlockActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		DebugUtil.setupErrorHandler(this);
 		setTitle(R.string.title_preference);
 		setContentView(R.layout.rc_preference_layout);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);

@@ -20,6 +20,7 @@ import org.rubychina.android.RCService;
 import org.rubychina.android.RCService.LocalBinder;
 import org.rubychina.android.type.Topic;
 import org.rubychina.android.type.User;
+import org.rubychina.android.util.DebugUtil;
 import org.rubychina.android.widget.TopicPagerAdapter;
 
 import android.content.ComponentName;
@@ -53,6 +54,7 @@ public class TopicDetailActivity extends SherlockFragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		DebugUtil.setupErrorHandler(this);
 		setContentView(R.layout.topic_pager_layout);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		Intent intent = new Intent(this, RCService.class);

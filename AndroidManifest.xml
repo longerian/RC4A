@@ -67,6 +67,10 @@ limitations under the License.
             android:name=".activity.UserIndexActivity" 
             android:screenOrientation="portrait"
             />
+        <activity 
+            android:name=".activity.BugReportActivity" 
+            android:screenOrientation="portrait"
+            />
         <service 
             android:name=".RCService" 
             />

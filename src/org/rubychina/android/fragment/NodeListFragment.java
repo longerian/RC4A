@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import org.rubychina.android.R;
+import org.rubychina.android.RCService;
 import org.rubychina.android.activity.RubyChinaActor;
 import org.rubychina.android.api.request.NodesRequest;
 import org.rubychina.android.api.response.NodesResponse;
@@ -112,7 +113,12 @@ public class NodeListFragment extends SherlockFragment {
 	}
 	
 	private List<Node> fetchNodes() {
-		return rubyChina.getService().fetchNodes();
+		RCService service = rubyChina.getService();
+		if(service != null) {
+			return service.fetchNodes();
+		} else {
+			return new ArrayList<Node>();
+		}
 	}
 	
 	public void startNodesRequest() {

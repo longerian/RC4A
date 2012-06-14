@@ -13,6 +13,10 @@ See the License for the specific language governing permissions and
 limitations under the License.*/
 package org.rubychina.android.activity;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.List;
 
 import org.rubychina.android.R;
@@ -22,6 +26,7 @@ import org.rubychina.android.RCService.LocalBinder;
 import org.rubychina.android.api.request.NodesRequest;
 import org.rubychina.android.api.response.NodesResponse;
 import org.rubychina.android.type.Node;
+import org.rubychina.android.util.DebugUtil;
 
 import yek.api.ApiCallback;
 import yek.api.ApiException;
@@ -49,8 +54,9 @@ public class RCActivity extends SherlockActivity {
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
+		DebugUtil.setupErrorHandler(this);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.rc_layout);
 		WindowManager windowManager = getWindowManager();
         Display display = windowManager.getDefaultDisplay();

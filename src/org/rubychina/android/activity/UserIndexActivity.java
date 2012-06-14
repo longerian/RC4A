@@ -27,6 +27,7 @@ import org.rubychina.android.fragment.UserRecentlyCreatedTopicListFragment;
 import org.rubychina.android.fragment.UserRelativeTopicListFragment.OnTopicSelectedListener;
 import org.rubychina.android.type.Topic;
 import org.rubychina.android.type.User;
+import org.rubychina.android.util.DebugUtil;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -76,6 +77,7 @@ public class UserIndexActivity extends SherlockFragmentActivity implements Actio
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        DebugUtil.setupErrorHandler(this);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.user_index_tabs_pager_layout);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

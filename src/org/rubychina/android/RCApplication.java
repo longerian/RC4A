@@ -50,7 +50,7 @@ public class RCApplication extends Application {
 		mAPIClient = new RCAPIClient(getApplicationContext(), new JSONParser(), mThreadPoolExecutor, mCacher);
 		mImgLoader = new BitmapAsyncLoader(new AsyncLoaderEngine(getApplicationContext(), mThreadPoolExecutor, mCacher));
 	}
-
+	
 	public RCAPIClient getAPIClient() {
 		return this.mAPIClient;
 	}

@@ -26,6 +26,7 @@ import org.rubychina.android.api.response.PostTopicResponse;
 import org.rubychina.android.fragment.RCAlertDialogFragment;
 import org.rubychina.android.fragment.RCAlertDialogFragment.OnRCDialogFragmentClickListener;
 import org.rubychina.android.type.Node;
+import org.rubychina.android.util.DebugUtil;
 import org.rubychina.android.widget.SimpleNodeAdapter;
 
 import yek.api.ApiCallback;
@@ -67,6 +68,7 @@ public class TopicEditingActivity extends SherlockFragmentActivity implements On
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		DebugUtil.setupErrorHandler(this);
 		setTitle(R.string.title_posting_new_topic);
 		setContentView(R.layout.topic_editing_layout);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);

@@ -34,6 +34,7 @@ import org.rubychina.android.type.Node;
 import org.rubychina.android.type.Site;
 import org.rubychina.android.type.Topic;
 import org.rubychina.android.type.User;
+import org.rubychina.android.util.DebugUtil;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -76,6 +77,7 @@ public class RubyChinaIndexActivity extends SherlockFragmentActivity implements 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		DebugUtil.setupErrorHandler(this);
 		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		Intent intent = new Intent(this, RCService.class);
 		bindService(intent, mConnection, Context.BIND_AUTO_CREATE);

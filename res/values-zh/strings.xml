@@ -24,7 +24,6 @@ limitations under the License.
     <string name="app_name">Ruby China</string>
     <string name="app_page_size">帖子加载页数</string>
     <string name="action_view_profile">查看个人资料</string>
-    <string name="action_save">保存</string>
     <string name="hint_reply">请输入......</string>
     <string name="hint_login_to_reply">登录发表回复</string>
     <string name="hint_no_token">请输入你的个人私钥</string>
@@ -52,6 +51,7 @@ limitations under the License.
     <string name="title_nodes">社区节点</string>
     <string name="title_preference">设置</string>
     <string name="title_posting_new_topic">发布新帖子</string>
+    <string name="title_bug_report">报告bug</string>
     <string name="user_account_label">用户信息</string>
     <string name="user_id">ID</string>
     <string name="user_name">Name</string>
@@ -64,6 +64,8 @@ limitations under the License.
     <string name="actionbar_compose">发帖</string>
     <string name="actionbar_refresh">刷新</string>
     <string name="actionbar_setting">设置</string>
+    <string name="actionbar_save">保存</string>
+    <string name="actionbar_send">发送</string>
     <string name="tab_topic">帖子</string>
     <string name="tab_node">节点</string>
     <string name="tab_site">酷站</string>
