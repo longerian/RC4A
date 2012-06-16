@@ -37,6 +37,9 @@ import android.widget.TextView;
 
 public class ReplyAdapter extends ArrayAdapter<Reply> {
 
+	private SimpleDateFormat fromSdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+	private SimpleDateFormat toSdf = new SimpleDateFormat("MM-dd HH:mm");
+	
 	private List<Reply> items;
 	private TopicDetailFragment fragment;
 	private int replyResource;
@@ -74,7 +77,7 @@ public class ReplyAdapter extends ArrayAdapter<Reply> {
 		final Reply r = items.get(position);
 		fragment.requestUserAvatar(r.getUser(), viewHolder.gravatar, 0);
 		viewHolder.userName.setText(r.getUser().getLogin());
-		viewHolder.replyAt.setText(" " + howLongAgo(r.getCreatedAt()) + getContext().getString(R.string.fragment_reply));
+		viewHolder.replyAt.setText(" " + getCreatedTime(r.getCreatedAt()) + " " + getContext().getString(R.string.fragment_reply));
 		viewHolder.floor.setText(position + "" + fragment.getString(R.string.reply_list_unit));
 		if(HtmlUtil.existsImg(r.getBodyHTML())) {
 			fragment.executeRetrieveSpannedTask(viewHolder.body, r.getBodyHTML());
@@ -130,43 +133,53 @@ public class ReplyAdapter extends ArrayAdapter<Reply> {
 	private String getTopicDesc(Topic t) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(t.getUser().getLogin()).append(" ");
-		sb.append(howLongAgo(t.getCreatedAt()));
+		sb.append(getCreatedTime(t.getCreatedAt())).append(" ");
 		sb.append(getContext().getString(R.string.fragment_at))
 			.append(topic.getNodeName())
 			.append(getContext().getString(R.string.fragment_created));
 		return sb.toString();
 	}
 	
-	private String howLongAgo(String date) {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-		StringBuilder sb = new StringBuilder();
+//	private String howLongAgo(String date) {
+//		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+//		StringBuilder sb = new StringBuilder();
+//		try {
+//			sdf.parse(date);
+//			long createAtInMillis = sdf.getCalendar().getTimeInMillis();
+//			long now = System.currentTimeMillis();
+//			if(DateUtil.compareYear(now, createAtInMillis) != 0) {
+//				sb.append(DateUtil.compareYear(now, createAtInMillis) + getContext().getString(R.string.fragment_x_years_ago));
+//				return sb.toString();
+//			} else if(DateUtil.compareMonth(now, createAtInMillis) != 0) {
+//				sb.append(DateUtil.compareMonth(now, createAtInMillis) + getContext().getString(R.string.fragment_x_months_ago));
+//				return sb.toString();
+//			} else if(DateUtil.compareDay(now, createAtInMillis) != 0) {
+//				sb.append(DateUtil.compareDay(now, createAtInMillis) + getContext().getString(R.string.fragment_x_days_ago));
+//				return sb.toString();
+//			} else if(DateUtil.compareHour(now, createAtInMillis) != 0) {
+//				sb.append(DateUtil.compareHour(now, createAtInMillis) + getContext().getString(R.string.fragment_x_hours_ago));
+//				return sb.toString();
+//			} else if(DateUtil.compareMinute(now, createAtInMillis) != 0) {
+//				sb.append(DateUtil.compareMinute(now, createAtInMillis) + getContext().getString(R.string.fragment_x_minutes_ago));
+//				return sb.toString();
+//			} else if(DateUtil.compareSecond(now, createAtInMillis) != 0) {
+//				sb.append(DateUtil.compareSecond(now, createAtInMillis) + getContext().getString(R.string.fragment_x_seconds_ago));
+//				return sb.toString();
+//			} 
+//		} catch (ParseException e) {
+//			e.printStackTrace();
+//		}
+//		return sb.toString();
+//	}
+	
+	private String getCreatedTime(String date) {
+		String createdTime = "";
 		try {
-			sdf.parse(date);
-			long createAtInMillis = sdf.getCalendar().getTimeInMillis();
-			long now = System.currentTimeMillis();
-			if(DateUtil.compareYear(now, createAtInMillis) != 0) {
-				sb.append(DateUtil.compareYear(now, createAtInMillis) + getContext().getString(R.string.fragment_x_years_ago));
-				return sb.toString();
-			} else if(DateUtil.compareMonth(now, createAtInMillis) != 0) {
-				sb.append(DateUtil.compareMonth(now, createAtInMillis) + getContext().getString(R.string.fragment_x_months_ago));
-				return sb.toString();
-			} else if(DateUtil.compareDay(now, createAtInMillis) != 0) {
-				sb.append(DateUtil.compareDay(now, createAtInMillis) + getContext().getString(R.string.fragment_x_days_ago));
-				return sb.toString();
-			} else if(DateUtil.compareHour(now, createAtInMillis) != 0) {
-				sb.append(DateUtil.compareHour(now, createAtInMillis) + getContext().getString(R.string.fragment_x_hours_ago));
-				return sb.toString();
-			} else if(DateUtil.compareMinute(now, createAtInMillis) != 0) {
-				sb.append(DateUtil.compareMinute(now, createAtInMillis) + getContext().getString(R.string.fragment_x_minutes_ago));
-				return sb.toString();
-			} else if(DateUtil.compareSecond(now, createAtInMillis) != 0) {
-				sb.append(DateUtil.compareSecond(now, createAtInMillis) + getContext().getString(R.string.fragment_x_seconds_ago));
-				return sb.toString();
-			} 
+			createdTime = toSdf.format(fromSdf.parse(date));
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		return sb.toString();
+		return createdTime;
 	}
 	
 }
